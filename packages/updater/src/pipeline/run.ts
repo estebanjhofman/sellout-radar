@@ -314,7 +314,9 @@ export async function runUpdate(cfg: Config, deps: RunDeps): Promise<RunOutput> 
     delta.changes.push(entry);
   }
   for (const id of merged.createdEventIds.slice(0, 100)) {
-    const e = cat.events.get(id)!;
+    // Een nieuw gevonden datum kan in dezelfde run alweer zijn samengevoegd of opgeruimd.
+    const e = cat.events.get(id);
+    if (!e) continue;
     const entry: ChangeLogEntry = { at: now, kind: 'new_event', eventIds: [id], text: `Nieuw gevonden: ${e.title}${e.date.localDate ? ` (${e.date.localDate})` : ''}` };
     state.changes.push(entry);
     delta.changes.push(entry);
