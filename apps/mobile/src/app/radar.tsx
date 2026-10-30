@@ -9,6 +9,7 @@ import {
   groupEvents,
   nextAction,
   normalizeText,
+  saleBucket,
   STAGE_LABEL,
   type EventGroup,
   type GroupDate,
@@ -61,7 +62,14 @@ export default function Radar() {
   const rows = useMemo(() => {
     if (!snapshot || !index) return [] as GroupDate[];
     const nowIso = now.toISOString();
-    return snapshot.events.map((e) => ({ event: e, view: eventScoreView(e, index.phasesByEvent.get(e.id) ?? [], nowIso), venue: index.venues.get(e.venueId) }));
+    // Na de verkoop (een dag na het laatste verkoopmoment) staat een datum niet meer in de radar,
+    // maar bij Uitverkocht of Nog beschikbaar.
+    return snapshot.events
+      .filter((e) => {
+        const b = saleBucket(e, index.phasesByEvent.get(e.id) ?? [], nowIso);
+        return b === 'upcoming' || b === 'onsale';
+      })
+      .map((e) => ({ event: e, view: eventScoreView(e, index.phasesByEvent.get(e.id) ?? [], nowIso), venue: index.venues.get(e.venueId) }));
   }, [snapshot, index, now]);
 
   const filtered = useMemo(() => {
@@ -146,7 +154,7 @@ export default function Radar() {
       <Text style={{ color: t.muted, fontSize: 13, lineHeight: 18, marginTop: -4, marginBottom: 10 }}>
         {tab === 'upcoming'
           ? 'Score = verwachte drukte: hoe moeilijk het wordt om bij de eerste verkoop een kaart te krijgen. Een datum schuift door zodra de eerste presale of algemene verkoop begint.'
-          : 'Score = uitverkoopkans: de kans dat de datum vóór de showdag uitverkoopt, op basis van echte verkoopsignalen. Uitverkochte datums staan onderaan.'}
+          : 'Score = uitverkoopkans: de kans dat de datum vóór de showdag uitverkoopt, op basis van echte verkoopsignalen. Een dag na het laatste verkoopmoment gaat een datum naar Uitverkocht of Nog beschikbaar.'}
       </Text>
       <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: t.card, borderRadius: 12, borderWidth: 1, borderColor: t.border, paddingHorizontal: 12, marginBottom: 12 }}>
         <IconSearch color={t.faint} />

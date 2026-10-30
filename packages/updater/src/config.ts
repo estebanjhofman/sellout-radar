@@ -19,6 +19,9 @@ export interface Config {
     setlistfm?: string;
     anthropic?: string;
     expo?: string;
+    /** Sleutelpaar voor meldingen in de browser (Web Push, VAPID). */
+    vapidPublic?: string;
+    vapidPrivate?: string;
   };
   anthropicModel: string;
   supabase?: { url: string; serviceKey: string };
@@ -54,6 +57,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
       setlistfm: opt('SETLISTFM_API_KEY'),
       anthropic: opt('ANTHROPIC_API_KEY'),
       expo: opt('EXPO_ACCESS_TOKEN'),
+      vapidPublic: opt('VAPID_PUBLIC_KEY'),
+      vapidPrivate: opt('VAPID_PRIVATE_KEY'),
     },
     anthropicModel: opt('ANTHROPIC_MODEL') ?? 'claude-haiku-5-5',
     supabase: supabaseUrl && supabaseKey ? { url: supabaseUrl, serviceKey: supabaseKey } : undefined,

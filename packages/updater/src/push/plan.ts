@@ -88,7 +88,7 @@ export function planPushes(args: {
       const ev = args.events.get(eventId);
       if (!ev) return false;
       const followed =
-        t.followedEvents.has(eventId) || (ev.tourId !== undefined && t.followedTours.has(ev.tourId)) || ev.artistIds.some((a) => t.followedArtists.has(a));
+        t.followedEvents.has(eventId) || !!t.ownedEvents?.has(eventId) || (ev.tourId !== undefined && t.followedTours.has(ev.tourId)) || ev.artistIds.some((a) => t.followedArtists.has(a));
       return inNotifyScope(eventId, ev.score, {
         followed: followed ? new Set([eventId]) : new Set(),
         muted: t.mutedEvents,
@@ -124,9 +124,11 @@ export function planPushes(args: {
 
     // 2. Vangnet voor herinneringen die het toestel niet zelf heeft ingepland
     //    (bijv. de webversie op de computer): liever eerder dan te laat.
+    // Datums met tickets krijgen geen verkoopherinneringen meer (wel wijzigingen, hierboven).
+    const wantsReminder = (id: string) => !t.ownedEvents?.has(id) && inScope(id);
     for (const phase of args.phases) {
-      if (!phase.eventIds.some(inScope)) continue;
-      const subject = subjectFor(phase, args.events, inScope);
+      if (!phase.eventIds.some(wantsReminder)) continue;
+      const subject = subjectFor(phase, args.events, wantsReminder);
       for (const n of planPhaseNotifications(phase, { now, settings: t.settings, subject })) {
         if (t.scheduledKeys.has(n.key)) continue;
         const sendAt = DateTime.fromISO(n.sendAt);

@@ -377,6 +377,7 @@ export class SupabaseStore implements Store {
           followedTours: new Set(),
           followedArtists: new Set(),
           mutedEvents: new Set(),
+          ownedEvents: new Set(),
           scheduledKeys: new Set(),
         };
         byUser.set(userId, t);
@@ -408,6 +409,7 @@ export class SupabaseStore implements Store {
       if (f.kind === 'event') (f.notify === false ? t.mutedEvents : t.followedEvents).add(ref);
       if (f.kind === 'tour' && f.notify !== false) t.followedTours.add(ref);
       if (f.kind === 'artist' && f.notify !== false) t.followedArtists.add(ref);
+      if (f.kind === 'owned') t.ownedEvents?.add(ref);
     }
     return [...byUser.values()].filter((t) => t.tokens.length > 0);
   }

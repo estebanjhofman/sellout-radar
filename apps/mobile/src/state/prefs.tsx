@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { DEFAULT_NOTIFY_SETTINGS, DEFAULT_SCORE_THRESHOLD, type QuietHours } from '@sellout/core';
 import { readJson, writeJson } from '../lib/storage';
 import { syncPrefsToServer } from '../lib/supabase';
+import { usePrefSync, type SyncApi } from './sync';
 
 export interface Settings {
   notificationsEnabled: boolean;
@@ -21,9 +22,23 @@ export interface Prefs {
   mutedEvents: string[];
   /** Datums waarvoor je al tickets hebt (geen verkoopherinneringen meer). */
   ownedEvents: string[];
+  /**
+   * Bewaarde gegevens van datums met tickets, zodat ze na de showdag (als ze uit de data verdwijnen)
+   * nog bij Mijn tickets staan.
+   */
+  ownedInfo: Record<string, OwnedInfo>;
   /** Datums waarvoor je ingeschreven staat: datum-ID → IDs van de inschrijvingen ('' = algemeen). */
   registered: Record<string, string[]>;
   settings: Settings;
+}
+
+export interface OwnedInfo {
+  title: string;
+  /** "za 5 jun 2027" */
+  dateText: string;
+  place: string;
+  /** Begin van de show (ms), als bekend. */
+  start: number | null;
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -32,6 +47,7 @@ export const DEFAULT_PREFS: Prefs = {
   followedArtists: [],
   mutedEvents: [],
   ownedEvents: [],
+  ownedInfo: {},
   registered: {},
   settings: {
     notificationsEnabled: true,
@@ -50,7 +66,7 @@ export async function loadPrefs(): Promise<Prefs> {
   return { ...DEFAULT_PREFS, ...(p ?? {}), settings: { ...DEFAULT_PREFS.settings, ...(p?.settings ?? {}) } };
 }
 
-interface PrefsState {
+interface PrefsState extends SyncApi {
   prefs: Prefs;
   ready: boolean;
   isFollowing: (eventId: string, tourId?: string, artistIds?: string[]) => boolean;
@@ -59,6 +75,8 @@ interface PrefsState {
   toggleArtist: (artistId: string) => void;
   setMuted: (eventId: string, muted: boolean) => void;
   toggleOwned: (eventId: string) => void;
+  /** Werkt de bewaarde gegevens van datums met tickets bij (alleen als er iets veranderde). */
+  rememberOwned: (info: Record<string, OwnedInfo>) => void;
   /** Zet een inschrijving voor een datum aan of uit (je kunt er meerdere hebben). */
   toggleRegistered: (eventId: string, phaseId: string) => void;
   updateSettings: (patch: Partial<Settings>) => void;
@@ -92,6 +110,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(t);
   }, [prefs, ready]);
 
+  const syncApi = usePrefSync(prefs, setPrefs, ready);
+
   const isFollowing = useCallback(
     (eventId: string, tourId?: string, artistIds: string[] = []) =>
       prefs.followedEvents.includes(eventId) ||
@@ -102,6 +122,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<PrefsState>(
     () => ({
+      ...syncApi,
       prefs,
       ready,
       isFollowing,
@@ -118,10 +139,22 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
           else delete r[id];
           return { ...p, registered: r };
         }),
-      toggleOwned: (id) => setPrefs((p) => ({ ...p, ownedEvents: toggle(p.ownedEvents ?? [], id) })),
+      toggleOwned: (id) =>
+        setPrefs((p) => {
+          const ownedEvents = toggle(p.ownedEvents ?? [], id);
+          const ownedInfo = { ...(p.ownedInfo ?? {}) };
+          if (!ownedEvents.includes(id)) delete ownedInfo[id];
+          return { ...p, ownedEvents, ownedInfo };
+        }),
+      rememberOwned: (info) =>
+        setPrefs((p) => {
+          const cur = p.ownedInfo ?? {};
+          const changed = Object.entries(info).some(([k, v]) => JSON.stringify(cur[k]) !== JSON.stringify(v));
+          return changed ? { ...p, ownedInfo: { ...cur, ...info } } : p;
+        }),
       updateSettings: (patch) => setPrefs((p) => ({ ...p, settings: { ...p.settings, ...patch } })),
     }),
-    [prefs, ready, isFollowing],
+    [prefs, ready, isFollowing, syncApi],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

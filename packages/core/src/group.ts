@@ -206,3 +206,32 @@ export function groupEvents(dates: GroupDate[], ctx: GroupContext, sort: GroupSo
 export function saleMoments(phases: SalePhase[], now: string): TimelineItem[] {
   return buildTimeline(phases, now).filter((i) => i.role !== 'end');
 }
+
+// ---------------------------------------------------------------------------
+// Lijsten na de verkoop: de 50 snelst uitverkochte en de 50 met de hoogste uitverkoopkans
+// ---------------------------------------------------------------------------
+
+export const ARCHIVE_SIZE = 50;
+
+const SPEED_ORDER: Record<string, number> = { presale: 0, day1: 1, week1: 2, later: 3 };
+
+/**
+ * Uitverkocht: snelst uitverkocht bovenaan (al in de presale, binnen een dag, binnen een week, later,
+ * onbekend), bij gelijke snelheid de hoogste verwachte drukte vooraf.
+ */
+export function rankSoldOut<T extends { event: SnapshotEvent }>(list: T[], max = ARCHIVE_SIZE): T[] {
+  const speed = (e: SnapshotEvent) => SPEED_ORDER[e.rushFinal?.outcome?.speed ?? ''] ?? 4;
+  return [...list]
+    .sort(
+      (a, b) =>
+        speed(a.event) - speed(b.event) ||
+        (b.event.rushFinal?.value ?? -1) - (a.event.rushFinal?.value ?? -1) ||
+        a.event.title.localeCompare(b.event.title),
+    )
+    .slice(0, max);
+}
+
+/** Nog beschikbaar: hoogste uitverkoopkans bovenaan. */
+export function rankAvailable<T extends { event: SnapshotEvent; view: EventScoreView }>(list: T[], max = ARCHIVE_SIZE): T[] {
+  return [...list].sort((a, b) => b.view.score.value - a.view.score.value || a.event.title.localeCompare(b.event.title)).slice(0, max);
+}

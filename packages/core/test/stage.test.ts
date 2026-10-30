@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { eventScoreView, groupEvents, saleMoments, type GroupDate } from '../src/group';
+import { eventScoreView, groupEvents, rankAvailable, rankSoldOut, saleMoments, type EventScoreView, type GroupDate } from '../src/group';
 import type { SnapshotEvent, SnapshotScore } from '../src/snapshot';
-import { firstSaleMoment, saleStage } from '../src/stage';
+import { firstSaleMoment, lastSaleMoment, saleBucket, saleStage } from '../src/stage';
 import { dateOnly, exactLocal, monthOnly } from '../src/time';
 import type { Artist, SalePhase, Tour, Venue } from '../src/types';
 import { EVENTS, NOW, PHASES } from './fixtures';
@@ -185,5 +185,41 @@ describe('festival: titel van het evenement', () => {
     // "Pinkpop" staat al in de titel, dus geen ondertitel.
     expect(g!.subtitle).toBeUndefined();
     expect(g!.cities[0]!.city).toBe('Landgraaf');
+  });
+});
+
+describe('na de verkoop: in de verkoop, uitverkocht of nog beschikbaar', () => {
+  // Laatste verkoopmoment van U2 Amsterdam: algemene verkoop vr 6 nov 10:00 CET (09:00 UTC).
+  it('blijft tot een dag na het laatste verkoopmoment bij "In de verkoop"', () => {
+    expect(saleBucket(EVENTS.u2Ams1, u2Phases, NOW)).toBe('upcoming');
+    expect(lastSaleMoment(u2Phases)!.toUTC().toISO()).toBe('2026-11-06T09:00:00.000Z');
+    expect(saleBucket({ status: 'onsale' }, u2Phases, '2026-11-07T08:59:00Z')).toBe('onsale');
+    expect(saleBucket({ status: 'onsale' }, u2Phases, '2026-11-07T09:00:00Z')).toBe('available');
+    expect(saleBucket({ status: 'soldout' }, u2Phases, '2026-11-07T09:00:00Z')).toBe('soldout');
+    expect(saleBucket({ status: 'soldout' }, u2Phases, '2026-11-03T12:00:00Z')).toBe('onsale');
+  });
+
+  it('alleen een datum bekend: de hele verkoopdag plus een dag', () => {
+    const p: SalePhase = { ...PHASES.u2EuStorePresale, start: dateOnly('2026-11-04', 'Europe/Amsterdam') };
+    expect(saleBucket({ status: 'onsale' }, [p], '2026-11-05T22:59:00Z')).toBe('onsale');
+    expect(saleBucket({ status: 'onsale' }, [p], '2026-11-05T23:00:00Z')).toBe('available');
+  });
+
+  it('in de verkoop volgens een bron, zonder bekend verkoopmoment: telt als voorbij', () => {
+    expect(saleBucket({ status: 'onsale' }, [], NOW)).toBe('available');
+    expect(saleBucket({ status: 'soldout' }, [], NOW)).toBe('soldout');
+  });
+
+  it('uitverkocht: snelst eerst, dan de hoogste verwachte drukte; maximaal 50', () => {
+    const mk = (id: string, speed?: 'presale' | 'day1' | 'week1' | 'later', value = 50) =>
+      ({ event: { ...EVENTS.u2Ams1, id, title: id, status: 'soldout', rushFinal: { value, label: '', confidence: 'medium', at: NOW, ...(speed ? { outcome: { result: 'busy', speed, text: '', resolvedAt: NOW } } : {}) } } }) as { event: SnapshotEvent };
+    const ranked = rankSoldOut([mk('a', 'week1', 90), mk('b', 'presale', 40), mk('c'), mk('d', 'presale', 70)]);
+    expect(ranked.map((x) => x.event.id)).toEqual(['d', 'b', 'a', 'c']);
+    expect(rankSoldOut(Array.from({ length: 60 }, (_, i) => mk(`x${i}`)))).toHaveLength(50);
+  });
+
+  it('nog beschikbaar: hoogste uitverkoopkans eerst', () => {
+    const mk = (id: string, value: number) => ({ event: { ...EVENTS.u2Ams1, id, title: id }, view: { score: { value } } }) as unknown as { event: SnapshotEvent; view: EventScoreView };
+    expect(rankAvailable([mk('a', 30), mk('b', 80), mk('c', 55)]).map((x) => x.event.id)).toEqual(['b', 'c', 'a']);
   });
 });

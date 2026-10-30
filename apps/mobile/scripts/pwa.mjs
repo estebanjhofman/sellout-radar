@@ -10,6 +10,8 @@ if (!dir) throw new Error('Gebruik: node scripts/pwa.mjs <map> [basispad]');
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 
 fs.copyFileSync(path.join(root, 'assets/icon.png'), path.join(dir, 'app-icon.png'));
+// Service worker voor meldingen (Web Push); staat in de hoofdmap van de site, zodat hij overal geldt.
+fs.copyFileSync(path.join(root, 'scripts/sw.js'), path.join(dir, 'sw.js'));
 const manifest = {
   name: 'Sellout Radar',
   short_name: 'Sellout Radar',

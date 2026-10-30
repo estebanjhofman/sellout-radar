@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { Platform } from 'react-native';
-import type { Prefs } from '../state/prefs';
+import { registeredIds, type Prefs } from '../state/prefs';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from './config';
 
 /**
@@ -51,9 +51,14 @@ export async function syncPrefsToServer(prefs: Prefs): Promise<void> {
     updated_at: new Date().toISOString(),
   });
   const notify = s.notificationsEnabled;
+  const owned = new Set(prefs.ownedEvents ?? []);
+  // Ingeschreven telt als gevolgd; met tickets: wel wijzigingen, geen verkoopherinneringen ('owned').
+  const registered = Object.keys(prefs.registered ?? {}).filter((id) => registeredIds(prefs.registered, id).length > 0);
+  const eventIds = [...new Set([...prefs.followedEvents, ...registered])].filter((id) => !owned.has(id));
   const rows = [
-    ...prefs.followedEvents.map((ref) => ({ user_id: uid, kind: 'event', ref, notify: notify && !prefs.mutedEvents.includes(ref) })),
-    ...prefs.mutedEvents.filter((ref) => !prefs.followedEvents.includes(ref)).map((ref) => ({ user_id: uid, kind: 'event', ref, notify: false })),
+    ...eventIds.map((ref) => ({ user_id: uid, kind: 'event', ref, notify: notify && !prefs.mutedEvents.includes(ref) })),
+    ...prefs.mutedEvents.filter((ref) => !eventIds.includes(ref) && !owned.has(ref)).map((ref) => ({ user_id: uid, kind: 'event', ref, notify: false })),
+    ...[...owned].map((ref) => ({ user_id: uid, kind: 'owned', ref, notify: notify && !prefs.mutedEvents.includes(ref) })),
     ...prefs.followedTours.map((ref) => ({ user_id: uid, kind: 'tour', ref, notify })),
     ...prefs.followedArtists.map((ref) => ({ user_id: uid, kind: 'artist', ref, notify })),
   ];
@@ -72,4 +77,32 @@ export async function reportScheduled(token: string, keys: string[]): Promise<vo
   const c = sb();
   if (!c || !(await userId())) return;
   await c.from('device').update({ scheduled: keys, last_sync_at: new Date().toISOString() }).eq('push_token', token);
+}
+
+// ---------------------------------------------------------------------------
+// Koppelcode: apparaten met dezelfde code delen sterren, tickets en inschrijvingen
+// ---------------------------------------------------------------------------
+
+export interface RemotePrefs {
+  prefs: Record<string, unknown>;
+  updatedAt: string;
+}
+
+/** Haalt de gedeelde lijsten op; null als de code (nog) niet bestaat. */
+export async function syncGet(code: string): Promise<RemotePrefs | null> {
+  const c = sb();
+  if (!c) throw new Error('Supabase is niet ingesteld.');
+  const { data, error } = await c.rpc('sync_get', { p_code: code });
+  if (error) throw new Error(error.message);
+  const row = (data as { prefs: Record<string, unknown>; updated_at: string }[] | null)?.[0];
+  return row ? { prefs: row.prefs, updatedAt: row.updated_at } : null;
+}
+
+/** Slaat de gedeelde lijsten op; geeft het moment van opslaan terug. */
+export async function syncPut(code: string, prefs: Record<string, unknown>): Promise<string> {
+  const c = sb();
+  if (!c) throw new Error('Supabase is niet ingesteld.');
+  const { data, error } = await c.rpc('sync_put', { p_code: code, p_prefs: prefs });
+  if (error) throw new Error(error.message);
+  return String(data);
 }

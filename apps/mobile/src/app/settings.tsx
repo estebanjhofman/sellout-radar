@@ -9,6 +9,8 @@ import { SOURCE_KIND_NL, timeAgo } from '../lib/view';
 import { snapshotUrl, useData } from '../state/data';
 import { usePrefs } from '../state/prefs';
 import { Banner, Button, Card, Chip, KeyValue, SectionTitle } from '../ui/components';
+import { SyncCard } from '../ui/SyncCard';
+import { WebPushCard } from '../ui/WebPushCard';
 import { useTheme } from '../ui/theme';
 
 export default function Settings() {
@@ -41,9 +43,7 @@ export default function Settings() {
           />
         </View>
         {!notificationsSupported ? (
-          <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 8, lineHeight: 19 }}>
-            In de browser kan de app geen meldingen inplannen. Ze komen op je iPhone; hier zie je de aftelklok.
-          </Text>
+          <WebPushCard />
         ) : perm === 'denied' && s.notificationsEnabled ? (
           <Text style={{ color: t.down, fontSize: 13.5, marginTop: 8 }}>Meldingen staan uit in de iOS-instellingen voor Sellout Radar.</Text>
         ) : null}
@@ -103,6 +103,9 @@ export default function Settings() {
           <KeyValue k="Pushmeldingen bij wijzigingen" v={supabaseEnabled() ? 'aan (via de server)' : 'niet ingesteld'} />
         </View>
       </Card>
+
+      <SectionTitle>Synchroniseren</SectionTitle>
+      <SyncCard />
 
       <SectionTitle>Data</SectionTitle>
       <Card>

@@ -26,6 +26,7 @@ import { emptyResult, type Connector, type ConnectorResult } from '../connectors
 import type { Extractor } from '../extract/llm';
 import type { Fetcher } from '../http';
 import { sendExpoPush } from '../push/expo';
+import { isWebPushToken, sendWebPush } from '../push/web';
 import { planPushes, type EventInfo, type PushMessage } from '../push/plan';
 import { compileSeedDir } from '../seed/compile';
 import { emptyDelta, pruneState, serializeCatalog, type RunDelta, type ScorePoint } from '../state';
@@ -43,6 +44,8 @@ export interface RunDeps {
   connectors?: Connector[];
   sleep?: (ms: number) => Promise<void>;
   log?: (msg: string) => void;
+  /** Vervangt het versturen van meldingen in de browser (tests). */
+  sendWebPush?: typeof sendWebPush;
 }
 
 export interface RunOutput {
@@ -346,10 +349,31 @@ export async function runUpdate(cfg: Config, deps: RunDeps): Promise<RunOutput> 
           log(`  wacht ${Math.round(wait / 60000)} min tot ${at} (einde stille uren)`);
           await sleep(wait);
         }
-        const res = await sendExpoPush(deps.http, groups.get(at)!, cfg.keys.expo);
-        log(`  push: ${res.sent} verstuurd, ${res.failed} mislukt`);
-        if (res.invalidTokens.length) await deps.store.removePushTokens(res.invalidTokens).catch(() => undefined);
-        errors.push(...res.errors.slice(0, 3).map((e) => `push: ${e}`));
+        const group = groups.get(at)!;
+        // Apps (Expo) en de webversie (Web Push) apart versturen.
+        const onlyTokens = (keep: (t: string) => boolean) => group.map((m) => ({ ...m, tokens: m.tokens.filter(keep) })).filter((m) => m.tokens.length > 0);
+        const expoMsgs = onlyTokens((tk) => !isWebPushToken(tk));
+        const webMsgs = onlyTokens(isWebPushToken);
+        if (expoMsgs.length) {
+          const res = await sendExpoPush(deps.http, expoMsgs, cfg.keys.expo);
+          log(`  push (app): ${res.sent} verstuurd, ${res.failed} mislukt`);
+          if (res.invalidTokens.length) await deps.store.removePushTokens(res.invalidTokens).catch(() => undefined);
+          errors.push(...res.errors.slice(0, 3).map((e) => `push: ${e}`));
+        }
+        if (webMsgs.length) {
+          if (!cfg.keys.vapidPublic || !cfg.keys.vapidPrivate) {
+            log('  push (web): overgeslagen – VAPID-sleutels ontbreken (zie SETUP.md)');
+          } else {
+            const res = await (deps.sendWebPush ?? sendWebPush)(webMsgs, {
+              publicKey: cfg.keys.vapidPublic,
+              privateKey: cfg.keys.vapidPrivate,
+              subject: cfg.repoUrl ?? 'mailto:sellout-radar@users.noreply.github.com',
+            });
+            log(`  push (web): ${res.sent} verstuurd, ${res.failed} mislukt`);
+            if (res.invalidTokens.length) await deps.store.removePushTokens(res.invalidTokens).catch(() => undefined);
+            errors.push(...res.errors.slice(0, 3).map((e) => `push: ${e}`));
+          }
+        }
       }
     }
   }

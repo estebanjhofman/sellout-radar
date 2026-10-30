@@ -12,7 +12,7 @@ declare global {
 if (typeof window !== 'undefined') {
   globalThis.__SR_BASE__ = new URL('.', window.location.href).href;
   if (process.env.EXPO_PUBLIC_DEMO_ROOT_FIX === '1') {
-    const known = /^\/(event\/[^/]+|settings|accuracy|changes|radar)?\/?$/;
+    const known = /^\/(event\/[^/]+|settings|accuracy|changes|radar|uitverkocht|beschikbaar)?\/?$/;
     if (!known.test(window.location.pathname)) {
       try {
         window.history.replaceState(null, '', `/${window.location.search}${window.location.hash}`);

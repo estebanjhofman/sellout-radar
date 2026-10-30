@@ -13,6 +13,8 @@ export interface PushTarget {
   followedArtists: Set<string>;
   /** Volgen met meldingen uit. */
   mutedEvents: Set<string>;
+  /** Datums waarvoor de gebruiker al tickets heeft: wel wijzigingen, geen verkoopherinneringen. */
+  ownedEvents?: Set<string>;
   /** Meldingsleutels die het toestel zelf lokaal heeft ingepland. */
   scheduledKeys: Set<string>;
   lastSyncAt?: string;

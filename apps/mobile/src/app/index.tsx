@@ -1,12 +1,13 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { DateTime } from 'luxon';
-import { countdown, earliestInstant, eventScoreView, SCORE_KIND_LABEL, type SnapshotEvent } from '@sellout/core';
+import { countdown, earliestInstant, eventScoreView, SCORE_KIND_LABEL, SPEED_LABELS, type SnapshotEvent } from '@sellout/core';
+import { bucketize } from '../lib/buckets';
 import { cityNl, nextInfo, shortDate } from '../lib/view';
 import { registrationTargets } from '../lib/registered';
 import { useData } from '../state/data';
-import { registeredIds, usePrefs } from '../state/prefs';
+import { registeredIds, usePrefs, type OwnedInfo } from '../state/prefs';
 import { Banner, Card, ScorePill, SectionTitle, useNow } from '../ui/components';
 import { IconGear, IconList, IconTicket } from '../ui/icons';
 import { useTheme } from '../ui/theme';
@@ -23,13 +24,26 @@ export default function Home() {
   const t = useTheme();
   const now = useNow(30_000);
   const { snapshot, index, loading, error, staleWarning } = useData();
-  const { prefs, isFollowing, toggleOwned } = usePrefs();
+  const { prefs, isFollowing, toggleOwned, rememberOwned } = usePrefs();
   const nowIso = now.toISOString();
   const owned = new Set(prefs.ownedEvents ?? []);
 
-  const { tickets, registered, followed, radar } = useMemo(() => {
+  const { tickets, registered, followed, radar, soldout, available, ownedNow } = useMemo(() => {
     const evs = snapshot?.events ?? [];
-    const tickets = evs.filter((e) => owned.has(e.id)).sort((a, b) => (showStart(a) ?? Infinity) - (showStart(b) ?? Infinity));
+    // Mijn tickets: uit de data, en na de showdag uit de bewaarde gegevens (die blijven tot je ze weghaalt).
+    const inData = new Map(evs.filter((e) => owned.has(e.id)).map((e) => [e.id, e]));
+    const ownedNow: Record<string, OwnedInfo> = {};
+    for (const e of inData.values()) {
+      const v = index?.venues.get(e.venueId);
+      ownedNow[e.id] = { title: e.title, dateText: shortDate(e), place: v ? `${cityNl(v.city, v.country)} · ${v.name}` : '', start: showStart(e) };
+    }
+    const tickets = [...owned]
+      .map((id) => ({ id, event: inData.get(id), info: ownedNow[id] ?? prefs.ownedInfo?.[id] }))
+      .filter((x): x is { id: string; event: SnapshotEvent | undefined; info: OwnedInfo } => !!x.info)
+      .sort((a, b) => {
+        const past = (x: { info: OwnedInfo }) => (x.info.start !== null && x.info.start < now.getTime() ? 1 : 0);
+        return past(a) - past(b) || (a.info.start ?? Infinity) - (b.info.start ?? Infinity);
+      });
     // Ingeschreven: aftellen naar de verkoop waarvoor je ingeschreven staat (zonder tickets).
     const isReg = (id: string) => registeredIds(prefs.registered, id).length > 0;
     const registered = evs
@@ -48,20 +62,29 @@ export default function Home() {
         return { e, next, at };
       })
       .sort((a, b) => a.at - b.at || (showStart(a.e) ?? Infinity) - (showStart(b.e) ?? Infinity));
-    // Radar: aantallen per tabblad en de drukste datums die nog in de verkoop moeten.
-    let upcoming = 0;
-    const hot: { e: SnapshotEvent; score: number }[] = [];
-    for (const e of evs) {
-      const v = eventScoreView(e, index?.phasesByEvent.get(e.id) ?? [], nowIso);
-      if (v.stage === 'upcoming') {
-        upcoming++;
-        if (v.score.state === 'scored') hot.push({ e, score: v.score.value });
-      }
-    }
-    hot.sort((a, b) => b.score - a.score);
-    return { tickets, registered, followed, radar: { upcoming, onsale: evs.length - upcoming, hot: hot.slice(0, 3) } };
+    // Radar en de twee lijsten na de verkoop.
+    const b = index ? bucketize(evs, index, nowIso) : { upcoming: [], onsale: [], soldout: [], available: [] };
+    const hot = b.upcoming
+      .filter((r) => r.view.score.state === 'scored')
+      .sort((x, y) => y.view.score.value - x.view.score.value)
+      .slice(0, 3)
+      .map((r) => ({ e: r.event, score: r.view.score.value }));
+    return {
+      tickets,
+      registered,
+      followed,
+      ownedNow,
+      radar: { upcoming: b.upcoming.length, onsale: b.onsale.length, hot },
+      soldout: b.soldout,
+      available: b.available,
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snapshot, index, prefs, nowIso]);
+
+  // Gegevens van datums met tickets bewaren, voor na de showdag.
+  useEffect(() => {
+    if (Object.keys(ownedNow).length) rememberOwned(ownedNow);
+  }, [ownedNow, rememberOwned]);
 
   const header = (
     <Stack.Screen
@@ -93,37 +116,38 @@ export default function Home() {
   const open = (id: string) => router.push({ pathname: '/event/[id]', params: { id } });
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 48, maxWidth: 760, width: '100%', alignSelf: 'center' }}>
+    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 48, maxWidth: 1180, width: '100%', alignSelf: 'center' }}>
       {header}
       {staleWarning ? <Banner tone="warn">{staleWarning}</Banner> : null}
-      <Pressable
-        onPress={() => router.push('/radar')}
-        accessibilityRole="button"
-        accessibilityLabel="Open de radar"
-        style={({ pressed }) => ({ backgroundColor: t.card, borderRadius: 14, borderWidth: 1, borderColor: t.border, padding: 14, marginTop: 4, opacity: pressed ? 0.85 : 1 })}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: t.text, fontSize: 19, fontWeight: '800' }}>Radar</Text>
-            <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 2 }}>
-              {radar.upcoming} nog niet in de verkoop · {radar.onsale} al in de verkoop
-            </Text>
-          </View>
-        </View>
-        {radar.hot.length ? (
-          <View style={{ marginTop: 10, gap: 8 }}>
-            <Text style={{ color: t.muted, fontSize: 12, fontWeight: '700', letterSpacing: 0.4, textTransform: 'uppercase' }}>Drukst verwacht</Text>
-            {radar.hot.map(({ e, score }) => (
-              <View key={e.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <ScorePill score={score} size={30} />
-                <Text style={{ color: t.text, fontSize: 14, fontWeight: '600', flex: 1 }} numberOfLines={1}>
-                  {e.title} <Text style={{ color: t.muted, fontWeight: '400' }}>· {shortDate(e)}</Text>
-                </Text>
-              </View>
-            ))}
-          </View>
-        ) : null}
-      </Pressable>
+      {/* Drie tegels naast elkaar (op een smal scherm onder elkaar). */}
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 4 }}>
+        <Tile
+          title="Radar"
+          sub={`${radar.upcoming} nog niet in de verkoop · ${radar.onsale} in de verkoop`}
+          label="Drukst verwacht"
+          onPress={() => router.push('/radar')}
+          rows={radar.hot.map(({ e, score }) => ({ id: e.id, score, title: e.title, sub: shortDate(e) }))}
+        />
+        <Tile
+          title="Uitverkocht"
+          sub={`Verkoop voorbij · top ${soldout.length}, snelst eerst`}
+          label="Snelst uitverkocht"
+          onPress={() => router.push('/uitverkocht')}
+          rows={soldout.slice(0, 3).map((r) => ({
+            id: r.event.id,
+            score: r.event.rushFinal?.value ?? 100,
+            title: r.event.title,
+            sub: r.event.rushFinal?.outcome?.speed ? SPEED_LABELS[r.event.rushFinal.outcome.speed] : shortDate(r.event),
+          }))}
+        />
+        <Tile
+          title="Nog beschikbaar"
+          sub={`Verkoop voorbij, niet uitverkocht · top ${available.length}`}
+          label="Hoogste uitverkoopkans"
+          onPress={() => router.push('/beschikbaar')}
+          rows={available.slice(0, 3).map((r) => ({ id: r.event.id, score: r.view.score.value, title: r.event.title, sub: shortDate(r.event) }))}
+        />
+      </View>
 
       <SectionTitle>Mijn tickets</SectionTitle>
       <Card style={{ paddingVertical: 6 }}>
@@ -132,20 +156,20 @@ export default function Home() {
             Nog geen tickets gemarkeerd. Tik bij een datum op het ticket-icoon of op "Ik heb tickets" op de detailpagina.
           </Text>
         ) : null}
-        {tickets.map((e) => {
-          const start = showStart(e);
+        {tickets.map(({ id, event: e, info }) => {
+          const start = info.start;
           const left = start && start > now.getTime() ? `over ${countdown(DateTime.fromMillis(start), DateTime.fromJSDate(now))}` : start ? 'geweest' : null;
           return (
-            <Pressable key={e.id} onPress={() => open(e.id)} style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 9, opacity: pressed ? 0.7 : 1 })}>
+            <Pressable key={id} disabled={!e} onPress={() => open(id)} style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 9, opacity: pressed ? 0.7 : e ? 1 : 0.6 })}>
               <IconTicket color={t.up} filled size={24} />
               <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }} numberOfLines={1}>{e.title}</Text>
-                <Text style={{ color: t.muted, fontSize: 13 }} numberOfLines={1}>{shortDate(e)} · {place(e)}</Text>
-                {e.status === 'cancelled' ? <Text style={{ color: t.down, fontSize: 13, fontWeight: '700' }}>Geannuleerd</Text> : null}
-                {e.status === 'postponed' ? <Text style={{ color: t.down, fontSize: 13, fontWeight: '700' }}>Uitgesteld</Text> : null}
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }} numberOfLines={1}>{info.title}</Text>
+                <Text style={{ color: t.muted, fontSize: 13 }} numberOfLines={1}>{info.dateText} · {info.place}</Text>
+                {e?.status === 'cancelled' ? <Text style={{ color: t.down, fontSize: 13, fontWeight: '700' }}>Geannuleerd</Text> : null}
+                {e?.status === 'postponed' ? <Text style={{ color: t.down, fontSize: 13, fontWeight: '700' }}>Uitgesteld</Text> : null}
               </View>
               {left ? <Text style={{ color: t.accent, fontSize: 13, fontWeight: '800', fontVariant: ['tabular-nums'] }}>{left}</Text> : null}
-              <Pressable onPress={() => toggleOwned(e.id)} hitSlop={8} accessibilityRole="button" accessibilityLabel="Toch geen tickets">
+              <Pressable onPress={() => toggleOwned(id)} hitSlop={8} accessibilityRole="button" accessibilityLabel="Toch geen tickets">
                 <Text style={{ color: t.faint, fontSize: 18 }}>×</Text>
               </Pressable>
             </Pressable>
@@ -215,5 +239,37 @@ export default function Home() {
         })}
       </Card>
     </ScrollView>
+  );
+}
+
+/** Tegel op de startpagina: titel, korte uitleg en de bovenste drie datums. */
+function Tile({ title, sub, label, rows, onPress }: { title: string; sub: string; label: string; rows: { id: string; score: number; title: string; sub: string }[]; onPress: () => void }) {
+  const t = useTheme();
+  let body: ReactNode = <Text style={{ color: t.muted, fontSize: 13, marginTop: 10 }}>Nog niets.</Text>;
+  if (rows.length)
+    body = (
+      <View style={{ marginTop: 10, gap: 8 }}>
+        <Text style={{ color: t.muted, fontSize: 12, fontWeight: '700', letterSpacing: 0.4, textTransform: 'uppercase' }}>{label}</Text>
+        {rows.map((r) => (
+          <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <ScorePill score={r.score} size={30} />
+            <Text style={{ color: t.text, fontSize: 14, fontWeight: '600', flex: 1 }} numberOfLines={1}>
+              {r.title} <Text style={{ color: t.muted, fontWeight: '400' }}>· {r.sub}</Text>
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Open ${title}`}
+      style={({ pressed }) => ({ flexGrow: 1, flexBasis: 300, minWidth: 0, backgroundColor: t.card, borderRadius: 14, borderWidth: 1, borderColor: t.border, padding: 14, opacity: pressed ? 0.85 : 1 })}
+    >
+      <Text style={{ color: t.text, fontSize: 19, fontWeight: '800' }}>{title}</Text>
+      <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 2 }}>{sub}</Text>
+      {body}
+    </Pressable>
   );
 }

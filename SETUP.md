@@ -64,13 +64,26 @@ Onder **Variables** (zelfde scherm, tabblad *Variables*) kun je instellen:
 Nodig voor pushmeldingen vanaf de server (bijv. "extra show toegevoegd", "nieuwe presale", "uitverkocht") en om op meerdere apparaten dezelfde lijst met gevolgde evenementen te hebben.
 
 1. Maak op supabase.com een nieuw project (gratis plan). Kies een regio in Europa.
-2. Open **SQL Editor**, plak de inhoud van `supabase/migrations/0001_schema.sql` en klik op **Run**. Doe daarna hetzelfde met `supabase/migrations/0002_twee_scores.sql` (de twee scores). Had je Supabase al ingericht met een eerdere versie, voer dan alleen `0002_twee_scores.sql` uit; bestaande gegevens blijven staan.
+2. Open **SQL Editor**, plak de inhoud van `supabase/migrations/0001_schema.sql` en klik op **Run**. Doe daarna hetzelfde met `supabase/migrations/0002_twee_scores.sql` (de twee scores) en `supabase/migrations/0003_koppelcode_en_webmeldingen.sql` (koppelcode en meldingen in de browser). Had je Supabase al ingericht met een eerdere versie, voer dan alleen de bestanden uit die je nog niet had; bestaande gegevens blijven staan.
 3. Ga naar **Authentication → Sign In / Providers** en zet **anonieme aanmeldingen** aan. De app meldt zich zo aan zonder e-mailadres of wachtwoord.
 4. Ga naar **Project Settings → API keys** en noteer:
    - de **Project URL**;
    - de **anon**- of **publishable**-sleutel (mag openbaar; de toegangsregels in de database beschermen de gegevens);
    - de **service_role**- of **secret**-sleutel (**geheim**: alleen in GitHub zetten, nooit in de app).
 5. Zet in GitHub de secrets `SUPABASE_URL` en `SUPABASE_SERVICE_ROLE_KEY`.
+
+### Telefoon en computer koppelen
+
+Ga in de app naar **Instellingen → Synchroniseren** en tik op **Maak een koppelcode**. Vul die code op je andere apparaat in bij **Al een code op je andere apparaat?**. Daarna delen ze je sterren, tickets en inschrijvingen; instellingen zoals stille uren blijven per apparaat. Houd de code voor jezelf.
+
+### Meldingen in de webversie (ook op je iPhone)
+
+1. Zet het sleutelpaar voor meldingen in GitHub: de **variable** `EXPO_PUBLIC_VAPID_PUBLIC_KEY` en de **secret** `VAPID_PRIVATE_KEY`. Een nieuw paar maak je met `npx web-push generate-vapid-keys`.
+2. Start **Actions → Webversie publiceren → Run workflow**.
+3. Open de site op je iPhone in Safari, kies **Deel → Zet op beginscherm** en open hem vanaf je beginscherm (iOS 16.4 of nieuwer).
+4. Ga naar **Instellingen** en tik op **Meldingen aanzetten op dit apparaat**.
+
+De server verstuurt de meldingen bij elke update (rond 07:00, 13:00 en 19:00). Een herinnering komt daarom soms eerder dan je instelling, nooit later. Datums waarvoor je tickets hebt, krijgen geen verkoopherinneringen meer, wel meldingen bij wijzigingen.
 
 Zonder Supabase bewaart de updater zijn geheugen in `data/state/` in de repository. De app werkt dan ook, maar alleen met herinneringen die de iPhone zelf inplant; meldingen over wijzigingen komen dan pas binnen als de app de nieuwe gegevens ophaalt.
 

@@ -42,6 +42,7 @@ jobs:
         env:
           EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+          EXPO_PUBLIC_VAPID_PUBLIC_KEY: ${{ vars.EXPO_PUBLIC_VAPID_PUBLIC_KEY }}
         run: |
           # Een gebruikerssite (<naam>.github.io) staat in de hoofdmap, een projectsite in /<repository>.
           REPO="${GITHUB_REPOSITORY#*/}"

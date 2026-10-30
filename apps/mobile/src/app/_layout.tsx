@@ -14,6 +14,7 @@ import {
   syncLocalNotifications,
 } from '../lib/notify';
 import { planReminders } from '../lib/plan';
+import { refreshWebPush } from '../lib/webpush';
 import { writeJson } from '../lib/storage';
 import { registerDevice, reportScheduled, supabaseEnabled } from '../lib/supabase';
 import { DataProvider, useData } from '../state/data';
@@ -24,6 +25,11 @@ import { useTheme } from '../ui/theme';
 function NotificationManager() {
   const { snapshot } = useData();
   const { prefs, ready } = usePrefs();
+
+  // Webversie: een bestaand meldingsabonnement bij het openen opnieuw aanmelden.
+  useEffect(() => {
+    if (Platform.OS === 'web') void refreshWebPush().catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     configureNotifications();
@@ -91,6 +97,8 @@ function AppStack() {
       >
         <Stack.Screen name="index" options={{ title: 'Sellout Radar', ...(Platform.OS === 'web' ? { headerLeft: () => null } : {}) }} />
         <Stack.Screen name="radar" options={{ title: 'Radar' }} />
+        <Stack.Screen name="uitverkocht" options={{ title: 'Uitverkocht' }} />
+        <Stack.Screen name="beschikbaar" options={{ title: 'Nog beschikbaar' }} />
         <Stack.Screen name="event/[id]" options={{ title: '' }} />
         <Stack.Screen name="settings" options={{ title: 'Instellingen' }} />
         <Stack.Screen name="accuracy" options={{ title: 'Nauwkeurigheid' }} />
