@@ -1,0 +1,49 @@
+{
+  "artist": {
+    "id": "the-traitors-stage",
+    "name": "The Traitors – Acts of Betrayal",
+    "genres": [
+      "theater"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "the-traitors-acts-of-betrayal",
+    "name": "The Traitors – Acts of Betrayal",
+    "leg": "West End",
+    "announcedAt": "2026-06-16",
+    "verification": "official"
+  },
+  "type": "theatre",
+  "sources": {
+    "tw": {
+      "name": "Theatre Weekly",
+      "kind": "news",
+      "url": "https://theatreweekly.com/tickets-go-on-sale-as-the-traitors-acts-of-betrayal-to-premiere-in-the-west-end-in-2027/",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "gillian-lynne": {
+      "name": "Gillian Lynne Theatre",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London"
+    }
+  },
+  "events": [
+    {
+      "venue": "gillian-lynne",
+      "date": "2027-05-11",
+      "title": "The Traitors – Acts of Betrayal (vanaf 11 mei 2027)",
+      "status": "onsale",
+      "sources": [
+        "tw"
+      ],
+      "notes": [
+        "Eerste voorstelling (preview) op 11 mei 2027; officiële première op 8 juni 2027.",
+        "Theatre Weekly (16 juni 2026): \"Tickets have gone on sale\"; de precieze verkoopstart staat er niet bij."
+      ]
+    }
+  ]
+}

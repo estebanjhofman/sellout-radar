@@ -1,0 +1,175 @@
+{
+  "artist": {
+    "id": "enhypen",
+    "name": "ENHYPEN",
+    "genres": [
+      "k-pop"
+    ],
+    "fandom": "organized"
+  },
+  "tour": {
+    "id": "enhypen-blood-saga-2027",
+    "name": "ENHYPEN WORLD TOUR 'BLOOD SAGA'",
+    "leg": "Europa en VK 2027",
+    "announcedAt": "2026-04-14",
+    "verification": "official"
+  },
+  "type": "concert",
+  "sources": {
+    "bww": {
+      "name": "BroadwayWorld",
+      "kind": "news",
+      "url": "https://www.broadwayworld.com/article/ENHYPEN-Reveal-Venues-and-Ticket-Information-for-Blood-Saga-World-Tour-20260414",
+      "checked": "2026-10-30"
+    },
+    "soompi27": {
+      "name": "Soompi: 2027 K-Pop Tour Masterlist",
+      "kind": "news",
+      "url": "https://www.soompi.com/article/1880039wpp/2027-k-pop-tour-masterlist-concerts-fan-meetings-and-more",
+      "checked": "2026-10-30",
+      "note": "Lijst bijgewerkt op 29 oktober 2026."
+    }
+  },
+  "venues": {
+    "unipol-dome": {
+      "name": "Unipol Dome",
+      "city": "Milan",
+      "country": "IT",
+      "tz": "Europe/Rome"
+    },
+    "la-defense-arena": {
+      "name": "La Défense Arena",
+      "city": "Paris",
+      "country": "FR",
+      "tz": "Europe/Paris"
+    },
+    "ziggo-dome": {
+      "name": "Ziggo Dome",
+      "city": "Amsterdam",
+      "country": "NL",
+      "tz": "Europe/Amsterdam",
+      "lat": 52.3134,
+      "lon": 4.9372
+    },
+    "uber-arena": {
+      "name": "Uber Arena",
+      "city": "Berlin",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "the-o2": {
+      "name": "The O2",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London"
+    }
+  },
+  "events": [
+    {
+      "venue": "unipol-dome",
+      "date": "2027-02-24",
+      "status": "onsale",
+      "sources": [
+        "bww",
+        "soompi27"
+      ]
+    },
+    {
+      "venue": "la-defense-arena",
+      "date": "2027-02-27",
+      "status": "onsale",
+      "sources": [
+        "bww",
+        "soompi27"
+      ]
+    },
+    {
+      "venue": "ziggo-dome",
+      "date": "2027-03-02",
+      "status": "onsale",
+      "sources": [
+        "bww",
+        "soompi27"
+      ]
+    },
+    {
+      "venue": "uber-arena",
+      "date": "2027-03-05",
+      "status": "onsale",
+      "sources": [
+        "bww",
+        "soompi27"
+      ]
+    },
+    {
+      "venue": "uber-arena",
+      "date": "2027-03-06",
+      "sources": [
+        "soompi27"
+      ],
+      "addedShow": true,
+      "addedShowReason": "Niet in de lijst bij de verkoopstart (BroadwayWorld, april 2026); wel in de lijst van Soompi (29 oktober 2026).",
+      "notes": [
+        "Verkoopdatum van deze extra show staat niet in de bronnen."
+      ]
+    },
+    {
+      "venue": "the-o2",
+      "date": "2027-03-08",
+      "sources": [
+        "soompi27"
+      ],
+      "addedShow": true,
+      "addedShowReason": "Niet in de lijst bij de verkoopstart (BroadwayWorld, april 2026); wel in de lijst van Soompi (29 oktober 2026).",
+      "notes": [
+        "Verkoopdatum van deze extra show staat niet in de bronnen."
+      ]
+    },
+    {
+      "venue": "the-o2",
+      "date": "2027-03-09",
+      "status": "onsale",
+      "sources": [
+        "bww",
+        "soompi27"
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "engene",
+      "kind": "presale",
+      "type": "fanclub",
+      "name": "Engene Membership-presale",
+      "events": [
+        "2027-02-24@unipol-dome",
+        "2027-02-27@la-defense-arena",
+        "2027-03-02@ziggo-dome",
+        "2027-03-05@uber-arena",
+        "2027-03-09@the-o2"
+      ],
+      "start": "2026-04-22T10:00",
+      "end": "2026-04-23T22:00",
+      "conditions": "Alleen met een Engene Membership.",
+      "sources": [
+        "bww"
+      ]
+    },
+    {
+      "key": "general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": [
+        "2027-02-24@unipol-dome",
+        "2027-02-27@la-defense-arena",
+        "2027-03-02@ziggo-dome",
+        "2027-03-05@uber-arena",
+        "2027-03-09@the-o2"
+      ],
+      "start": "2026-04-24T10:00",
+      "sources": [
+        "bww"
+      ]
+    }
+  ]
+}

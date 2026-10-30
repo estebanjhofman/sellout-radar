@@ -1,0 +1,500 @@
+{
+  "artist": {
+    "id": "bruce-dickinson",
+    "name": "Bruce Dickinson",
+    "genres": [
+      "metal"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "bruce-dickinson-psychogod-2027",
+    "name": "PsychoGod Tour 2027",
+    "leg": "Europa",
+    "announcedAt": "2026-10-27",
+    "verification": "official"
+  },
+  "type": "concert",
+  "sources": {
+    "blabbermouth": {
+      "name": "Blabbermouth",
+      "kind": "news",
+      "url": "https://blabbermouth.net/news/bruce-dickinson-announces-2027-psychogod-european-tour",
+      "checked": "2026-10-30"
+    },
+    "louder": {
+      "name": "Louder",
+      "kind": "news",
+      "url": "https://loudersound.com/news/iron-maiden-bruce-dickinson-announces-european-tour-2027",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "ulster-hall-belfast": {
+      "name": "Ulster Hall",
+      "city": "Belfast",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "the-academy-dublin": {
+      "name": "The Academy",
+      "city": "Dublin",
+      "country": "IE",
+      "tz": "Europe/Dublin"
+    },
+    "alcatraz-milan": {
+      "name": "Alcatraz",
+      "city": "Milan",
+      "country": "IT",
+      "tz": "Europe/Rome"
+    },
+    "volkshaus-zurich": {
+      "name": "Volkshaus",
+      "city": "Zurich",
+      "country": "CH",
+      "tz": "Europe/Zurich"
+    },
+    "src-salata-zagreb": {
+      "name": "SRC Šalata",
+      "city": "Zagreb",
+      "country": "HR",
+      "tz": "Europe/Zagreb"
+    },
+    "luka-beograd-belgrade": {
+      "name": "Luka Beograd",
+      "city": "Belgrade",
+      "country": "RS",
+      "tz": "Europe/Belgrade"
+    },
+    "vidas-art-arena-sofia": {
+      "name": "Vidas Art Arena",
+      "city": "Sofia",
+      "country": "BG",
+      "tz": "Europe/Sofia"
+    },
+    "bonus-parkorman-istanbul": {
+      "name": "Bonus Parkorman",
+      "city": "Istanbul",
+      "country": "TR",
+      "tz": "Europe/Istanbul"
+    },
+    "den-atelier-luxembourg": {
+      "name": "Den Atelier",
+      "city": "Luxembourg",
+      "country": "LU",
+      "tz": "Europe/Luxembourg"
+    },
+    "stodola-warsaw": {
+      "name": "Stodoła",
+      "city": "Warsaw",
+      "country": "PL",
+      "tz": "Europe/Warsaw"
+    },
+    "black-box-jaahalli-helsinki": {
+      "name": "Black Box Jäähalli",
+      "city": "Helsinki",
+      "country": "FI",
+      "tz": "Europe/Helsinki"
+    },
+    "annexet-stockholm": {
+      "name": "Annexet",
+      "city": "Stockholm",
+      "country": "SE",
+      "tz": "Europe/Stockholm"
+    },
+    "sentrum-scene-oslo": {
+      "name": "Sentrum Scene",
+      "city": "Oslo",
+      "country": "NO",
+      "tz": "Europe/Oslo"
+    },
+    "store-vega-copenhagen": {
+      "name": "Store Vega",
+      "city": "Copenhagen",
+      "country": "DK",
+      "tz": "Europe/Copenhagen"
+    },
+    "inselpark-arena-hamburg": {
+      "name": "Inselpark Arena",
+      "city": "Hamburg",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "ubereats-music-hall-berlin": {
+      "name": "UberEats Music Hall",
+      "city": "Berlin",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "zenith-munich": {
+      "name": "Zenith",
+      "city": "Munich",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "mitsubishi-electric-halle-düsseldorf": {
+      "name": "Mitsubishi Electric Halle",
+      "city": "Düsseldorf",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "afas-live-amsterdam": {
+      "name": "AFAS Live",
+      "city": "Amsterdam",
+      "country": "NL",
+      "tz": "Europe/Amsterdam"
+    },
+    "the-engine-shed-lincoln": {
+      "name": "The Engine Shed",
+      "city": "Lincoln",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "o2-academy-glasgow": {
+      "name": "O2 Academy",
+      "city": "Glasgow",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "o2-apollo-manchester": {
+      "name": "O2 Apollo",
+      "city": "Manchester",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "o2-academy-bristol": {
+      "name": "O2 Academy",
+      "city": "Bristol",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "eventim-apollo-london": {
+      "name": "Eventim Apollo",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "o2-academy-birmingham": {
+      "name": "O2 Academy",
+      "city": "Birmingham",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "le-radiant-bellevue-lyon": {
+      "name": "Le Radiant-Bellevue",
+      "city": "Lyon",
+      "country": "FR",
+      "tz": "Europe/Paris"
+    },
+    "le-bikini-toulouse": {
+      "name": "Le Bikini",
+      "city": "Toulouse",
+      "country": "FR",
+      "tz": "Europe/Paris"
+    },
+    "lolympia-paris": {
+      "name": "L'Olympia",
+      "city": "Paris",
+      "country": "FR",
+      "tz": "Europe/Paris"
+    }
+  },
+  "events": [
+    {
+      "venue": "ulster-hall-belfast",
+      "date": "2027-06-14",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "the-academy-dublin",
+      "date": "2027-06-16",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "alcatraz-milan",
+      "date": "2027-06-22",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "volkshaus-zurich",
+      "date": "2027-06-23",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "src-salata-zagreb",
+      "date": "2027-06-25",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "luka-beograd-belgrade",
+      "date": "2027-06-26",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "vidas-art-arena-sofia",
+      "date": "2027-06-28",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "bonus-parkorman-istanbul",
+      "date": "2027-06-29",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "den-atelier-luxembourg",
+      "date": "2027-07-07",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ]
+    },
+    {
+      "venue": "stodola-warsaw",
+      "date": "2027-11-10",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "black-box-jaahalli-helsinki",
+      "date": "2027-11-12",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "annexet-stockholm",
+      "date": "2027-11-14",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "sentrum-scene-oslo",
+      "date": "2027-11-16",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "store-vega-copenhagen",
+      "date": "2027-11-17",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "inselpark-arena-hamburg",
+      "date": "2027-11-19",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "ubereats-music-hall-berlin",
+      "date": "2027-11-20",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "zenith-munich",
+      "date": "2027-11-22",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "mitsubishi-electric-halle-düsseldorf",
+      "date": "2027-11-24",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "afas-live-amsterdam",
+      "date": "2027-11-25",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "the-engine-shed-lincoln",
+      "date": "2027-11-27",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "o2-academy-glasgow",
+      "date": "2027-11-28",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "o2-apollo-manchester",
+      "date": "2027-11-30",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "o2-academy-bristol",
+      "date": "2027-12-01",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "eventim-apollo-london",
+      "date": "2027-12-03",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "o2-academy-birmingham",
+      "date": "2027-12-04",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "le-radiant-bellevue-lyon",
+      "date": "2027-12-07",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "le-bikini-toulouse",
+      "date": "2027-12-08",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    },
+    {
+      "venue": "lolympia-paris",
+      "date": "2027-12-10",
+      "sources": [
+        "blabbermouth",
+        "louder"
+      ],
+      "notes": [
+        "Voorprogramma: Evergrey."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": "all",
+      "start": "2026-10-30",
+      "notes": [
+        "Louder: \"Tickets go on sale on Friday, October 30\"; het tijdstip staat er niet bij."
+      ],
+      "sources": [
+        "louder"
+      ]
+    }
+  ]
+}

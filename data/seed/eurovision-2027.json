@@ -1,0 +1,98 @@
+{
+  "artist": {
+    "id": "eurovision",
+    "name": "Eurovisie Songfestival",
+    "aliases": [
+      "Eurovision Song Contest",
+      "ESC"
+    ],
+    "genres": [
+      "eurovisie"
+    ],
+    "fandom": "organized"
+  },
+  "tour": {
+    "id": "eurovision-2027",
+    "name": "Eurovisie Songfestival 2027",
+    "leg": "Burgas",
+    "verification": "official"
+  },
+  "type": "other",
+  "sources": {
+    "ebu": {
+      "name": "Eurovision.com: FAQ Burgas 2027",
+      "kind": "promoter",
+      "url": "https://www.eurovision.com/newsroom/frequently-asked-questions/faqs-burgas-2027/",
+      "checked": "2026-10-30"
+    },
+    "esw": {
+      "name": "Eurovisionworld",
+      "kind": "fansite",
+      "url": "https://eurovisionworld.com/esc/eurovision-2027-will-be-held-in-burgas-final-on-15-may",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "arena-burgas": {
+      "name": "Arena Burgas",
+      "city": "Burgas",
+      "country": "BG",
+      "tz": "Europe/Sofia"
+    }
+  },
+  "events": [
+    {
+      "venue": "arena-burgas",
+      "date": "2027-05-11",
+      "time": "22:00",
+      "title": "Eurovisie Songfestival 2027 · Eerste halve finale",
+      "sources": [
+        "ebu",
+        "esw"
+      ]
+    },
+    {
+      "venue": "arena-burgas",
+      "date": "2027-05-13",
+      "time": "22:00",
+      "title": "Eurovisie Songfestival 2027 · Tweede halve finale",
+      "sources": [
+        "ebu",
+        "esw"
+      ]
+    },
+    {
+      "venue": "arena-burgas",
+      "date": "2027-05-15",
+      "time": "22:00",
+      "title": "Eurovisie Songfestival 2027 · Finale",
+      "sources": [
+        "ebu",
+        "esw"
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "sale",
+      "kind": "general_sale",
+      "name": "Kaartverkoop",
+      "events": "all",
+      "start": null,
+      "whereToRegister": "eurovision.com (Eurofan-account)",
+      "conditions": "Alleen met een (gratis) Eurofan-account op eurovision.com kun je kaarten kopen, en alleen via de officiële kanalen die de EBU bekendmaakt.",
+      "notes": [
+        "Eurovisionworld verwacht de verkoop eind 2026; een datum is er nog niet.",
+        "Ook voor de previewshows vóór elke liveshow komen kaarten in de verkoop."
+      ],
+      "sources": [
+        "ebu",
+        "esw"
+      ]
+    }
+  ],
+  "notes": [
+    "Aanvang 21:00 Nederlandse tijd (Eurovisionworld); de EBU noemt nog geen tijden.",
+    "De capaciteit hangt af van de opstelling (EBU); Eurovisionworld noemt tot 15.000 bezoekers bij concerten."
+  ]
+}

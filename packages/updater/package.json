@@ -1,0 +1,30 @@
+{
+  "name": "@sellout/updater",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Updater: haalt bronnen op, bepaalt verkoopfases en scores en schrijft het snapshot dat de app leest.",
+  "scripts": {
+    "update": "tsx src/cli.ts run",
+    "seed:check": "tsx src/cli.ts seed-check",
+    "snapshot": "tsx src/cli.ts snapshot",
+    "calibrate": "tsx src/cli.ts calibrate",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "@sellout/core": "0.1.0",
+    "@supabase/supabase-js": "^2.118.0",
+    "fast-xml-parser": "^5.11.2",
+    "luxon": "^3.7.2",
+    "node-html-parser": "^9.0.5"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.7.6",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

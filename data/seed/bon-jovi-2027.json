@@ -1,0 +1,280 @@
+{
+  "artist": {
+    "id": "bon-jovi",
+    "name": "Bon Jovi",
+    "genres": [
+      "rock"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "bon-jovi-forever-2027",
+    "name": "Forever Tour",
+    "leg": "2027",
+    "announcedAt": "2026-10-19",
+    "soldOutElsewhere": [
+      {
+        "city": "New York",
+        "country": "US",
+        "count": 9,
+        "sources": [
+          "musicUniverse"
+        ]
+      },
+      {
+        "city": "London",
+        "country": "GB",
+        "count": 3,
+        "capacity": 90000,
+        "sources": [
+          "musicUniverse",
+          "wikiStadiums"
+        ]
+      },
+      {
+        "city": "Edinburgh",
+        "country": "GB",
+        "count": 1,
+        "sources": [
+          "musicUniverse"
+        ]
+      },
+      {
+        "city": "Dublin",
+        "country": "IE",
+        "count": 1,
+        "sources": [
+          "musicUniverse"
+        ]
+      }
+    ],
+    "verification": "official"
+  },
+  "type": "concert",
+  "sources": {
+    "seatgeek": {
+      "name": "SeatGeek",
+      "kind": "news",
+      "url": "https://seatgeek.ca/blog/bon-jovi-forever-tour-2027-dates-schedule-presales-tickets-and-what-to-expect",
+      "checked": "2026-10-29"
+    },
+    "musicUniverse": {
+      "name": "The Music Universe",
+      "kind": "news",
+      "url": "https://themusicuniverse.com/bon-jovi-reveals-global-2027-forever-tour/",
+      "checked": "2026-10-29"
+    },
+    "wikiStadiums": {
+      "name": "Wikipedia: List of European stadiums by capacity",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity",
+      "checked": "2026-10-29T21:20:00Z",
+      "note": "Sportcapaciteit; de concertopstelling kan afwijken."
+    }
+  },
+  "venues": {
+    "marvel-stadium": {
+      "name": "Marvel Stadium",
+      "city": "Melbourne",
+      "country": "AU",
+      "tz": "Australia/Melbourne"
+    },
+    "accor-stadium": {
+      "name": "Accor Stadium",
+      "city": "Sydney",
+      "country": "AU",
+      "tz": "Australia/Sydney",
+      "outdoor": true
+    },
+    "bst-hyde-park": {
+      "name": "BST Hyde Park",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London",
+      "outdoor": true
+    },
+    "metlife-stadium": {
+      "name": "MetLife Stadium",
+      "city": "East Rutherford",
+      "country": "US",
+      "tz": "America/New_York",
+      "outdoor": true
+    },
+    "soldier-field": {
+      "name": "Soldier Field",
+      "city": "Chicago",
+      "country": "US",
+      "tz": "America/Chicago",
+      "outdoor": true
+    },
+    "gillette-stadium": {
+      "name": "Gillette Stadium",
+      "city": "Foxborough",
+      "country": "US",
+      "tz": "America/New_York",
+      "outdoor": true
+    },
+    "rogers-stadium": {
+      "name": "Rogers Stadium",
+      "city": "Toronto",
+      "country": "CA",
+      "tz": "America/Toronto",
+      "outdoor": true
+    }
+  },
+  "events": [
+    {
+      "venue": "marvel-stadium",
+      "date": "2027-03-04",
+      "sources": [
+        "musicUniverse",
+        "seatgeek"
+      ],
+      "notes": [
+        "Verkoopinformatie voor Australië nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."
+      ]
+    },
+    {
+      "venue": "accor-stadium",
+      "date": "2027-03-11",
+      "sources": [
+        "musicUniverse",
+        "seatgeek"
+      ],
+      "notes": [
+        "Verkoopinformatie voor Australië nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."
+      ]
+    },
+    {
+      "venue": "bst-hyde-park",
+      "date": "2027-06-24",
+      "sources": [
+        "musicUniverse",
+        "seatgeek"
+      ],
+      "notes": [
+        "Verkoopinformatie voor het VK nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."
+      ]
+    },
+    {
+      "venue": "metlife-stadium",
+      "date": "2027-07-15",
+      "status": "onsale",
+      "sources": [
+        "musicUniverse",
+        "seatgeek"
+      ],
+      "notes": [
+        "Thuiswedstrijd: Bon Jovi komt uit New Jersey."
+      ]
+    },
+    {
+      "venue": "soldier-field",
+      "date": "2027-07-21",
+      "status": "onsale",
+      "sources": [
+        "musicUniverse",
+        "seatgeek"
+      ]
+    },
+    {
+      "venue": "gillette-stadium",
+      "date": "2027-07-28",
+      "status": "onsale",
+      "sources": [
+        "musicUniverse",
+        "seatgeek"
+      ]
+    },
+    {
+      "venue": "rogers-stadium",
+      "date": "2027-08-04",
+      "sources": [
+        "seatgeek"
+      ],
+      "notes": [
+        "Ontbreekt in de datumlijst van The Music Universe; wel genoemd door SeatGeek."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "na-artist-presale",
+      "kind": "presale",
+      "type": "artist",
+      "name": "Artist presale",
+      "region": "US",
+      "events": {
+        "countries": [
+          "US"
+        ]
+      },
+      "start": "2026-10-28T10:00",
+      "end": "2026-10-29T22:00",
+      "whereToRegister": "bonjovi.com",
+      "notes": [
+        "The Music Universe noemt 'Tuesday, October 28th', maar 28 oktober 2026 is een woensdag. SeatGeek noemt woensdag 28 oktober; die datum is aangehouden."
+      ],
+      "sources": [
+        "seatgeek"
+      ]
+    },
+    {
+      "key": "na-livenation-presale",
+      "kind": "presale",
+      "type": "livenation",
+      "name": "Live Nation-presale",
+      "region": "US",
+      "events": {
+        "countries": [
+          "US"
+        ]
+      },
+      "start": "2026-10-29T10:00",
+      "end": "2026-10-29T22:00",
+      "requiresCode": false,
+      "conditions": "Voor (gratis) Live Nation All Access-leden; volgens de eventpagina's geen aparte code nodig.",
+      "sources": [
+        "seatgeek"
+      ]
+    },
+    {
+      "key": "na-venue-presale",
+      "kind": "presale",
+      "type": "venue",
+      "name": "Venue-presale",
+      "region": "US",
+      "events": {
+        "countries": [
+          "US"
+        ]
+      },
+      "start": "2026-10-29T10:00",
+      "end": "2026-10-29T22:00",
+      "conditions": "Toegang verschilt per stadion (nieuwsbrief, abonnement of code).",
+      "sources": [
+        "seatgeek"
+      ]
+    },
+    {
+      "key": "na-general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "region": "NA",
+      "events": {
+        "countries": [
+          "US",
+          "CA"
+        ]
+      },
+      "start": "2026-10-30T10:00",
+      "notes": [
+        "Voor Toronto kunnen beschikbaarheid en presales afwijken."
+      ],
+      "sources": [
+        "seatgeek",
+        "musicUniverse"
+      ]
+    }
+  ]
+}

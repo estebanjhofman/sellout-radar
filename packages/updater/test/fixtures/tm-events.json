@@ -1,0 +1,52 @@
+{
+  "_comment": "Testdata in de vorm van de Ticketmaster Discovery API v2. De velden volgen de API; de presale 'Testpresale (fictief)' en artiest 'Testband' zijn verzonnen voor de test en komen niet in de app.",
+  "_embedded": {
+    "events": [
+      {
+        "id": "TEST-U2-AMS-1",
+        "name": "U2: The Greatest Show On Earth Tour",
+        "url": "https://www.ticketmaster.nl/event/test-u2-ams-1",
+        "dates": {
+          "start": { "localDate": "2027-06-05", "localTime": "18:30:00", "dateTBD": false, "dateTBA": false, "timeTBA": false, "noSpecificTime": false },
+          "timezone": "Europe/Amsterdam",
+          "status": { "code": "onsale" }
+        },
+        "sales": {
+          "public": { "startDateTime": "2026-11-06T09:00:00Z", "startTBD": false, "startTBA": false, "endDateTime": "2027-06-05T16:00:00Z" },
+          "presales": [
+            { "name": "Testpresale (fictief)", "startDateTime": "2026-11-05T09:00:00Z", "endDateTime": "2026-11-05T21:00:00Z", "url": "https://example.org/presale" }
+          ]
+        },
+        "priceRanges": [{ "type": "standard", "currency": "EUR", "min": 59.5, "max": 289 }],
+        "ticketLimit": { "info": "There is a 4 ticket limit for this event." },
+        "classifications": [{ "segment": { "name": "Music" }, "genre": { "name": "Rock" } }],
+        "_embedded": {
+          "venues": [{ "id": "TEST-V-JCA", "name": "Johan Cruijff ArenA", "timezone": "Europe/Amsterdam", "city": { "name": "Amsterdam" }, "country": { "countryCode": "NL" }, "location": { "latitude": "52.3144", "longitude": "4.9419" } }],
+          "attractions": [{ "id": "TEST-A-U2", "name": "U2" }]
+        }
+      },
+      {
+        "id": "TEST-NEW-1",
+        "name": "Testband",
+        "url": "https://www.ticketmaster.nl/event/test-new-1",
+        "dates": {
+          "start": { "localDate": "2027-03-12", "localTime": "20:00:00" },
+          "timezone": "Europe/Amsterdam",
+          "status": { "code": "onsale" }
+        },
+        "sales": { "public": { "startDateTime": "2026-11-20T09:00:00Z" } },
+        "classifications": [{ "segment": { "name": "Music" }, "genre": { "name": "Pop" } }],
+        "_embedded": {
+          "venues": [{ "id": "TEST-V-ZD", "name": "Ziggo Dome", "timezone": "Europe/Amsterdam", "city": { "name": "Amsterdam" }, "country": { "countryCode": "NL" } }],
+          "attractions": [{ "id": "TEST-A-NEW", "name": "Testband" }]
+        }
+      },
+      {
+        "id": "TEST-BROKEN",
+        "name": "Zonder datum",
+        "dates": { "start": { "dateTBA": true } },
+        "_embedded": { "venues": [{ "name": "X", "city": { "name": "Y" }, "country": { "countryCode": "NL" }, "timezone": "Europe/Amsterdam" }] }
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "sellout-radar",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Sellout Radar: volgt aangekondigde evenementen, voorspelt de kans op uitverkopen en waarschuwt op tijd voor inschrijvingen en presales.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "tsc -p packages/core && tsc -p packages/updater",
+    "update": "npm run update -w @sellout/updater",
+    "snapshot": "npm run snapshot -w @sellout/updater",
+    "seed:check": "npm run seed:check -w @sellout/updater",
+    "calibrate": "npm run calibrate -w @sellout/updater"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

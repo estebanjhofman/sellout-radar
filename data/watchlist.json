@@ -1,0 +1,9 @@
+[
+  { "name": "U2.com tourpagina", "url": "https://www.u2.com/tour", "kind": "artist" },
+  { "name": "U2 EU Store, presalevoorwaarden", "url": "https://shopeu.u2.com/pages/pre-sale-terms-08716489247478392284", "kind": "official_store" },
+  { "name": "Mojo", "url": "https://www.mojo.nl/", "kind": "promoter" },
+  { "name": "Live Nation Nederland", "url": "https://www.livenation.nl/", "kind": "promoter" },
+  { "name": "Ziggo Dome", "url": "https://www.ziggodome.nl/", "kind": "venue" },
+  { "name": "AFAS Live", "url": "https://www.afaslive.nl/", "kind": "venue" },
+  { "name": "Johan Cruijff ArenA", "url": "https://www.johancruijffarena.nl/", "kind": "venue" }
+]

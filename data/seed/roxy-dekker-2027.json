@@ -1,0 +1,88 @@
+{
+  "artist": {
+    "id": "roxy-dekker",
+    "name": "Roxy Dekker",
+    "genres": [
+      "pop"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "roxy-dekker-arena-2027",
+    "name": "Roxy Dekker in de Johan Cruijff ArenA",
+    "verification": "official"
+  },
+  "type": "concert",
+  "sources": {
+    "jca": {
+      "name": "Johan Cruijff ArenA",
+      "kind": "venue",
+      "url": "https://www.johancruijffarena.nl/en/news/johan-cruijff-arena/roxy-dekker-in-de-johan-cruijff-arena/",
+      "checked": "2026-10-30"
+    },
+    "hvn": {
+      "name": "Hart van Nederland",
+      "kind": "news",
+      "url": "https://www.hartvannederland.nl/entertainment/muziek/artikelen/roxy-dekker-concert-johan-cruijff-arena-uitverkocht",
+      "checked": "2026-10-30"
+    },
+    "wikiStadiums": {
+      "name": "Wikipedia: List of European stadiums by capacity",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity",
+      "checked": "2026-10-29",
+      "note": "Sportcapaciteit; de concertopstelling kan afwijken."
+    }
+  },
+  "venues": {
+    "johan-cruijff-arena": {
+      "name": "Johan Cruijff ArenA",
+      "city": "Amsterdam",
+      "country": "NL",
+      "tz": "Europe/Amsterdam",
+      "capacity": 55445,
+      "capacitySource": "wikiStadiums",
+      "lat": 52.3144,
+      "lon": 4.9419
+    }
+  },
+  "events": [
+    {
+      "venue": "johan-cruijff-arena",
+      "date": "2027-04-24",
+      "status": "soldout",
+      "soldOutAt": "2026-09-09T08:15:00Z",
+      "sources": [
+        "jca",
+        "hvn"
+      ],
+      "notes": [
+        "Binnen enkele minuten uitverkocht volgens organisator Friendly Fire; een deel ging al in de presale weg.",
+        "Er komt geen tweede concert in de ArenA."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "presale",
+      "kind": "presale",
+      "type": "artist",
+      "name": "Presale",
+      "events": "all",
+      "start": "2026-09-07T10:00",
+      "sources": [
+        "jca"
+      ]
+    },
+    {
+      "key": "general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": "all",
+      "start": "2026-09-09T10:00",
+      "sources": [
+        "jca"
+      ]
+    }
+  ]
+}

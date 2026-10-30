@@ -1,0 +1,261 @@
+{
+  "artist": {
+    "id": "ateez",
+    "name": "ATEEZ",
+    "genres": [
+      "k-pop"
+    ],
+    "fandom": "organized"
+  },
+  "tour": {
+    "id": "ateez-zero-to-all-2027",
+    "name": "2027 ATEEZ World Tour [ZERO TO ALL]",
+    "leg": "Azië en Europa 2027",
+    "announcedAt": "2026-10-10"
+  },
+  "type": "concert",
+  "sources": {
+    "koreaTimes": {
+      "name": "The Korea Times",
+      "kind": "news",
+      "url": "https://www.koreatimes.co.kr/entertainment/k-pop/20261012/ateez-announces-2027-world-tour-sets-january-kickoff-in-incheon",
+      "checked": "2026-10-29"
+    },
+    "starnews": {
+      "name": "StarNews Korea",
+      "kind": "news",
+      "url": "https://www.starnewskorea.com/en/music/2026/10/11/2026101107442279389",
+      "checked": "2026-10-29"
+    },
+    "joongang": {
+      "name": "Korea JoongAng Daily",
+      "kind": "news",
+      "url": "https://www.koreajoongangdaily.com/entertainment/ateez-to-open-2027-zero-to-all-world-tour-in-incheonnbsp/12913665",
+      "checked": "2026-10-29"
+    },
+    "karlobag": {
+      "name": "Karlobag",
+      "kind": "news",
+      "url": "https://karlobag.eu/en/music/ateez-announces-zero-to-all-world-tour-for-2027-with-european-concerts-in-london-btafi/",
+      "checked": "2026-10-29",
+      "note": "Nieuwssite die naar KQ Entertainment verwijst; venues en verkoopdata nog niet bekend."
+    }
+  },
+  "venues": {
+    "tba-incheon": {
+      "name": "Venue nog niet bekend",
+      "city": "Incheon",
+      "country": "KR",
+      "tz": "Asia/Seoul"
+    },
+    "tba-tokyo": {
+      "name": "Venue nog niet bekend",
+      "city": "Tokyo",
+      "country": "JP",
+      "tz": "Asia/Tokyo"
+    },
+    "tba-kobe": {
+      "name": "Venue nog niet bekend",
+      "city": "Kobe",
+      "country": "JP",
+      "tz": "Asia/Tokyo"
+    },
+    "tba-london": {
+      "name": "Venue nog niet bekend",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "tba-lyon": {
+      "name": "Venue nog niet bekend",
+      "city": "Lyon",
+      "country": "FR",
+      "tz": "Europe/Paris"
+    },
+    "tba-berlin": {
+      "name": "Venue nog niet bekend",
+      "city": "Berlin",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "tba-krakow": {
+      "name": "Venue nog niet bekend",
+      "city": "Kraków",
+      "country": "PL",
+      "tz": "Europe/Warsaw"
+    },
+    "tba-amsterdam": {
+      "name": "Venue nog niet bekend",
+      "city": "Amsterdam",
+      "country": "NL",
+      "tz": "Europe/Amsterdam"
+    },
+    "tba-cologne": {
+      "name": "Venue nog niet bekend",
+      "city": "Cologne",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "tba-antwerp": {
+      "name": "Venue nog niet bekend",
+      "city": "Antwerp",
+      "country": "BE",
+      "tz": "Europe/Brussels"
+    }
+  },
+  "events": [
+    {
+      "venue": "tba-incheon",
+      "date": "2027-01-22",
+      "sources": [
+        "koreaTimes",
+        "starnews",
+        "joongang",
+        "karlobag"
+      ],
+      "notes": [
+        "Aangekondigd door KQ Entertainment (volgens de Korea Times); de officiële bron zelf is nog niet gecontroleerd."
+      ],
+      "verification": "official"
+    },
+    {
+      "venue": "tba-incheon",
+      "date": "2027-01-23",
+      "sources": [
+        "koreaTimes",
+        "starnews",
+        "joongang",
+        "karlobag"
+      ],
+      "verification": "official"
+    },
+    {
+      "venue": "tba-incheon",
+      "date": "2027-01-24",
+      "sources": [
+        "koreaTimes",
+        "starnews",
+        "karlobag"
+      ],
+      "verification": "official"
+    },
+    {
+      "venue": "tba-tokyo",
+      "date": "2027-02-02",
+      "sources": [
+        "starnews"
+      ],
+      "verification": "official"
+    },
+    {
+      "venue": "tba-tokyo",
+      "date": "2027-02-03",
+      "sources": [
+        "starnews"
+      ],
+      "verification": "official"
+    },
+    {
+      "venue": "tba-kobe",
+      "date": "2027-02-13",
+      "sources": [
+        "starnews"
+      ],
+      "verification": "official"
+    },
+    {
+      "venue": "tba-kobe",
+      "date": "2027-02-14",
+      "sources": [
+        "starnews"
+      ],
+      "verification": "official"
+    },
+    {
+      "venue": "tba-london",
+      "date": "2027-03-31",
+      "sources": [
+        "karlobag"
+      ],
+      "verification": "unconfirmed",
+      "notes": [
+        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
+      ]
+    },
+    {
+      "venue": "tba-lyon",
+      "date": "2027-04-04",
+      "sources": [
+        "karlobag"
+      ],
+      "verification": "unconfirmed",
+      "notes": [
+        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
+      ]
+    },
+    {
+      "venue": "tba-berlin",
+      "date": "2027-04-07",
+      "sources": [
+        "karlobag"
+      ],
+      "verification": "unconfirmed",
+      "notes": [
+        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
+      ]
+    },
+    {
+      "venue": "tba-krakow",
+      "date": "2027-04-10",
+      "sources": [
+        "karlobag"
+      ],
+      "verification": "unconfirmed",
+      "notes": [
+        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
+      ]
+    },
+    {
+      "venue": "tba-amsterdam",
+      "date": "2027-04-12",
+      "sources": [
+        "karlobag"
+      ],
+      "verification": "unconfirmed",
+      "notes": [
+        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
+      ]
+    },
+    {
+      "venue": "tba-cologne",
+      "date": "2027-04-15",
+      "sources": [
+        "karlobag"
+      ],
+      "verification": "unconfirmed",
+      "notes": [
+        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
+      ]
+    },
+    {
+      "venue": "tba-antwerp",
+      "date": "2027-04-17",
+      "sources": [
+        "karlobag"
+      ],
+      "verification": "unconfirmed",
+      "notes": [
+        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "target": "2027-01-24@tba-incheon",
+      "field": "date",
+      "value": "2027-01-25",
+      "source": "joongang",
+      "evidence": "Korea JoongAng Daily noemt 22, 23 en 25 januari in plaats van 22 tot en met 24 januari."
+    }
+  ]
+}

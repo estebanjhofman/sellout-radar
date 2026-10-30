@@ -1,0 +1,544 @@
+{
+  "artist": {
+    "id": "rod-stewart",
+    "name": "Rod Stewart",
+    "genres": [
+      "rock",
+      "pop"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "rod-stewart-final-encore-2027",
+    "name": "The Final Encore",
+    "leg": "VK en Europa 2027",
+    "announcedAt": "2026-09-28",
+    "farewell": true,
+    "verification": "official"
+  },
+  "type": "concert",
+  "sources": {
+    "heart": {
+      "name": "Heart",
+      "kind": "news",
+      "url": "https://www.heart.co.uk/events/rod-stewart-tour-dates-venue-tickets/",
+      "checked": "2026-10-30"
+    },
+    "karlobag": {
+      "name": "Karlobag",
+      "kind": "news",
+      "url": "https://karlobag.eu/en/music/rod-stewart-announces-final-major-tour-the-final-encore-2027-crosses-europe-thro-epu6f/",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "3arena": {
+      "name": "3Arena",
+      "city": "Dublin",
+      "country": "IE",
+      "tz": "Europe/Dublin"
+    },
+    "sse-arena": {
+      "name": "SSE Arena",
+      "city": "Belfast",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "ovo-hydro": {
+      "name": "OVO Hydro",
+      "city": "Glasgow",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "utilita-arena": {
+      "name": "Utilita Arena",
+      "city": "Birmingham",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "co-op-live": {
+      "name": "Co-op Live",
+      "city": "Manchester",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "the-o2": {
+      "name": "The O2",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "ziggo-dome": {
+      "name": "Ziggo Dome",
+      "city": "Amsterdam",
+      "country": "NL",
+      "tz": "Europe/Amsterdam",
+      "lat": 52.3134,
+      "lon": 4.9372
+    },
+    "afas-dome": {
+      "name": "AFAS Dome",
+      "city": "Antwerp",
+      "country": "BE",
+      "tz": "Europe/Brussels"
+    },
+    "uber-arena": {
+      "name": "Uber Arena",
+      "city": "Berlin",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "psd-bank-dome": {
+      "name": "PSD Bank Dome",
+      "city": "Düsseldorf",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "royal-arena": {
+      "name": "Royal Arena",
+      "city": "Copenhagen",
+      "country": "DK",
+      "tz": "Europe/Copenhagen"
+    },
+    "veikkaus-arena": {
+      "name": "Veikkaus Arena",
+      "city": "Helsinki",
+      "country": "FI",
+      "tz": "Europe/Helsinki"
+    },
+    "dalhalla": {
+      "name": "Dalhalla",
+      "city": "Rättvik",
+      "country": "SE",
+      "tz": "Europe/Stockholm",
+      "outdoor": true
+    },
+    "sverresborg": {
+      "name": "Sverresborg",
+      "city": "Trondheim",
+      "country": "NO",
+      "tz": "Europe/Oslo",
+      "outdoor": true
+    },
+    "plenen": {
+      "name": "Plenen",
+      "city": "Bergen",
+      "country": "NO",
+      "tz": "Europe/Oslo",
+      "outdoor": true
+    },
+    "budapest-sportsarena": {
+      "name": "Sportsarena",
+      "city": "Budapest",
+      "country": "HU",
+      "tz": "Europe/Budapest"
+    },
+    "olympiahalle": {
+      "name": "Olympiahalle",
+      "city": "Munich",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    },
+    "pula-arena": {
+      "name": "Pula Arena",
+      "city": "Pula",
+      "country": "HR",
+      "tz": "Europe/Zagreb",
+      "outdoor": true
+    },
+    "o2-arena-prague": {
+      "name": "O2 Arena",
+      "city": "Prague",
+      "country": "CZ",
+      "tz": "Europe/Prague"
+    },
+    "tauron-arena": {
+      "name": "Tauron Arena",
+      "city": "Kraków",
+      "country": "PL",
+      "tz": "Europe/Warsaw"
+    },
+    "zag-arena": {
+      "name": "ZAG Arena",
+      "city": "Hannover",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    }
+  },
+  "events": [
+    {
+      "venue": "3arena",
+      "date": "2027-04-23",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "sse-arena",
+      "date": "2027-04-27",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "ovo-hydro",
+      "date": "2027-04-29",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "utilita-arena",
+      "date": "2027-05-04",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "co-op-live",
+      "date": "2027-05-06",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "the-o2",
+      "date": "2027-05-11",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "ziggo-dome",
+      "date": "2027-05-28",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "afas-dome",
+      "date": "2027-05-29",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "uber-arena",
+      "date": "2027-06-01",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "psd-bank-dome",
+      "date": "2027-06-03",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "royal-arena",
+      "date": "2027-06-06",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "veikkaus-arena",
+      "date": "2027-06-09",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "dalhalla",
+      "date": "2027-06-11",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "sverresborg",
+      "date": "2027-06-13",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ],
+      "notes": [
+        "Heart schrijft \"Sverresboro\"."
+      ]
+    },
+    {
+      "venue": "plenen",
+      "date": "2027-06-15",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "budapest-sportsarena",
+      "date": "2027-06-18",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "olympiahalle",
+      "date": "2027-06-20",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "pula-arena",
+      "date": "2027-06-22",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "o2-arena-prague",
+      "date": "2027-06-24",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "tauron-arena",
+      "date": "2027-07-20",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    },
+    {
+      "venue": "zag-arena",
+      "date": "2027-07-24",
+      "status": "onsale",
+      "sources": [
+        "heart",
+        "karlobag"
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "de-presale",
+      "kind": "presale",
+      "type": "ticketmaster",
+      "name": "Presale Duitsland (Ticketmaster)",
+      "events": {
+        "countries": [
+          "DE"
+        ]
+      },
+      "start": "2026-09-29T10:00",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "pl-fanclub",
+      "kind": "presale",
+      "type": "fanclub",
+      "name": "Fanclub-presale",
+      "events": {
+        "countries": [
+          "PL"
+        ]
+      },
+      "start": "2026-09-29T12:00",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "pl-mastercard",
+      "kind": "presale",
+      "type": "card",
+      "name": "Mastercard/Pekao-presale",
+      "events": {
+        "countries": [
+          "PL"
+        ]
+      },
+      "start": "2026-09-30",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "pl-tm",
+      "kind": "presale",
+      "type": "ticketmaster",
+      "name": "Ticketmaster-presale",
+      "events": {
+        "countries": [
+          "PL"
+        ]
+      },
+      "start": "2026-10-01",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "pl-general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": {
+        "countries": [
+          "PL"
+        ]
+      },
+      "start": "2026-10-02T12:00",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "gb-hydro",
+      "kind": "presale",
+      "type": "venue",
+      "name": "OVO Hydro-presale",
+      "events": {
+        "venues": [
+          "ovo-hydro"
+        ]
+      },
+      "start": "2026-09-30",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "gb-presale",
+      "kind": "presale",
+      "type": "livenation",
+      "name": "Presale (Live Nation)",
+      "events": {
+        "countries": [
+          "GB"
+        ]
+      },
+      "start": "2026-10-01",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "gb-general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": {
+        "countries": [
+          "GB"
+        ]
+      },
+      "start": "2026-10-02T10:00",
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "nl-presale",
+      "kind": "presale",
+      "type": "ticketmaster",
+      "name": "Presales (Ticketmaster)",
+      "events": {
+        "countries": [
+          "NL"
+        ]
+      },
+      "start": "2026-09-30",
+      "end": "2026-10-01",
+      "notes": [
+        "Presales op 30 september en 1 oktober."
+      ],
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "nl-general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": {
+        "countries": [
+          "NL"
+        ]
+      },
+      "start": "2026-10-02",
+      "notes": [
+        "Karlobag noemt 10:00 zonder tijdzone; daarom alleen de datum."
+      ],
+      "sources": [
+        "karlobag"
+      ]
+    },
+    {
+      "key": "eu-general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": {
+        "countries": [
+          "IE",
+          "BE",
+          "DE",
+          "DK",
+          "FI",
+          "SE",
+          "NO",
+          "HU",
+          "HR",
+          "CZ"
+        ]
+      },
+      "start": "2026-10-02",
+      "notes": [
+        "Voor het grootste deel van de Europese data; lokale starttijden verschillen."
+      ],
+      "sources": [
+        "karlobag"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "artist": {
+    "id": "wimbledon",
+    "name": "Wimbledon",
+    "aliases": [
+      "The Championships"
+    ],
+    "genres": [
+      "tennis"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "wimbledon-2027",
+    "name": "The Championships, Wimbledon 2027",
+    "verification": "official"
+  },
+  "type": "sport",
+  "sources": {
+    "timeout": {
+      "name": "Time Out London",
+      "kind": "news",
+      "url": "https://www.timeout.com/london/news/wimbledon-2027-ticket-ballot-now-open-how-to-enter-090326",
+      "checked": "2026-10-30",
+      "note": "Artikel van 3 september 2026."
+    }
+  },
+  "venues": {
+    "aeltc": {
+      "name": "All England Lawn Tennis Club",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London",
+      "outdoor": true
+    }
+  },
+  "events": [
+    {
+      "venue": "aeltc",
+      "date": "2027-06-28",
+      "title": "Wimbledon 2027 (28 juni – 11 juli)",
+      "sources": [
+        "timeout"
+      ],
+      "priceRange": {
+        "min": 22,
+        "max": 400,
+        "currency": "GBP"
+      },
+      "ticketLimit": 2,
+      "notes": [
+        "Grounds pass £35 in de eerste week en £22 in de tweede; Centre Court van £85–£130 op de openingsdag tot £255–£400 bij de finales.",
+        "Zonder lotingkaart: in de rij (The Queue) in Wimbledon Park voor kaarten op de dag zelf."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "ballot",
+      "kind": "lottery",
+      "name": "Wimbledon Public Ballot",
+      "events": "all",
+      "start": "2026-09-01",
+      "deadline": "2026-09-14",
+      "ticketLimit": 2,
+      "conditions": "Maximaal twee kaarten per huishouden. Je kiest geen dag en vroeg inschrijven maakt niet uit; na sluiting worden de winnaars willekeurig gekozen.",
+      "sources": [
+        "timeout"
+      ]
+    }
+  ]
+}

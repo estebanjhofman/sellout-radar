@@ -1,0 +1,56 @@
+{
+  "artist": {
+    "id": "uefa-champions-league",
+    "name": "UEFA Champions League",
+    "genres": [
+      "voetbal"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "ucl-final-2027",
+    "name": "Champions League-finale 2027",
+    "verification": "official"
+  },
+  "type": "sport",
+  "sources": {
+    "uefa": {
+      "name": "UEFA.com",
+      "kind": "promoter",
+      "url": "https://www.uefa.com/uefachampionsleague/news/029d-1eb2d5faf53c-d67c9fed04fa-1000--2027-uefa-champions-league-final-estadio-metropolitano",
+      "checked": "2026-10-30"
+    },
+    "wiki": {
+      "name": "Wikipedia: 2027 UEFA Champions League final",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/2027_UEFA_Champions_League_final",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "estadio-metropolitano": {
+      "name": "Estadio Metropolitano",
+      "city": "Madrid",
+      "country": "ES",
+      "tz": "Europe/Madrid",
+      "capacity": 70692,
+      "capacitySource": "wiki",
+      "outdoor": true
+    }
+  },
+  "events": [
+    {
+      "venue": "estadio-metropolitano",
+      "date": "2027-06-05",
+      "title": "Champions League-finale 2027",
+      "sources": [
+        "uefa",
+        "wiki"
+      ],
+      "notes": [
+        "UEFA noemt \"a capacity of around 70,000\".",
+        "Over de kaartverkoop staat nog niets in de bronnen."
+      ]
+    }
+  ]
+}

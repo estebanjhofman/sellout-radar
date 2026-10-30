@@ -1,0 +1,67 @@
+# Bouwt de webversie (om Sellout Radar op je computer te gebruiken) en zet die op GitHub Pages.
+# De webversie haalt het snapshot live op uit deze repository, dus na een update (3x per dag)
+# hoeft de site niet opnieuw gebouwd te worden. Eenmalig nodig: Settings → Pages → Source: "GitHub Actions".
+name: Webversie publiceren
+
+on:
+  push:
+    branches: [main]
+    paths: ['apps/mobile/**', 'packages/core/**', '.github/workflows/web.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/mobile/package-lock.json
+
+      - run: npm ci
+
+      - run: npm ci
+        working-directory: apps/mobile
+
+      - name: Webversie bouwen
+        working-directory: apps/mobile
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          # Een gebruikerssite (<naam>.github.io) staat in de hoofdmap, een projectsite in /<repository>.
+          REPO="${GITHUB_REPOSITORY#*/}"
+          if [ "$REPO" = "${GITHUB_REPOSITORY_OWNER}.github.io" ]; then BASE=""; else BASE="/$REPO"; fi
+          export WEB_BASE_URL="$BASE"
+          export EXPO_PUBLIC_SNAPSHOT_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}/data/snapshot.json"
+          npx expo export --platform web --output-dir dist-web
+          # Directe links (bijv. /event/...) laden via 404.html dezelfde app.
+          cp dist-web/index.html dist-web/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/mobile/dist-web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

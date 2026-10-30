@@ -1,0 +1,83 @@
+{
+  "artist": {
+    "id": "zwarte-cross",
+    "name": "Zwarte Cross",
+    "genres": [
+      "festival"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "zwarte-cross-2027",
+    "name": "Zwarte Cross 2027",
+    "verification": "official"
+  },
+  "type": "festival",
+  "sources": {
+    "festivalinfo": {
+      "name": "Festivalinfo.nl",
+      "kind": "news",
+      "url": "https://www.festivalinfo.nl/news/59345/Zwarte-Cross-2027-maakt-datums-voor-kaartverkoop-in-november-bekend/",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "zwarte-cross-terrein": {
+      "name": "Zwarte Cross-terrein",
+      "city": "Lichtenvoorde",
+      "country": "NL",
+      "tz": "Europe/Amsterdam",
+      "outdoor": true
+    }
+  },
+  "events": [
+    {
+      "venue": "zwarte-cross-terrein",
+      "date": "2027-07-15",
+      "title": "Zwarte Cross 2027 (15–18 juli)",
+      "sources": [
+        "festivalinfo"
+      ],
+      "notes": [
+        "Donderdag 15 t/m zondag 18 juli 2027, in de omgeving van Lichtenvoorde. Ticketprijzen nog niet bekend."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "motocross",
+      "kind": "presale",
+      "type": "other",
+      "name": "Inschrijving motorcross (deelnemers)",
+      "events": "all",
+      "start": "2026-11-06",
+      "notes": [
+        "De kaartverkoop opent met de inschrijvingen voor de motorcross."
+      ],
+      "sources": [
+        "festivalinfo"
+      ]
+    },
+    {
+      "key": "fanclub",
+      "kind": "presale",
+      "type": "fanclub",
+      "name": "Voorverkoop leden fanclub Harder!",
+      "events": "all",
+      "start": "2026-11-13",
+      "sources": [
+        "festivalinfo"
+      ]
+    },
+    {
+      "key": "general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": "all",
+      "start": "2026-11-20T16:00",
+      "sources": [
+        "festivalinfo"
+      ]
+    }
+  ]
+}

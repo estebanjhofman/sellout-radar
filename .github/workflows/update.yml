@@ -1,0 +1,67 @@
+# Werkt Sellout Radar drie keer per dag bij: rond 07:00, 13:00 en 19:00 Nederlandse tijd.
+# De runs starten om :43 zodat de data er op het hele uur is (GitHub start geplande runs
+# soms later, en de volle en halve uren zijn het drukst).
+name: Sellout Radar bijwerken
+
+on:
+  schedule:
+    - cron: '43 6 * * *'
+      timezone: 'Europe/Amsterdam'
+    - cron: '43 12 * * *'
+      timezone: 'Europe/Amsterdam'
+    - cron: '43 18 * * *'
+      timezone: 'Europe/Amsterdam'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sellout-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Bronnen ophalen, scores berekenen, snapshot schrijven
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          SEATGEEK_CLIENT_ID: ${{ secrets.SEATGEEK_CLIENT_ID }}
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          SETLISTFM_API_KEY: ${{ secrets.SETLISTFM_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          EXPO_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
+          SELLOUT_COUNTRIES: ${{ vars.SELLOUT_COUNTRIES }}
+          SELLOUT_MAX_LLM_CALLS: ${{ vars.SELLOUT_MAX_LLM_CALLS }}
+        run: npm run update
+
+      - name: Snapshot vastleggen
+        run: |
+          git config user.name "sellout-radar-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/snapshot.json
+          if [ -d data/state ]; then git add data/state; fi
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen"
+            exit 0
+          fi
+          git commit -m "Update $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git pull --rebase --autostash && git push && break
+            sleep 5
+          done

@@ -1,0 +1,181 @@
+{
+  "artist": {
+    "id": "tame-impala",
+    "name": "Tame Impala",
+    "genres": [
+      "psychedelic"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "tame-impala-europe-2027",
+    "name": "Tame Impala Europa 2027",
+    "announcedAt": "2026-08-24",
+    "verification": "official"
+  },
+  "type": "concert",
+  "sources": {
+    "officialcharts": {
+      "name": "Official Charts",
+      "kind": "news",
+      "url": "https://www.officialcharts.com/chart-news/tame-impala-2027-european-tour-uk-dates-london-manchester-buy-tickets-sale-when/",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "co-op-live": {
+      "name": "Co-op Live",
+      "city": "Manchester",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "the-o2": {
+      "name": "The O2",
+      "city": "London",
+      "country": "GB",
+      "tz": "Europe/London"
+    },
+    "rotterdam-ahoy": {
+      "name": "Rotterdam Ahoy",
+      "city": "Rotterdam",
+      "country": "NL",
+      "tz": "Europe/Amsterdam"
+    },
+    "accor-arena": {
+      "name": "Accor Arena",
+      "city": "Paris",
+      "country": "FR",
+      "tz": "Europe/Paris"
+    },
+    "lanxess-arena": {
+      "name": "Lanxess Arena",
+      "city": "Cologne",
+      "country": "DE",
+      "tz": "Europe/Berlin"
+    }
+  },
+  "events": [
+    {
+      "venue": "co-op-live",
+      "date": "2027-05-28",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    },
+    {
+      "venue": "the-o2",
+      "date": "2027-06-01",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    },
+    {
+      "venue": "the-o2",
+      "date": "2027-06-02",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    },
+    {
+      "venue": "rotterdam-ahoy",
+      "date": "2027-06-07",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    },
+    {
+      "venue": "rotterdam-ahoy",
+      "date": "2027-06-08",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    },
+    {
+      "venue": "accor-arena",
+      "date": "2027-06-12",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    },
+    {
+      "venue": "accor-arena",
+      "date": "2027-06-13",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    },
+    {
+      "venue": "lanxess-arena",
+      "date": "2027-06-17",
+      "status": "onsale",
+      "sources": [
+        "officialcharts"
+      ],
+      "notes": [
+        "Voorprogramma: Wet Leg."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "fan-presale",
+      "kind": "presale",
+      "type": "artist",
+      "name": "Fan-presale",
+      "events": {
+        "exceptCities": [
+          "Paris"
+        ]
+      },
+      "start": "2026-08-26T09:00",
+      "tz": "Europe/London",
+      "url": "https://tameimpala.com",
+      "sources": [
+        "officialcharts"
+      ]
+    },
+    {
+      "key": "general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": {
+        "exceptCities": [
+          "Paris"
+        ]
+      },
+      "start": "2026-08-28T09:00",
+      "tz": "Europe/London",
+      "sources": [
+        "officialcharts"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[
+  { "name": "Pollstar", "url": "https://news.pollstar.com/feed/", "lang": "en" },
+  { "name": "NME", "url": "https://www.nme.com/news/music/feed", "lang": "en" },
+  { "name": "Billboard", "url": "https://www.billboard.com/c/music/music-news/feed/", "lang": "en" },
+  { "name": "Stereogum", "url": "https://www.stereogum.com/feed/", "lang": "en" },
+  { "name": "Pitchfork", "url": "https://pitchfork.com/feed/feed-news/rss", "lang": "en" },
+  { "name": "Soompi", "url": "https://www.soompi.com/feed", "lang": "en" },
+  { "name": "Festileaks", "url": "https://festileaks.com/feed/", "lang": "nl" },
+  { "name": "Musicmaker", "url": "https://www.musicmaker.nl/feed/", "lang": "nl" }
+]

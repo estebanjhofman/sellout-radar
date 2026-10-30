@@ -1,0 +1,57 @@
+{
+  "artist": {
+    "id": "paaspop",
+    "name": "Paaspop",
+    "genres": [
+      "festival"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "paaspop-2027",
+    "name": "Paaspop 2027 (50e editie)",
+    "verification": "official"
+  },
+  "type": "festival",
+  "sources": {
+    "site": {
+      "name": "Paaspop.nl",
+      "kind": "promoter",
+      "url": "https://www.paaspop.nl/",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "paaspop-schijndel": {
+      "name": "Paaspop-terrein",
+      "city": "Schijndel",
+      "country": "NL",
+      "tz": "Europe/Amsterdam"
+    }
+  },
+  "events": [
+    {
+      "venue": "paaspop-schijndel",
+      "date": "2027-03-26",
+      "title": "Paaspop 2027 (26–28 maart)",
+      "sources": [
+        "site"
+      ],
+      "notes": [
+        "50e editie. Eerste 50 namen o.a. Rag’n’Bone Man, Clouseau, BLØF, The Opposites, De Staat en Sub Focus."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "general",
+      "kind": "general_sale",
+      "name": "Kaartverkoop dag- en weekendtickets",
+      "events": "all",
+      "start": "2026-10-31T11:00",
+      "sources": [
+        "site"
+      ]
+    }
+  ]
+}

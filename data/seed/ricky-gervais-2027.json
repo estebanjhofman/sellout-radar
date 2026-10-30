@@ -1,0 +1,165 @@
+{
+  "artist": {
+    "id": "ricky-gervais",
+    "name": "Ricky Gervais",
+    "genres": [
+      "comedy"
+    ],
+    "fandom": "regular"
+  },
+  "tour": {
+    "id": "ricky-gervais-legend-2027",
+    "name": "Ricky Gervais: Legend",
+    "leg": "Europa 2027",
+    "announcedAt": "2026-10-19",
+    "verification": "official"
+  },
+  "type": "comedy",
+  "sources": {
+    "chortle": {
+      "name": "Chortle",
+      "kind": "news",
+      "url": "https://www.chortle.co.uk/news/2026/10/19/61862/ricky_gervais_announces_european_tour_dates_for_2027",
+      "checked": "2026-10-30"
+    }
+  },
+  "venues": {
+    "lotto-arena": {
+      "name": "Lotto Arena",
+      "city": "Antwerp",
+      "country": "BE",
+      "tz": "Europe/Brussels"
+    },
+    "olimpic-arena": {
+      "name": "Olimpic Arena",
+      "city": "Barcelona",
+      "country": "ES",
+      "tz": "Europe/Madrid"
+    },
+    "meo-arena": {
+      "name": "MEO Arena",
+      "city": "Lisbon",
+      "country": "PT",
+      "tz": "Europe/Lisbon"
+    },
+    "wiener-stadthalle": {
+      "name": "Wiener Stadthalle",
+      "city": "Vienna",
+      "country": "AT",
+      "tz": "Europe/Vienna"
+    },
+    "accor-arena": {
+      "name": "Accor Arena",
+      "city": "Paris",
+      "country": "FR",
+      "tz": "Europe/Paris"
+    },
+    "arena-zagreb": {
+      "name": "Arena Zagreb",
+      "city": "Zagreb",
+      "country": "HR",
+      "tz": "Europe/Zagreb"
+    },
+    "afas-live": {
+      "name": "AFAS Live",
+      "city": "Amsterdam",
+      "country": "NL",
+      "tz": "Europe/Amsterdam"
+    },
+    "hallenstadion": {
+      "name": "Hallenstadion",
+      "city": "Zurich",
+      "country": "CH",
+      "tz": "Europe/Zurich"
+    },
+    "avicii-arena": {
+      "name": "Avicii Arena",
+      "city": "Stockholm",
+      "country": "SE",
+      "tz": "Europe/Stockholm"
+    }
+  },
+  "events": [
+    {
+      "venue": "lotto-arena",
+      "date": "2027-01-23",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "olimpic-arena",
+      "date": "2027-02-27",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "meo-arena",
+      "date": "2027-03-19",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "wiener-stadthalle",
+      "date": "2027-04-24",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "accor-arena",
+      "date": "2027-04-30",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "arena-zagreb",
+      "date": "2027-06-19",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "afas-live",
+      "date": "2027-07-02",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "hallenstadion",
+      "date": "2027-07-17",
+      "sources": [
+        "chortle"
+      ]
+    },
+    {
+      "venue": "avicii-arena",
+      "date": "2027-08-28",
+      "sources": [
+        "chortle"
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "key": "general",
+      "kind": "general_sale",
+      "name": "Algemene verkoop",
+      "events": "all",
+      "start": "2026-10-23",
+      "notes": [
+        "Chortle (maandag 19 oktober): \"Tickets for the European dates go on general sale from 10am on Friday\", dus vrijdag 23 oktober. De tijdzone staat er niet bij; daarom alleen de datum."
+      ],
+      "sources": [
+        "chortle"
+      ]
+    }
+  ],
+  "notes": [
+    "Promotor Live Nation kondigt later nog meer Europese arena's aan (Chortle)."
+  ]
+}
