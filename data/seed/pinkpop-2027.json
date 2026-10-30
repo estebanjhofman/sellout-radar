@@ -1,50 +1,25 @@
 {
-  "artist": {
-    "id": "pinkpop",
-    "name": "Pinkpop",
-    "genres": [
-      "festival"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "pinkpop-2027",
-    "name": "Pinkpop 2027",
-    "announcedAt": "2026-10-26",
-    "verification": "official"
-  },
+  "artist": { "id": "pinkpop", "name": "Pinkpop", "genres": ["festival"], "fandom": "regular" },
+  "tour": { "id": "pinkpop-2027", "name": "Pinkpop 2027", "announcedAt": "2026-10-26", "verification": "official" },
   "type": "festival",
   "sources": {
-    "site": {
-      "name": "Pinkpop.nl",
-      "kind": "promoter",
-      "url": "https://www.pinkpop.nl/",
-      "checked": "2026-10-30"
-    },
-    "presale": {
-      "name": "Pinkpop.nl: Loyalty Pre-sale",
-      "kind": "promoter",
-      "url": "https://www.pinkpop.nl/alle-info-over-de-pre-sale-en-loyalty-tickets/",
-      "checked": "2026-10-30"
+    "site": { "name": "Pinkpop.nl", "kind": "promoter", "url": "https://www.pinkpop.nl/", "checked": "2026-10-30" },
+    "presale": { "name": "Pinkpop.nl: Loyalty Pre-sale", "kind": "promoter", "url": "https://www.pinkpop.nl/alle-info-over-de-pre-sale-en-loyalty-tickets/", "checked": "2026-10-30" },
+    "nieuws2025": {
+      "name": "nieuws.nl: Pinkpop-leiding ziet 2025 als topeditie",
+      "kind": "news",
+      "url": "https://nieuws.nl/entertainment/pinkpop-leiding-ziet-2025-als-topeditie-we-zitten-op-goede-route",
+      "checked": "2026-10-30",
+      "note": "Artikel van 23 juni 2025."
     }
   },
-  "venues": {
-    "megaland": {
-      "name": "Megaland",
-      "city": "Landgraaf",
-      "country": "NL",
-      "tz": "Europe/Amsterdam",
-      "outdoor": true
-    }
-  },
+  "venues": { "megaland": { "name": "Megaland", "city": "Landgraaf", "country": "NL", "tz": "Europe/Amsterdam", "outdoor": true } },
   "events": [
     {
       "venue": "megaland",
       "date": "2027-06-18",
       "title": "Pinkpop 2027 (18–20 juni)",
-      "sources": [
-        "site"
-      ],
+      "sources": ["site"],
       "notes": [
         "Weekendticket voor vrijdag 18 t/m zondag 20 juni 2027.",
         "Eerste namen o.a. RAYE, The Prodigy, Mumford & Sons, Sting 3.0, Kacey Musgraves, blink-182 en 5 Seconds of Summer.",
@@ -62,25 +37,22 @@
       "start": null,
       "ticketLimit": 4,
       "conditions": "Voor wie een ticket voor Pinkpop 2026 kocht: automatisch een e-mail met persoonlijke pre-sale-informatie (maandagochtend 26 oktober). €25 voordeel per weekendticket, max. 4 tickets.",
-      "notes": [
-        "Starttijd van de pre-sale staat niet op de site."
-      ],
-      "sources": [
-        "presale"
-      ]
+      "notes": ["Starttijd van de pre-sale staat niet op de site."],
+      "sources": ["presale"]
     },
-    {
-      "key": "general",
-      "kind": "general_sale",
-      "name": "Kaartverkoop",
-      "events": "all",
-      "start": "2026-10-31T11:00",
-      "notes": [
-        "Verkoop via Ticketmaster."
-      ],
-      "sources": [
-        "site"
-      ]
-    }
-  ]
+    { "key": "general", "kind": "general_sale", "name": "Kaartverkoop", "events": "all", "start": "2026-10-31T11:00", "notes": ["Verkoop via Ticketmaster."], "sources": ["site"] }
+  ],
+  "history": {
+    "previousEditions": [
+      {
+        "year": 2025,
+        "city": "Landgraaf",
+        "country": "NL",
+        "venue": "Megaland",
+        "soldOut": false,
+        "detail": "130.000 bezoekers over het weekend; volgens de festivaldirecteur 'eigenlijk nooit uitverkocht geweest' (eerder 90.000 à 95.000 verkochte tickets per jaar).",
+        "sources": ["nieuws2025"]
+      }
+    ]
+  }
 }

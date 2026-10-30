@@ -47,7 +47,8 @@ export type NotificationKind =
   | 'change_sale_date'
   | 'change_new_phase'
   | 'change_score_jump'
-  | 'change_soldout';
+  | 'change_soldout'
+  | 'change_sale_started';
 
 export interface PlannedNotification {
   /** Unieke sleutel; dezelfde sleutel wordt nooit twee keer verstuurd. */
@@ -292,7 +293,8 @@ export function selectForLocalSchedule(
 // ---------------------------------------------------------------------------
 
 export interface ChangeSnapshot {
-  events: { id: string; title: string; status: EventStatus; addedShow?: boolean; score?: number }[];
+  /** `score` is de score die bij `stage` hoort (verwachte drukte of uitverkoopkans). */
+  events: { id: string; title: string; status: EventStatus; addedShow?: boolean; score?: number; stage?: 'upcoming' | 'onsale' }[];
   phases: { id: string; name: string; kind: SalePhase['kind']; start: TimePoint; eventIds: string[] }[];
 }
 
@@ -301,7 +303,9 @@ export type Change =
   | { type: 'new_phase'; phaseId: string; name: string; eventIds: string[] }
   | { type: 'sale_date'; phaseId: string; name: string; before: TimePoint; after: TimePoint; eventIds: string[] }
   | { type: 'score_jump'; eventId: string; title: string; before: number; after: number }
-  | { type: 'soldout'; eventId: string; title: string };
+  | { type: 'soldout'; eventId: string; title: string }
+  /** De eerste verkoop is begonnen: de datum gaat naar "Al in de verkoop" (alleen voor het wijzigingenlogboek). */
+  | { type: 'sale_started'; eventId: string; title: string; rush?: number };
 
 export function diffSnapshots(prev: ChangeSnapshot, next: ChangeSnapshot, scoreJump = 15): Change[] {
   const changes: Change[] = [];
@@ -317,7 +321,12 @@ export function diffSnapshots(prev: ChangeSnapshot, next: ChangeSnapshot, scoreJ
     if (e.status === 'soldout' && before.status !== 'soldout') {
       changes.push({ type: 'soldout', eventId: e.id, title: e.title });
     }
-    if (e.score !== undefined && before.score !== undefined && Math.abs(e.score - before.score) >= scoreJump) {
+    const stageChanged = e.stage !== undefined && before.stage !== undefined && e.stage !== before.stage;
+    if (stageChanged && e.stage === 'onsale') {
+      changes.push({ type: 'sale_started', eventId: e.id, title: e.title, ...(before.score !== undefined ? { rush: before.score } : {}) });
+    }
+    // Een sprong tussen twee verschillende scores (drukte → kans) is geen echte sprong.
+    if (!stageChanged && e.score !== undefined && before.score !== undefined && Math.abs(e.score - before.score) >= scoreJump) {
       changes.push({ type: 'score_jump', eventId: e.id, title: e.title, before: before.score, after: e.score });
     }
   }
@@ -400,6 +409,16 @@ export function changeNotification(
         eventIds: [change.eventId],
         title: `Uitverkocht: ${change.title}`,
         body: 'Deze datum is uitverkocht. Houd extra shows en officiële doorverkoop in de gaten.',
+        url: `selloutradar://event/${encodeURIComponent(change.eventId)}`,
+      };
+    case 'sale_started':
+      return {
+        ...base,
+        key: `change_sale_started:${change.eventId}`,
+        kind: 'change_sale_started',
+        eventIds: [change.eventId],
+        title: `Verkoop begonnen: ${change.title}`,
+        body: change.rush !== undefined ? `Verwachte drukte vooraf: ${change.rush}. Nu volgt de uitverkoopkans.` : 'Deze datum staat nu bij "Al in de verkoop".',
         url: `selloutradar://event/${encodeURIComponent(change.eventId)}`,
       };
   }

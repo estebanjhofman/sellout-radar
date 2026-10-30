@@ -1,14 +1,26 @@
 import { DateTime } from 'luxon';
-import { earliestInstant, firstSaleStart, normalizeName, type Observation, type SalePhase, type ScoreInputs, type SiblingInfo } from '@sellout/core';
+import {
+  earliestInstant,
+  firstSaleMoment,
+  normalizeName,
+  populationM,
+  type ChartHit,
+  type Observation,
+  type PastVisit,
+  type SalePhase,
+  type ScoreInputs,
+  type SiblingInfo,
+} from '@sellout/core';
 import type { Catalog, CatalogEvent } from '../catalog';
 import type { PreviousVisitFact } from '../connectors/signals';
 import { BENELUX, COUNTRY_NAME_NL, continentOf } from '../geo';
 
 export interface InputContext {
   now: string;
-  observations: Observation[];
   setlistVisits: Record<string, PreviousVisitFact | { none: true; checkedAt: string } | null>;
   phasesByEvent: Map<string, SalePhase[]>;
+  /** Toplijsten van Last.fm: wanneer per land (of 'world') voor het laatst opgehaald en hoe lang. */
+  lastfmLists?: Record<string, { at: string; size: number }>;
 }
 
 /** Indexeert metingen per entiteit en meting, oud → nieuw. */
@@ -25,7 +37,7 @@ export function indexObservations(obs: Observation[]): Map<string, Observation[]
 }
 
 /** Groei tussen de meting van ~`days` dagen geleden en de laatste. */
-function growth(list: Observation[] | undefined, now: string, days: number): number | undefined {
+export function growth(list: Observation[] | undefined, now: string, days: number): number | undefined {
   if (!list || list.length < 2) return undefined;
   const last = list[list.length - 1]!;
   const target = DateTime.fromISO(now).minus({ days }).toISO()!;
@@ -38,9 +50,23 @@ function growth(list: Observation[] | undefined, now: string, days: number): num
   return last.value / base.value - 1;
 }
 
-function latest(list: Observation[] | undefined): number | undefined {
+export function latestValue(list: Observation[] | undefined): number | undefined {
   const v = list?.[list.length - 1]?.value;
   return typeof v === 'number' ? v : undefined;
+}
+
+/**
+ * Positie in een Last.fm-toplijst, alleen als die lijst recent is opgehaald. Een positie wordt alleen
+ * opnieuw bewaard als hij verandert (of wekelijks), dus een meting tot 8 dagen vóór de laatste ophaalronde
+ * telt nog. Staat de artiest niet in een recente lijst, dan is de positie null ("niet in de toplijst").
+ */
+function rankFrom(list: Observation[] | undefined, fetched: { at: string; size: number } | undefined, now: string): { rank: number | null; size: number } | undefined {
+  if (!fetched) return undefined;
+  if (DateTime.fromISO(now).diff(DateTime.fromISO(fetched.at), 'days').days > 14) return undefined;
+  const cutoff = DateTime.fromISO(fetched.at).minus({ days: 8 }).toISO()!;
+  const last = list?.[list.length - 1];
+  if (last && last.observedAt >= cutoff && typeof last.value === 'number') return { rank: last.value, size: fetched.size };
+  return { rank: null, size: fetched.size };
 }
 
 function siblingsOf(ev: CatalogEvent, cat: Catalog): CatalogEvent[] {
@@ -53,20 +79,34 @@ function siblingsOf(ev: CatalogEvent, cat: Catalog): CatalogEvent[] {
   });
 }
 
+const sameCity = (a: string, b: string) => normalizeName(a) === normalizeName(b);
+
+/** Het meest recente vorige bezoek in deze stad, anders in dit land. */
+function pickVisit(visits: PastVisit[] | undefined, city: string, country: string): { v: PastVisit; scope: 'city' | 'country' } | undefined {
+  const sorted = [...(visits ?? [])].sort((a, b) => b.year - a.year || (b.date ?? '').localeCompare(a.date ?? ''));
+  const inCity = sorted.find((v) => v.city && sameCity(v.city, city) && (!v.country || v.country === country));
+  if (inCity) return { v: inCity, scope: 'city' };
+  const inCountry = sorted.find((v) => v.country === country);
+  return inCountry ? { v: inCountry, scope: 'country' } : undefined;
+}
+
 export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputContext, obsIndex: Map<string, Observation[]>): ScoreInputs {
   const venue = cat.venues.get(ev.venueId);
   const tour = ev.tourId ? cat.tours.get(ev.tourId) : undefined;
-  const artist = cat.artists.get(ev.artistIds[0] ?? '');
+  const artistId = ev.artistIds[0] ?? '';
+  const artist = cat.artists.get(artistId);
   const country = venue?.country ?? '';
   const continent = continentOf(country);
   const now = DateTime.fromISO(ctx.now);
+  const phases = ctx.phasesByEvent.get(ev.id) ?? [];
+  const first = firstSaleMoment(phases);
 
   const sibs = siblingsOf(ev, cat).filter((s) => s.status !== 'cancelled');
   const siblingInfo: SiblingInfo[] = sibs.map((s) => {
     const v = cat.venues.get(s.venueId);
-    const phases = ctx.phasesByEvent.get(s.id) ?? [];
-    const first = firstSaleStart(phases);
-    const general = phases.find((p) => p.kind === 'general_sale');
+    const sp = ctx.phasesByEvent.get(s.id) ?? [];
+    const sFirst = firstSaleMoment(sp);
+    const general = sp.find((p) => p.kind === 'general_sale');
     const soldAt = s.soldOutAt ? DateTime.fromISO(s.soldOutAt) : undefined;
     return {
       eventId: s.id,
@@ -75,8 +115,8 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
       continent: continentOf(v?.country ?? ''),
       ...(v?.capacity ? { capacity: v.capacity } : {}),
       status: s.status,
-      ...(first ? { firstSaleAt: first.toUTC().toISO()! } : {}),
-      ...(soldAt && first ? { soldOutAfterHours: Math.max(0, soldAt.diff(first, 'hours').hours) } : {}),
+      ...(sFirst ? { firstSaleAt: sFirst.toUTC().toISO()! } : {}),
+      ...(soldAt && sFirst ? { soldOutAfterHours: Math.max(0, soldAt.diff(sFirst, 'hours').hours) } : {}),
       ...(s.soldOutInPresale || (soldAt && general && earliestInstant(general.start) && soldAt < earliestInstant(general.start)!) ? { soldOutInPresale: true } : {}),
       ...(s.addedShow ? { addedShow: true } : {}),
     };
@@ -96,20 +136,22 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
   const addedInCatalog = sibs.filter((s) => s.addedShow).length + (ev.addedShow ? 1 : 0);
 
   // Doorverkoop
-  const minPrice = latest(obsIndex.get(`event:${ev.id}|resale_min_price|USD`)) ?? latest(obsIndex.get(`event:${ev.id}|resale_min_price|`));
-  const listings = latest(obsIndex.get(`event:${ev.id}|resale_listings|`));
-  const phases = ctx.phasesByEvent.get(ev.id) ?? [];
+  const minPrice = latestValue(obsIndex.get(`event:${ev.id}|resale_min_price|USD`)) ?? latestValue(obsIndex.get(`event:${ev.id}|resale_min_price|`));
+  const listings = latestValue(obsIndex.get(`event:${ev.id}|resale_listings|`));
   const capped = [...(ev.notes ?? []), ...phases.flatMap((p) => p.notes ?? [])].some((n) => /face value|nominale prijs/i.test(n));
-  const priceHist = obsIndex.get(`event:${ev.id}|resale_min_price|USD`);
-  const trend = growth(priceHist, ctx.now, 7);
+  const trend = growth(obsIndex.get(`event:${ev.id}|resale_min_price|USD`), ctx.now, 7);
 
   // Tours en voorstellingen herhalen shows; festivals, sport en het Songfestival zijn per datum uniek.
   const touring = ev.type === 'concert' || ev.type === 'comedy' || ev.type === 'theatre';
 
-  // Vorige keer in deze stad of dit land
+  // Vorige tour of vorige editie
   let previousVisit: ScoreInputs['previousVisit'];
   let yearsSince: number | undefined;
   const seedPv = ev.inputs?.previousVisit;
+  const yearsAgo = (v: { year: number; date?: string }) => {
+    const d = v.date ? DateTime.fromISO(v.date.length === 7 ? `${v.date}-15` : v.date) : DateTime.fromObject({ year: v.year, month: 7, day: 1 });
+    return Math.max(0, Math.round(now.diff(d, 'years').years * 10) / 10);
+  };
   if (seedPv) {
     previousVisit = {
       scope: seedPv.scope,
@@ -121,8 +163,39 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
       ...(seedPv.place ? { place: seedPv.place } : {}),
     };
     yearsSince = seedPv.yearsAgo;
-  } else if (venue && ev.artistIds[0]) {
-    const fact = ctx.setlistVisits[`${ev.artistIds[0]}|${normalizeName(venue.city)}`];
+  } else if (!touring && tour?.previousEditions?.length) {
+    const ed = [...tour.previousEditions].sort((a, b) => b.year - a.year)[0]!;
+    const same = !ed.venue || !venue || normalizeName(ed.venue) === normalizeName(venue.name) || (ed.city !== undefined && sameCity(ed.city, venue.city));
+    previousVisit = {
+      scope: 'city',
+      ...(same ? { sameVenue: true } : {}),
+      ...(ed.capacity ? { capacity: ed.capacity } : {}),
+      ...(ed.soldOut !== undefined ? { soldOut: ed.soldOut } : {}),
+      ...(ed.sellThrough !== undefined ? { sellThrough: ed.sellThrough } : {}),
+      ...(ed.withinHours !== undefined ? { withinHours: ed.withinHours } : {}),
+      yearsAgo: yearsAgo(ed),
+      year: ed.year,
+      ...(ed.venue ? { venueName: ed.venue } : {}),
+    };
+  } else if (venue && tour?.previousVisits?.length && pickVisit(tour.previousVisits, venue.city, country)) {
+    const { v, scope } = pickVisit(tour.previousVisits, venue.city, country)!;
+    previousVisit = {
+      scope,
+      ...(v.venue && normalizeName(v.venue) === normalizeName(venue.name) ? { sameVenue: true } : {}),
+      ...(v.capacity ? { capacity: v.capacity } : {}),
+      ...(v.shows ? { shows: v.shows } : {}),
+      ...(v.soldOut !== undefined ? { soldOut: v.soldOut } : {}),
+      ...(v.sellThrough !== undefined ? { sellThrough: v.sellThrough } : {}),
+      ...(v.withinHours !== undefined ? { withinHours: v.withinHours } : {}),
+      yearsAgo: yearsAgo(v),
+      year: v.year,
+      ...(v.venue ? { venueName: v.venue } : {}),
+      ...(scope === 'city' && v.city ? { place: v.city } : scope === 'country' ? { place: COUNTRY_NAME_NL[country] ?? country } : {}),
+      ...(v.tour ? { tourName: v.tour } : {}),
+    };
+    yearsSince = Math.floor(yearsAgo(v));
+  } else if (venue && artistId) {
+    const fact = ctx.setlistVisits[`${artistId}|${normalizeName(venue.city)}`];
     if (fact && !('none' in fact)) {
       const years = Math.round(now.diff(DateTime.fromISO(fact.date), 'years').years * 10) / 10;
       const prevVenue = [...cat.venues.values()].find((v) => normalizeName(v.name) === normalizeName(fact.venueName) && normalizeName(v.city) === normalizeName(fact.city));
@@ -139,14 +212,18 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
   }
   if (ev.inputs?.yearsSinceLastVisit !== undefined) yearsSince = ev.inputs.yearsSinceLastVisit;
 
-  // Markt: aantal shows in dezelfde stad en de volgorde
-  const sameCity = [ev, ...sibs.filter((s) => cat.venues.get(s.venueId)?.city === venue?.city)].sort((a, b) =>
+  // Markt: shows in dezelfde stad (volgorde) en alle plekken van deze tour in dit land
+  const sameCityEvents = [ev, ...sibs.filter((s) => cat.venues.get(s.venueId)?.city === venue?.city)].sort((a, b) =>
     (a.date.localDate ?? '').localeCompare(b.date.localDate ?? ''),
   );
+  const inCountry = [ev, ...sibs.filter((s) => cat.venues.get(s.venueId)?.country === country)];
+  const caps = inCountry.map((e) => cat.venues.get(e.venueId)?.capacity);
+  const known = caps.filter((c): c is number => !!c);
+  // Alleen als alle datums in het land een bekende capaciteit hebben; anders tellen we te weinig plekken.
+  const seatsInCountry = known.length === caps.length && known.length > 0 ? known.reduce((a, b) => a + b, 0) : undefined;
 
   // Schaarste: enige show in land, Benelux of Europa
   let onlyShowIn: 'europe' | 'benelux' | 'country' | null = null;
-  // Alleen zinvol als de tour ook elders langskomt; een losse show is niet "schaars".
   if (venue && sibs.length > 0) {
     const others = sibs.map((s) => cat.venues.get(s.venueId)?.country ?? '');
     if (continent === 'EU' && !others.some((c) => continentOf(c) === 'EU')) onlyShowIn = 'europe';
@@ -154,18 +231,32 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
     else if (!others.includes(country)) onlyShowIn = 'country';
   }
 
-  // Momentum
-  const first = firstSaleStart(phases);
+  // Populariteit en groei (Last.fm, met de seedmeting als startpunt), hitnoteringen, nieuwe release
   const releaseDays =
-    tour?.releaseDate && first ? Math.abs(DateTime.fromISO(tour.releaseDate).diff(first, 'days').days) : tour?.releaseDate ? Math.abs(DateTime.fromISO(tour.releaseDate).diff(now, 'days').days) : undefined;
-  const listenerGrowth = growth(obsIndex.get(`artist:${ev.artistIds[0]}|lastfm_listeners|`), ctx.now, 90);
-  const videoGrowth = growth(obsIndex.get(`artist:${ev.artistIds[0]}|youtube_views|`), ctx.now, 90);
-  const nlRank = latest(obsIndex.get(`artist:${ev.artistIds[0]}|lastfm_rank|NL`));
-  const momentum: ScoreInputs['momentum'] = {
+    tour?.releaseDate && first
+      ? Math.abs(DateTime.fromISO(tour.releaseDate).diff(first, 'days').days)
+      : tour?.releaseDate
+        ? Math.abs(DateTime.fromISO(tour.releaseDate).diff(now, 'days').days)
+        : undefined;
+  const listenersList = obsIndex.get(`artist:${artistId}|lastfm_listeners|`);
+  const listeners = latestValue(listenersList);
+  const listenerGrowth = growth(listenersList, ctx.now, 90);
+  const countryRank = rankFrom(obsIndex.get(`artist:${artistId}|lastfm_rank|${country}`), ctx.lastfmLists?.[country], ctx.now);
+  const globalRank = rankFrom(obsIndex.get(`artist:${artistId}|lastfm_rank|world`), ctx.lastfmLists?.world, ctx.now);
+  const facts = cat.facts.get(artistId);
+  const charts: ChartHit[] | undefined = facts ? facts.charts.map((c) => ({ chart: c.chart, country: c.country, title: c.title, peak: c.peak, year: c.year })) : undefined;
+  const pop = populationM(country);
+  // Luisteraars zeggen iets over de vraag naar concerten; bij comedy, theater, festivals en sport niet
+  // (Last.fm-cijfers van een comedian of een festivalnaam zijn geen maat voor de kaartvraag).
+  const music = ev.type === 'concert';
+  const popularity: ScoreInputs['popularity'] = {
+    ...(music && listeners !== undefined ? { listeners } : {}),
+    ...(music && listenerGrowth !== undefined ? { listenerGrowth90d: listenerGrowth } : {}),
+    ...(music && countryRank ? { countryRank: countryRank.rank, countryListSize: countryRank.size } : {}),
+    ...(music && globalRank ? { globalRank: globalRank.rank, globalListSize: globalRank.size } : {}),
+    ...(pop !== undefined ? { populationM: pop } : {}),
+    ...(charts && charts.length ? { charts } : {}),
     ...(releaseDays !== undefined ? { newReleaseWithinDays: Math.round(releaseDays) } : {}),
-    ...(listenerGrowth !== undefined ? { listenerGrowth90d: listenerGrowth } : {}),
-    ...(videoGrowth !== undefined ? { videoGrowth90d: videoGrowth } : {}),
-    ...(nlRank !== undefined && BENELUX.has(country) ? { charting: nlRank <= 50 } : {}),
   };
 
   return {
@@ -178,6 +269,7 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
     ...(venue?.capacity ? { capacity: venue.capacity } : {}),
     ...(ev.date.localDate ? { localDate: ev.date.localDate } : {}),
     ...(venue?.outdoor !== undefined ? { outdoor: venue.outdoor } : {}),
+    ...(first ? { firstSaleAt: first.toUTC().toISO()! } : {}),
     siblings: siblingInfo,
     addedForDemand: Math.max(tour?.addedForDemand ?? 0, addedInCatalog),
     ...(minPrice !== undefined || listings !== undefined || capped
@@ -192,18 +284,18 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
         }
       : {}),
     ...(previousVisit ? { previousVisit } : {}),
-    // "Shows versus markt" gaat over herhaalde shows van een tour of voorstelling. Bij festivals,
+    // "Shows in de stad" gaat over herhaalde shows van een tour of voorstelling. Bij festivals,
     // sport en evenementen zoals het Songfestival is elke datum een ander programma.
-    ...(touring
+    market: touring
       ? {
-          market: {
-            showsInCity: sameCity.length,
-            indexInCity: sameCity.findIndex((e) => e.id === ev.id),
-            ...(ev.addedShow ? { isAddedShow: true } : {}),
-            addedInCity: sameCity.filter((e) => e.addedShow).length,
-          },
+          showsInCity: sameCityEvents.length,
+          indexInCity: sameCityEvents.findIndex((e) => e.id === ev.id),
+          ...(ev.addedShow ? { isAddedShow: true } : {}),
+          addedInCity: sameCityEvents.filter((e) => e.addedShow).length,
+          ...(seatsInCountry ? { seatsInCountry } : {}),
+          showsInCountry: inCountry.length,
         }
-      : {}),
+      : { showsInCity: 1, indexInCity: 0, ...(venue?.capacity ? { seatsInCountry: venue.capacity } : {}), showsInCountry: 1 },
     scarcity: {
       // "Lang niet geweest" geldt voor tours; een jaarlijks festival of toernooi komt altijd terug.
       ...(yearsSince !== undefined && touring ? { yearsSinceLastVisit: yearsSince } : {}),
@@ -212,9 +304,8 @@ export function buildScoreInputs(ev: CatalogEvent, cat: Catalog, ctx: InputConte
       ...(tour?.reunion ? { reunion: true } : {}),
       ...(phases.some((p) => p.kind === 'lottery') ? { ballot: true } : {}),
     },
-    ...(Object.keys(momentum).length ? { momentum } : {}),
+    ...(Object.keys(popularity).length ? { popularity } : {}),
     fandom: artist?.fandom ?? 'unknown',
-    ...(ev.inputs?.priceVsComparable !== undefined ? { practical: { priceVsComparable: ev.inputs.priceVsComparable } } : {}),
     ...(ev.status === 'few_left' || ev.inputs?.fewTicketsLeft ? { live: { fewTicketsLeft: true } } : {}),
     now: ctx.now,
   };

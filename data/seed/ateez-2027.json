@@ -1,18 +1,6 @@
 {
-  "artist": {
-    "id": "ateez",
-    "name": "ATEEZ",
-    "genres": [
-      "k-pop"
-    ],
-    "fandom": "organized"
-  },
-  "tour": {
-    "id": "ateez-zero-to-all-2027",
-    "name": "2027 ATEEZ World Tour [ZERO TO ALL]",
-    "leg": "Azië en Europa 2027",
-    "announcedAt": "2026-10-10"
-  },
+  "artist": { "id": "ateez", "name": "ATEEZ", "genres": ["k-pop"], "fandom": "organized" },
+  "tour": { "id": "ateez-zero-to-all-2027", "name": "2027 ATEEZ World Tour [ZERO TO ALL]", "leg": "Azië en Europa 2027", "announcedAt": "2026-10-10" },
   "type": "concert",
   "sources": {
     "koreaTimes": {
@@ -21,12 +9,7 @@
       "url": "https://www.koreatimes.co.kr/entertainment/k-pop/20261012/ateez-announces-2027-world-tour-sets-january-kickoff-in-incheon",
       "checked": "2026-10-29"
     },
-    "starnews": {
-      "name": "StarNews Korea",
-      "kind": "news",
-      "url": "https://www.starnewskorea.com/en/music/2026/10/11/2026101107442279389",
-      "checked": "2026-10-29"
-    },
+    "starnews": { "name": "StarNews Korea", "kind": "news", "url": "https://www.starnewskorea.com/en/music/2026/10/11/2026101107442279389", "checked": "2026-10-29" },
     "joongang": {
       "name": "Korea JoongAng Daily",
       "kind": "news",
@@ -39,214 +22,97 @@
       "url": "https://karlobag.eu/en/music/ateez-announces-zero-to-all-world-tour-for-2027-with-european-concerts-in-london-btafi/",
       "checked": "2026-10-29",
       "note": "Nieuwssite die naar KQ Entertainment verwijst; venues en verkoopdata nog niet bekend."
+    },
+    "lastfm": {
+      "name": "Last.fm: ATEEZ",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/ATEEZ",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiDisc": { "name": "Wikipedia: Ateez discography", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Ateez_discography", "checked": "2026-10-30" },
+    "touringdata": {
+      "name": "Touring Data: ATEEZ Towards The Light: Will To Power Tour",
+      "kind": "aggregator",
+      "url": "https://touringdata.org/2025/03/20/ateez-towards-the-light-will-to-power-tour",
+      "checked": "2026-10-30",
+      "note": "Box office per show: verkochte kaarten en percentage van de beschikbare kaarten."
     }
   },
   "venues": {
-    "tba-incheon": {
-      "name": "Venue nog niet bekend",
-      "city": "Incheon",
-      "country": "KR",
-      "tz": "Asia/Seoul"
-    },
-    "tba-tokyo": {
-      "name": "Venue nog niet bekend",
-      "city": "Tokyo",
-      "country": "JP",
-      "tz": "Asia/Tokyo"
-    },
-    "tba-kobe": {
-      "name": "Venue nog niet bekend",
-      "city": "Kobe",
-      "country": "JP",
-      "tz": "Asia/Tokyo"
-    },
-    "tba-london": {
-      "name": "Venue nog niet bekend",
-      "city": "London",
-      "country": "GB",
-      "tz": "Europe/London"
-    },
-    "tba-lyon": {
-      "name": "Venue nog niet bekend",
-      "city": "Lyon",
-      "country": "FR",
-      "tz": "Europe/Paris"
-    },
-    "tba-berlin": {
-      "name": "Venue nog niet bekend",
-      "city": "Berlin",
-      "country": "DE",
-      "tz": "Europe/Berlin"
-    },
-    "tba-krakow": {
-      "name": "Venue nog niet bekend",
-      "city": "Kraków",
-      "country": "PL",
-      "tz": "Europe/Warsaw"
-    },
-    "tba-amsterdam": {
-      "name": "Venue nog niet bekend",
-      "city": "Amsterdam",
-      "country": "NL",
-      "tz": "Europe/Amsterdam"
-    },
-    "tba-cologne": {
-      "name": "Venue nog niet bekend",
-      "city": "Cologne",
-      "country": "DE",
-      "tz": "Europe/Berlin"
-    },
-    "tba-antwerp": {
-      "name": "Venue nog niet bekend",
-      "city": "Antwerp",
-      "country": "BE",
-      "tz": "Europe/Brussels"
-    }
+    "tba-incheon": { "name": "Venue nog niet bekend", "city": "Incheon", "country": "KR", "tz": "Asia/Seoul" },
+    "tba-tokyo": { "name": "Venue nog niet bekend", "city": "Tokyo", "country": "JP", "tz": "Asia/Tokyo" },
+    "tba-kobe": { "name": "Venue nog niet bekend", "city": "Kobe", "country": "JP", "tz": "Asia/Tokyo" },
+    "tba-london": { "name": "Venue nog niet bekend", "city": "London", "country": "GB", "tz": "Europe/London" },
+    "tba-lyon": { "name": "Venue nog niet bekend", "city": "Lyon", "country": "FR", "tz": "Europe/Paris" },
+    "tba-berlin": { "name": "Venue nog niet bekend", "city": "Berlin", "country": "DE", "tz": "Europe/Berlin" },
+    "tba-krakow": { "name": "Venue nog niet bekend", "city": "Kraków", "country": "PL", "tz": "Europe/Warsaw" },
+    "tba-amsterdam": { "name": "Venue nog niet bekend", "city": "Amsterdam", "country": "NL", "tz": "Europe/Amsterdam" },
+    "tba-cologne": { "name": "Venue nog niet bekend", "city": "Cologne", "country": "DE", "tz": "Europe/Berlin" },
+    "tba-antwerp": { "name": "Venue nog niet bekend", "city": "Antwerp", "country": "BE", "tz": "Europe/Brussels" }
   },
   "events": [
     {
       "venue": "tba-incheon",
       "date": "2027-01-22",
-      "sources": [
-        "koreaTimes",
-        "starnews",
-        "joongang",
-        "karlobag"
-      ],
-      "notes": [
-        "Aangekondigd door KQ Entertainment (volgens de Korea Times); de officiële bron zelf is nog niet gecontroleerd."
-      ],
+      "sources": ["koreaTimes", "starnews", "joongang", "karlobag"],
+      "notes": ["Aangekondigd door KQ Entertainment (volgens de Korea Times); de officiële bron zelf is nog niet gecontroleerd."],
       "verification": "official"
     },
-    {
-      "venue": "tba-incheon",
-      "date": "2027-01-23",
-      "sources": [
-        "koreaTimes",
-        "starnews",
-        "joongang",
-        "karlobag"
-      ],
-      "verification": "official"
-    },
-    {
-      "venue": "tba-incheon",
-      "date": "2027-01-24",
-      "sources": [
-        "koreaTimes",
-        "starnews",
-        "karlobag"
-      ],
-      "verification": "official"
-    },
-    {
-      "venue": "tba-tokyo",
-      "date": "2027-02-02",
-      "sources": [
-        "starnews"
-      ],
-      "verification": "official"
-    },
-    {
-      "venue": "tba-tokyo",
-      "date": "2027-02-03",
-      "sources": [
-        "starnews"
-      ],
-      "verification": "official"
-    },
-    {
-      "venue": "tba-kobe",
-      "date": "2027-02-13",
-      "sources": [
-        "starnews"
-      ],
-      "verification": "official"
-    },
-    {
-      "venue": "tba-kobe",
-      "date": "2027-02-14",
-      "sources": [
-        "starnews"
-      ],
-      "verification": "official"
-    },
+    { "venue": "tba-incheon", "date": "2027-01-23", "sources": ["koreaTimes", "starnews", "joongang", "karlobag"], "verification": "official" },
+    { "venue": "tba-incheon", "date": "2027-01-24", "sources": ["koreaTimes", "starnews", "karlobag"], "verification": "official" },
+    { "venue": "tba-tokyo", "date": "2027-02-02", "sources": ["starnews"], "verification": "official" },
+    { "venue": "tba-tokyo", "date": "2027-02-03", "sources": ["starnews"], "verification": "official" },
+    { "venue": "tba-kobe", "date": "2027-02-13", "sources": ["starnews"], "verification": "official" },
+    { "venue": "tba-kobe", "date": "2027-02-14", "sources": ["starnews"], "verification": "official" },
     {
       "venue": "tba-london",
       "date": "2027-03-31",
-      "sources": [
-        "karlobag"
-      ],
+      "sources": ["karlobag"],
       "verification": "unconfirmed",
-      "notes": [
-        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
-      ]
+      "notes": ["Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."]
     },
     {
       "venue": "tba-lyon",
       "date": "2027-04-04",
-      "sources": [
-        "karlobag"
-      ],
+      "sources": ["karlobag"],
       "verification": "unconfirmed",
-      "notes": [
-        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
-      ]
+      "notes": ["Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."]
     },
     {
       "venue": "tba-berlin",
       "date": "2027-04-07",
-      "sources": [
-        "karlobag"
-      ],
+      "sources": ["karlobag"],
       "verification": "unconfirmed",
-      "notes": [
-        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
-      ]
+      "notes": ["Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."]
     },
     {
       "venue": "tba-krakow",
       "date": "2027-04-10",
-      "sources": [
-        "karlobag"
-      ],
+      "sources": ["karlobag"],
       "verification": "unconfirmed",
-      "notes": [
-        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
-      ]
+      "notes": ["Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."]
     },
     {
       "venue": "tba-amsterdam",
       "date": "2027-04-12",
-      "sources": [
-        "karlobag"
-      ],
+      "sources": ["karlobag"],
       "verification": "unconfirmed",
-      "notes": [
-        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
-      ]
+      "notes": ["Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."]
     },
     {
       "venue": "tba-cologne",
       "date": "2027-04-15",
-      "sources": [
-        "karlobag"
-      ],
+      "sources": ["karlobag"],
       "verification": "unconfirmed",
-      "notes": [
-        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
-      ]
+      "notes": ["Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."]
     },
     {
       "venue": "tba-antwerp",
       "date": "2027-04-17",
-      "sources": [
-        "karlobag"
-      ],
+      "sources": ["karlobag"],
       "verification": "unconfirmed",
-      "notes": [
-        "Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."
-      ]
+      "notes": ["Stad en datum komen uit een nieuwsbericht; KQ Entertainment noemde officieel alleen \"Europa in april\". Venue en verkoop nog niet bekend."]
     }
   ],
   "claims": [
@@ -257,5 +123,99 @@
       "source": "joongang",
       "evidence": "Korea JoongAng Daily noemt 22, 23 en 25 januari in plaats van 22 tot en met 24 januari."
     }
-  ]
+  ],
+  "popularity": {
+    "metrics": [
+      { "metric": "lastfm_listeners", "value": 881700, "source": "lastfm", "note": "881.7K op de pagina" },
+      { "metric": "lastfm_playcount", "value": 236500000, "source": "lastfm", "note": "236.5M op de pagina" }
+    ],
+    "charts": [
+      { "chart": "Circle Album Chart", "country": "KR", "title": "Golden Hour: Part.5", "kind": "album", "peak": 1, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Billboard 200", "country": "US", "title": "Golden Hour: Part.5", "kind": "album", "peak": 1, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Oricon Albums", "country": "JP", "title": "Golden Hour: Part.5", "kind": "album", "peak": 4, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Billboard 200", "country": "US", "title": "Golden Hour: Part.4", "kind": "album", "peak": 3, "year": 2026, "source": "wikiDisc" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "Towards the Light: Will to Power",
+        "year": 2025,
+        "date": "2025-02-03",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "Ziggo Dome",
+        "capacity": 13901,
+        "shows": 1,
+        "sellThrough": 0.9829,
+        "detail": "13.663 kaarten verkocht (98,29% van de beschikbare kaarten).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Towards the Light: Will to Power",
+        "year": 2025,
+        "date": "2025-01-27",
+        "city": "London",
+        "country": "GB",
+        "venue": "The O2",
+        "capacity": 11065,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "22.129 kaarten verkocht (100%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Towards the Light: Will to Power",
+        "year": 2025,
+        "date": "2025-02-18",
+        "city": "Berlin",
+        "country": "DE",
+        "venue": "Uber Arena",
+        "capacity": 12240,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "24.479 kaarten verkocht (100%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Towards the Light: Will to Power",
+        "year": 2025,
+        "date": "2025-02-11",
+        "city": "Cologne",
+        "country": "DE",
+        "venue": "Lanxess Arena",
+        "capacity": 14156,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "14.156 kaarten verkocht (100%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Towards the Light: Will to Power",
+        "year": 2025,
+        "date": "2025-02-22",
+        "city": "Paris",
+        "country": "FR",
+        "venue": "La Défense Arena",
+        "capacity": 29225,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "29.225 kaarten verkocht (100%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Towards the Light: Will to Power",
+        "year": 2025,
+        "date": "2025-02-25",
+        "city": "Brussels",
+        "country": "BE",
+        "venue": "ING Arena",
+        "capacity": 11005,
+        "shows": 1,
+        "sellThrough": 0.8912,
+        "detail": "9.808 kaarten verkocht (89,12%).",
+        "sources": ["touringdata"]
+      }
+    ]
+  }
 }

@@ -4,6 +4,7 @@ import {
   COUNTRY_NL,
   countdown,
   earliestInstant,
+  formatCompact,
   formatDate,
   formatDual,
   formatTimePoint,
@@ -100,6 +101,38 @@ export function timeAgo(iso: string, now = new Date()): string {
   const d = Math.round(h / 24);
   return `${d} dagen geleden`;
 }
+
+/** Korte naam van een verkoopmoment voor in het overzicht. */
+export function momentLabel(item: TimelineItem): string {
+  // "Inschrijving sluit: Inschrijving artist presale" → "Inschrijving sluit: artist presale"
+  const say = (head: string, word: string) => {
+    const r = item.phase.name.replace(new RegExp(`^${word}\\s+(voor\\s+)?`, 'i'), '');
+    return r.toLowerCase() === word ? head : `${head}: ${r}`;
+  };
+  if (item.role === 'deadline') return item.kind === 'lottery' ? say('Loting sluit', 'loting') : say('Inschrijving sluit', 'inschrijving');
+  if (item.role === 'opens') return item.kind === 'lottery' ? say('Loting opent', 'loting') : say('Inschrijving opent', 'inschrijving');
+  if (item.role === 'draw') return say('Uitslag loting', 'loting');
+  if (item.kind === 'general_sale') return item.phase.name === 'Algemene verkoop' ? 'Algemene verkoop' : `Algemene verkoop (${item.phase.name})`;
+  return item.phase.name;
+}
+
+/** Lokale tijd en, als die afwijkt, de Nederlandse tijd. */
+export function momentTimes(item: TimelineItem): { local: string; nl: string | null } {
+  if (item.at.precision !== 'exact') return { local: formatTimePoint(item.at), nl: null };
+  const d = formatDual(item.at);
+  return { local: d.local, nl: d.same ? null : d.user };
+}
+
+/** Aftelklok of status van een verkoopmoment. */
+export function momentCountdown(item: TimelineItem, now: Date): string | null {
+  if (item.state === 'past') return 'voorbij';
+  if (item.state === 'now') return 'nu bezig';
+  if (item.state === 'unknown') return null;
+  const at = earliestInstant(item.at);
+  return at ? `over ${countdown(at, DateTime.fromJSDate(now))}` : null;
+}
+
+export { formatCompact };
 
 export function typeLabel(t: SnapshotEvent['type']): string {
   return { concert: 'Concert', festival: 'Festival', sport: 'Sport', theatre: 'Theater', comedy: 'Comedy', other: 'Overig' }[t];

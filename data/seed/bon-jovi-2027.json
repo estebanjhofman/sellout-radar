@@ -1,201 +1,77 @@
 {
-  "artist": {
-    "id": "bon-jovi",
-    "name": "Bon Jovi",
-    "genres": [
-      "rock"
-    ],
-    "fandom": "regular"
-  },
+  "artist": { "id": "bon-jovi", "name": "Bon Jovi", "genres": ["rock"], "fandom": "regular" },
   "tour": {
     "id": "bon-jovi-forever-2027",
     "name": "Forever Tour",
     "leg": "2027",
     "announcedAt": "2026-10-19",
     "soldOutElsewhere": [
-      {
-        "city": "New York",
-        "country": "US",
-        "count": 9,
-        "sources": [
-          "musicUniverse"
-        ]
-      },
-      {
-        "city": "London",
-        "country": "GB",
-        "count": 3,
-        "capacity": 90000,
-        "sources": [
-          "musicUniverse",
-          "wikiStadiums"
-        ]
-      },
-      {
-        "city": "Edinburgh",
-        "country": "GB",
-        "count": 1,
-        "sources": [
-          "musicUniverse"
-        ]
-      },
-      {
-        "city": "Dublin",
-        "country": "IE",
-        "count": 1,
-        "sources": [
-          "musicUniverse"
-        ]
-      }
+      { "city": "New York", "country": "US", "count": 9, "sources": ["musicUniverse"] },
+      { "city": "London", "country": "GB", "count": 3, "capacity": 90000, "sources": ["musicUniverse", "wikiStadiums"] },
+      { "city": "Edinburgh", "country": "GB", "count": 1, "sources": ["musicUniverse"] },
+      { "city": "Dublin", "country": "IE", "count": 1, "sources": ["musicUniverse"] }
     ],
     "verification": "official"
   },
   "type": "concert",
   "sources": {
-    "seatgeek": {
-      "name": "SeatGeek",
-      "kind": "news",
-      "url": "https://seatgeek.ca/blog/bon-jovi-forever-tour-2027-dates-schedule-presales-tickets-and-what-to-expect",
-      "checked": "2026-10-29"
-    },
-    "musicUniverse": {
-      "name": "The Music Universe",
-      "kind": "news",
-      "url": "https://themusicuniverse.com/bon-jovi-reveals-global-2027-forever-tour/",
-      "checked": "2026-10-29"
-    },
+    "seatgeek": { "name": "SeatGeek", "kind": "news", "url": "https://seatgeek.ca/blog/bon-jovi-forever-tour-2027-dates-schedule-presales-tickets-and-what-to-expect", "checked": "2026-10-29" },
+    "musicUniverse": { "name": "The Music Universe", "kind": "news", "url": "https://themusicuniverse.com/bon-jovi-reveals-global-2027-forever-tour/", "checked": "2026-10-29" },
     "wikiStadiums": {
       "name": "Wikipedia: List of European stadiums by capacity",
       "kind": "aggregator",
       "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity",
       "checked": "2026-10-29T21:20:00Z",
       "note": "Sportcapaciteit; de concertopstelling kan afwijken."
+    },
+    "lastfm": {
+      "name": "Last.fm: Bon Jovi",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/Bon+Jovi",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiForever": { "name": "Wikipedia: Forever (Bon Jovi album)", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Forever_(Bon_Jovi_album)", "checked": "2026-10-30" },
+    "wikiTour": {
+      "name": "Wikipedia: This House Is Not for Sale Tour",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/This_House_Is_Not_for_Sale_Tour",
+      "checked": "2026-10-30",
+      "note": "Box office: verkocht / beschikbaar per show."
     }
   },
   "venues": {
-    "marvel-stadium": {
-      "name": "Marvel Stadium",
-      "city": "Melbourne",
-      "country": "AU",
-      "tz": "Australia/Melbourne"
-    },
-    "accor-stadium": {
-      "name": "Accor Stadium",
-      "city": "Sydney",
-      "country": "AU",
-      "tz": "Australia/Sydney",
-      "outdoor": true
-    },
-    "bst-hyde-park": {
-      "name": "BST Hyde Park",
-      "city": "London",
-      "country": "GB",
-      "tz": "Europe/London",
-      "outdoor": true
-    },
-    "metlife-stadium": {
-      "name": "MetLife Stadium",
-      "city": "East Rutherford",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "soldier-field": {
-      "name": "Soldier Field",
-      "city": "Chicago",
-      "country": "US",
-      "tz": "America/Chicago",
-      "outdoor": true
-    },
-    "gillette-stadium": {
-      "name": "Gillette Stadium",
-      "city": "Foxborough",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "rogers-stadium": {
-      "name": "Rogers Stadium",
-      "city": "Toronto",
-      "country": "CA",
-      "tz": "America/Toronto",
-      "outdoor": true
-    }
+    "marvel-stadium": { "name": "Marvel Stadium", "city": "Melbourne", "country": "AU", "tz": "Australia/Melbourne" },
+    "accor-stadium": { "name": "Accor Stadium", "city": "Sydney", "country": "AU", "tz": "Australia/Sydney", "outdoor": true },
+    "bst-hyde-park": { "name": "BST Hyde Park", "city": "London", "country": "GB", "tz": "Europe/London", "outdoor": true },
+    "metlife-stadium": { "name": "MetLife Stadium", "city": "East Rutherford", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "soldier-field": { "name": "Soldier Field", "city": "Chicago", "country": "US", "tz": "America/Chicago", "outdoor": true },
+    "gillette-stadium": { "name": "Gillette Stadium", "city": "Foxborough", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "rogers-stadium": { "name": "Rogers Stadium", "city": "Toronto", "country": "CA", "tz": "America/Toronto", "outdoor": true }
   },
   "events": [
     {
       "venue": "marvel-stadium",
       "date": "2027-03-04",
-      "sources": [
-        "musicUniverse",
-        "seatgeek"
-      ],
-      "notes": [
-        "Verkoopinformatie voor Australië nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."
-      ]
+      "sources": ["musicUniverse", "seatgeek"],
+      "notes": ["Verkoopinformatie voor Australië nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."]
     },
     {
       "venue": "accor-stadium",
       "date": "2027-03-11",
-      "sources": [
-        "musicUniverse",
-        "seatgeek"
-      ],
-      "notes": [
-        "Verkoopinformatie voor Australië nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."
-      ]
+      "sources": ["musicUniverse", "seatgeek"],
+      "notes": ["Verkoopinformatie voor Australië nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."]
     },
     {
       "venue": "bst-hyde-park",
       "date": "2027-06-24",
-      "sources": [
-        "musicUniverse",
-        "seatgeek"
-      ],
-      "notes": [
-        "Verkoopinformatie voor het VK nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."
-      ]
+      "sources": ["musicUniverse", "seatgeek"],
+      "notes": ["Verkoopinformatie voor het VK nog niet gevonden; de aankondiging verwijst naar lokale ticketinformatie."]
     },
-    {
-      "venue": "metlife-stadium",
-      "date": "2027-07-15",
-      "status": "onsale",
-      "sources": [
-        "musicUniverse",
-        "seatgeek"
-      ],
-      "notes": [
-        "Thuiswedstrijd: Bon Jovi komt uit New Jersey."
-      ]
-    },
-    {
-      "venue": "soldier-field",
-      "date": "2027-07-21",
-      "status": "onsale",
-      "sources": [
-        "musicUniverse",
-        "seatgeek"
-      ]
-    },
-    {
-      "venue": "gillette-stadium",
-      "date": "2027-07-28",
-      "status": "onsale",
-      "sources": [
-        "musicUniverse",
-        "seatgeek"
-      ]
-    },
-    {
-      "venue": "rogers-stadium",
-      "date": "2027-08-04",
-      "sources": [
-        "seatgeek"
-      ],
-      "notes": [
-        "Ontbreekt in de datumlijst van The Music Universe; wel genoemd door SeatGeek."
-      ]
-    }
+    { "venue": "metlife-stadium", "date": "2027-07-15", "status": "onsale", "sources": ["musicUniverse", "seatgeek"], "notes": ["Thuiswedstrijd: Bon Jovi komt uit New Jersey."] },
+    { "venue": "soldier-field", "date": "2027-07-21", "status": "onsale", "sources": ["musicUniverse", "seatgeek"] },
+    { "venue": "gillette-stadium", "date": "2027-07-28", "status": "onsale", "sources": ["musicUniverse", "seatgeek"] },
+    { "venue": "rogers-stadium", "date": "2027-08-04", "sources": ["seatgeek"], "notes": ["Ontbreekt in de datumlijst van The Music Universe; wel genoemd door SeatGeek."] }
   ],
   "phases": [
     {
@@ -204,20 +80,12 @@
       "type": "artist",
       "name": "Artist presale",
       "region": "US",
-      "events": {
-        "countries": [
-          "US"
-        ]
-      },
+      "events": { "countries": ["US"] },
       "start": "2026-10-28T10:00",
       "end": "2026-10-29T22:00",
       "whereToRegister": "bonjovi.com",
-      "notes": [
-        "The Music Universe noemt 'Tuesday, October 28th', maar 28 oktober 2026 is een woensdag. SeatGeek noemt woensdag 28 oktober; die datum is aangehouden."
-      ],
-      "sources": [
-        "seatgeek"
-      ]
+      "notes": ["The Music Universe noemt 'Tuesday, October 28th', maar 28 oktober 2026 is een woensdag. SeatGeek noemt woensdag 28 oktober; die datum is aangehouden."],
+      "sources": ["seatgeek"]
     },
     {
       "key": "na-livenation-presale",
@@ -225,18 +93,12 @@
       "type": "livenation",
       "name": "Live Nation-presale",
       "region": "US",
-      "events": {
-        "countries": [
-          "US"
-        ]
-      },
+      "events": { "countries": ["US"] },
       "start": "2026-10-29T10:00",
       "end": "2026-10-29T22:00",
       "requiresCode": false,
       "conditions": "Voor (gratis) Live Nation All Access-leden; volgens de eventpagina's geen aparte code nodig.",
-      "sources": [
-        "seatgeek"
-      ]
+      "sources": ["seatgeek"]
     },
     {
       "key": "na-venue-presale",
@@ -244,37 +106,113 @@
       "type": "venue",
       "name": "Venue-presale",
       "region": "US",
-      "events": {
-        "countries": [
-          "US"
-        ]
-      },
+      "events": { "countries": ["US"] },
       "start": "2026-10-29T10:00",
       "end": "2026-10-29T22:00",
       "conditions": "Toegang verschilt per stadion (nieuwsbrief, abonnement of code).",
-      "sources": [
-        "seatgeek"
-      ]
+      "sources": ["seatgeek"]
     },
     {
       "key": "na-general",
       "kind": "general_sale",
       "name": "Algemene verkoop",
       "region": "NA",
-      "events": {
-        "countries": [
-          "US",
-          "CA"
-        ]
-      },
+      "events": { "countries": ["US", "CA"] },
       "start": "2026-10-30T10:00",
-      "notes": [
-        "Voor Toronto kunnen beschikbaarheid en presales afwijken."
-      ],
-      "sources": [
-        "seatgeek",
-        "musicUniverse"
-      ]
+      "notes": ["Voor Toronto kunnen beschikbaarheid en presales afwijken."],
+      "sources": ["seatgeek", "musicUniverse"]
     }
-  ]
+  ],
+  "popularity": {
+    "metrics": [{ "metric": "lastfm_listeners", "value": 4363478, "source": "lastfm" }, { "metric": "lastfm_playcount", "value": 128328320, "source": "lastfm" }],
+    "charts": [
+      { "chart": "UK Albums Chart", "country": "GB", "title": "Forever", "kind": "album", "peak": 3, "year": 2024, "source": "wikiForever" },
+      { "chart": "Billboard 200", "country": "US", "title": "Forever", "kind": "album", "peak": 5, "year": 2024, "source": "wikiForever" },
+      { "chart": "ARIA Albums", "country": "AU", "title": "Forever", "kind": "album", "peak": 4, "year": 2024, "source": "wikiForever" },
+      { "chart": "Album Top 100", "country": "NL", "title": "Forever", "kind": "album", "peak": 7, "year": 2024, "source": "wikiForever" },
+      { "chart": "Canadian Albums", "country": "CA", "title": "Forever", "kind": "album", "peak": 36, "year": 2024, "source": "wikiForever" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "This House Is Not for Sale Tour",
+        "year": 2019,
+        "date": "2019-06-21",
+        "city": "London",
+        "country": "GB",
+        "venue": "Wembley Stadium",
+        "capacity": 69674,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "69.674 van 69.674 kaarten verkocht.",
+        "sources": ["wikiTour"]
+      },
+      {
+        "tour": "This House Is Not for Sale Tour",
+        "year": 2018,
+        "date": "2018-12-01",
+        "city": "Melbourne",
+        "country": "AU",
+        "venue": "Melbourne Cricket Ground",
+        "capacity": 64314,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "64.314 van 64.314 kaarten verkocht.",
+        "sources": ["wikiTour"]
+      },
+      {
+        "tour": "This House Is Not for Sale Tour",
+        "year": 2018,
+        "date": "2018-12-08",
+        "city": "Sydney",
+        "country": "AU",
+        "venue": "ANZ Stadium",
+        "capacity": 49553,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "49.553 van 49.553 kaarten verkocht.",
+        "sources": ["wikiTour"]
+      },
+      {
+        "tour": "This House Is Not for Sale Tour",
+        "year": 2018,
+        "date": "2018-05-12",
+        "city": "Toronto",
+        "country": "CA",
+        "venue": "Air Canada Centre",
+        "capacity": 17721,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "17.721 van 17.721 kaarten verkocht.",
+        "sources": ["wikiTour"]
+      },
+      {
+        "tour": "This House Is Not for Sale Tour",
+        "year": 2018,
+        "date": "2018-04-26",
+        "city": "Chicago",
+        "country": "US",
+        "venue": "United Center",
+        "capacity": 15787,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "15.787 van 15.787 kaarten verkocht.",
+        "sources": ["wikiTour"]
+      },
+      {
+        "tour": "This House Is Not for Sale Tour",
+        "year": 2018,
+        "date": "2018-04-02",
+        "city": "Boston",
+        "country": "US",
+        "venue": "TD Garden",
+        "capacity": 15815,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "15.815 van 15.815 kaarten verkocht.",
+        "sources": ["wikiTour"]
+      }
+    ]
+  }
 }

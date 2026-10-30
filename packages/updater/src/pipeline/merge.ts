@@ -9,6 +9,7 @@ import {
   isOfficial,
   normalizeName,
   resolveClaims,
+  saleStage,
   sameTimePoint,
   sameVenue,
   slug,
@@ -154,6 +155,8 @@ export function mergeAll(input: MergeInput): MergeOutput {
     phases: new Map(input.previous.phases.map((p) => [p.id, p])),
     claims: [],
     conflicts: [],
+    observations: [],
+    facts: new Map(),
   });
 
   // 1. Seed bovenop de vorige catalogus: de handmatig gecontroleerde structuur gaat voor.
@@ -478,13 +481,12 @@ export function mergeAll(input: MergeInput): MergeOutput {
       if (r.conflict) conflicts.push(r.conflict);
     }
   }
-  // Afgeleide status: zodra een verkoopfase is begonnen, is de datum "in de verkoop".
+  // Afgeleide status: zodra een presale of de algemene verkoop is begonnen, is de datum "in de verkoop"
+  // (zelfde regel als het tabblad in de app; een start die alleen tot op de maand bekend is, telt niet).
   for (const ev of cat.events.values()) {
     if (ev.status !== 'announced') continue;
-    const started = [...(phasesByEvent.get(ev.id) ?? [])]
-      .map((id) => cat.phases.get(id))
-      .some((p) => p && p.kind !== 'registration' && p.kind !== 'lottery' && (earliestInstant(p.start)?.toMillis() ?? Infinity) <= nowDt.toMillis());
-    if (started) ev.status = 'onsale';
+    const phases = [...(phasesByEvent.get(ev.id) ?? [])].map((id) => cat.phases.get(id)).filter((p): p is SalePhase => !!p);
+    if (saleStage(ev, phases, nowDt) === 'onsale') ev.status = 'onsale';
   }
 
   // 5. Opruimen: fases zonder datums, datums ruim voorbij.

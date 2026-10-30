@@ -22,6 +22,14 @@ async function main() {
     const { issues, files, catalog } = compileSeedDir(path.join(cfg.dataDir, 'seed'));
     for (const i of issues) console.log(`${i.level === 'error' ? 'FOUT ' : 'let op'} ${i.file}: ${i.message}`);
     console.log(`${files.length} bestanden, ${catalog.events.size} datums, ${catalog.phases.size} fases, ${catalog.venues.size} venues.`);
+    const withListeners = new Set(catalog.observations.filter((o) => o.metric === 'lastfm_listeners').map((o) => o.entity)).size;
+    const withCharts = [...catalog.facts.values()].filter((f) => f.charts.length).length;
+    const tours = [...catalog.tours.values()];
+    const withHistory = tours.filter((t) => t.previousVisits?.length || t.previousEditions?.length).length;
+    const withCapacity = [...catalog.venues.values()].filter((v) => v.capacity).length;
+    console.log(
+      `Populariteit: ${withListeners} met Last.fm-luisteraars, ${withCharts} met hitnoteringen; ${withHistory} van ${tours.length} met vorige tour of editie; ${withCapacity} venues met capaciteit.`,
+    );
     process.exit(issues.some((i) => i.level === 'error') ? 1 : 0);
   }
 
@@ -30,8 +38,12 @@ async function main() {
 
   if (cmd === 'calibrate') {
     const state = await store.load();
-    const rep = recalibrate(state.model, state.outcomes, cfg.now);
-    console.log(JSON.stringify({ reason: rep.reason, applied: rep.applied, before: rep.before, after: rep.after, accuracy: accuracySummary(state.outcomes) }, null, 2));
+    const report = (kind: 'rush' | 'sellout') => {
+      const records = kind === 'rush' ? state.rushOutcomes : state.outcomes;
+      const rep = recalibrate(state.models[kind], records, cfg.now);
+      return { model: state.models[kind].version, reason: rep.reason, applied: rep.applied, before: rep.before, after: rep.after, accuracy: accuracySummary(records) };
+    };
+    console.log(JSON.stringify({ verwachteDrukte: report('rush'), uitverkoopkans: report('sellout') }, null, 2));
     return;
   }
 

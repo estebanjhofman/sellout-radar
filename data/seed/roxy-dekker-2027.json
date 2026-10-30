@@ -1,25 +1,9 @@
 {
-  "artist": {
-    "id": "roxy-dekker",
-    "name": "Roxy Dekker",
-    "genres": [
-      "pop"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "roxy-dekker-arena-2027",
-    "name": "Roxy Dekker in de Johan Cruijff ArenA",
-    "verification": "official"
-  },
+  "artist": { "id": "roxy-dekker", "name": "Roxy Dekker", "genres": ["pop"], "fandom": "regular" },
+  "tour": { "id": "roxy-dekker-arena-2027", "name": "Roxy Dekker in de Johan Cruijff ArenA", "verification": "official" },
   "type": "concert",
   "sources": {
-    "jca": {
-      "name": "Johan Cruijff ArenA",
-      "kind": "venue",
-      "url": "https://www.johancruijffarena.nl/en/news/johan-cruijff-arena/roxy-dekker-in-de-johan-cruijff-arena/",
-      "checked": "2026-10-30"
-    },
+    "jca": { "name": "Johan Cruijff ArenA", "kind": "venue", "url": "https://www.johancruijffarena.nl/en/news/johan-cruijff-arena/roxy-dekker-in-de-johan-cruijff-arena/", "checked": "2026-10-30" },
     "hvn": {
       "name": "Hart van Nederland",
       "kind": "news",
@@ -32,19 +16,27 @@
       "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity",
       "checked": "2026-10-29",
       "note": "Sportcapaciteit; de concertopstelling kan afwijken."
-    }
+    },
+    "lastfm": {
+      "name": "Last.fm: Roxy Dekker",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/Roxy+Dekker",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiMIMI": { "name": "Wikipedia: Mama I Made It", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Mama_I_Made_It", "checked": "2026-10-30" },
+    "wikiRoxy": { "name": "Wikipedia: Roxy Dekker", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Roxy_Dekker", "checked": "2026-10-30" },
+    "nhZiggo": {
+      "name": "NH Nieuws / AT5: Roxy Dekker treedt volgend jaar op in Johan Cruijff Arena",
+      "kind": "news",
+      "url": "https://www.nhnieuws.nl/nieuws/363107/amsterdamse-popster-roxy-dekker-treedt-volgend-jaar-op-in-johan-cruijff-arena",
+      "checked": "2026-10-30",
+      "note": "Artikel van 4 september 2026: 'deze week vier keer in een uitverkochte Ziggo Dome'."
+    },
+    "wikiZiggo": { "name": "Wikipedia: Ziggo Dome", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Ziggo_Dome", "checked": "2026-10-30" }
   },
   "venues": {
-    "johan-cruijff-arena": {
-      "name": "Johan Cruijff ArenA",
-      "city": "Amsterdam",
-      "country": "NL",
-      "tz": "Europe/Amsterdam",
-      "capacity": 55445,
-      "capacitySource": "wikiStadiums",
-      "lat": 52.3144,
-      "lon": 4.9419
-    }
+    "johan-cruijff-arena": { "name": "Johan Cruijff ArenA", "city": "Amsterdam", "country": "NL", "tz": "Europe/Amsterdam", "capacity": 55445, "capacitySource": "wikiStadiums", "lat": 52.3144, "lon": 4.9419 }
   },
   "events": [
     {
@@ -52,37 +44,38 @@
       "date": "2027-04-24",
       "status": "soldout",
       "soldOutAt": "2026-09-09T08:15:00Z",
-      "sources": [
-        "jca",
-        "hvn"
-      ],
-      "notes": [
-        "Binnen enkele minuten uitverkocht volgens organisator Friendly Fire; een deel ging al in de presale weg.",
-        "Er komt geen tweede concert in de ArenA."
-      ]
+      "sources": ["jca", "hvn"],
+      "notes": ["Binnen enkele minuten uitverkocht volgens organisator Friendly Fire; een deel ging al in de presale weg.", "Er komt geen tweede concert in de ArenA."]
     }
   ],
   "phases": [
-    {
-      "key": "presale",
-      "kind": "presale",
-      "type": "artist",
-      "name": "Presale",
-      "events": "all",
-      "start": "2026-09-07T10:00",
-      "sources": [
-        "jca"
-      ]
-    },
-    {
-      "key": "general",
-      "kind": "general_sale",
-      "name": "Algemene verkoop",
-      "events": "all",
-      "start": "2026-09-09T10:00",
-      "sources": [
-        "jca"
-      ]
-    }
-  ]
+    { "key": "presale", "kind": "presale", "type": "artist", "name": "Presale", "events": "all", "start": "2026-09-07T10:00", "sources": ["jca"] },
+    { "key": "general", "kind": "general_sale", "name": "Algemene verkoop", "events": "all", "start": "2026-09-09T10:00", "sources": ["jca"] }
+  ],
+  "popularity": {
+    "metrics": [{ "metric": "lastfm_listeners", "value": 58821, "source": "lastfm" }, { "metric": "lastfm_playcount", "value": 2897229, "source": "lastfm" }],
+    "charts": [
+      { "chart": "Album Top 100", "country": "NL", "title": "Mama I Made It", "kind": "album", "peak": 1, "year": 2025, "source": "wikiMIMI" },
+      { "chart": "Ultratop Vlaanderen", "country": "BE", "title": "Mama I Made It", "kind": "album", "peak": 1, "year": 2025, "source": "wikiMIMI" },
+      { "chart": "Nederlandse Top 40", "country": "NL", "title": "Ga dan!", "kind": "single", "peak": 2, "year": 2025, "source": "wikiRoxy" },
+      { "chart": "Nederlandse Top 40", "country": "NL", "title": "Superstar", "kind": "single", "peak": 13, "year": 2026, "source": "wikiRoxy" },
+      { "chart": "Nederlandse Top 40", "country": "NL", "title": "Sugardaddy", "kind": "single", "peak": 1, "year": 2024, "source": "wikiRoxy" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "year": 2026,
+        "date": "2026-09",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "Ziggo Dome",
+        "capacity": 17000,
+        "shows": 4,
+        "soldOut": true,
+        "detail": "Vier uitverkochte shows in de week van 4 september 2026.",
+        "sources": ["nhZiggo", "wikiZiggo"]
+      }
+    ]
+  }
 }

@@ -4,9 +4,9 @@ import type { CatalogEvent } from '../catalog';
 import { emptyResult, type Connector, type ConnectorContext } from './types';
 
 /**
- * Signaalbronnen voor de score: doorverkoop (SeatGeek), luisteraars (Last.fm),
- * video's (YouTube) en eerdere bezoeken (setlist.fm). Allemaal officiële API's met een
- * eigen sleutel; zonder sleutel wordt de bron overgeslagen.
+ * Signaalbronnen: doorverkoop (SeatGeek), luisteraars en toplijsten per land (Last.fm),
+ * kanaalcijfers (YouTube, alleen ter informatie) en eerdere bezoeken (setlist.fm). Allemaal
+ * officiële API's met een eigen sleutel; zonder sleutel wordt de bron overgeslagen.
  */
 
 function upcomingEvents(ctx: ConnectorContext): CatalogEvent[] {
@@ -67,9 +67,26 @@ export class SeatGeekConnector implements Connector {
 }
 
 // ---------------------------------------------------------------------------
-// Last.fm: luisteraars wereldwijd en positie in de Nederlandse toplijst
-// Voorwaarden: https://www.last.fm/api/tos (niet-commercieel, met bronvermelding)
+// Last.fm: luisteraars wereldwijd en de toplijsten per land
+// Voorwaarden: https://www.last.fm/api/tos (alleen niet-commercieel, met bronvermelding en link naar
+// Last.fm; gebruik volgens de HTTP-cacheheaders; hooguit 100 MB opslag). We vragen drie keer per dag op.
 // ---------------------------------------------------------------------------
+
+/** Landnamen zoals Last.fm ze verwacht (ISO 3166-1 country names). */
+export const LASTFM_COUNTRY: Record<string, string> = {
+  NL: 'Netherlands', BE: 'Belgium', LU: 'Luxembourg', DE: 'Germany', FR: 'France', GB: 'United Kingdom', IE: 'Ireland',
+  ES: 'Spain', PT: 'Portugal', IT: 'Italy', AT: 'Austria', CH: 'Switzerland', SE: 'Sweden', NO: 'Norway', DK: 'Denmark',
+  FI: 'Finland', PL: 'Poland', CZ: 'Czech Republic', HU: 'Hungary', HR: 'Croatia', RS: 'Serbia', BG: 'Bulgaria',
+  RO: 'Romania', GR: 'Greece', TR: 'Turkey', US: 'United States', CA: 'Canada', MX: 'Mexico', BR: 'Brazil',
+  AR: 'Argentina', CL: 'Chile', AU: 'Australia', NZ: 'New Zealand', JP: 'Japan', KR: 'Korea, Republic of',
+  TW: 'Taiwan', HK: 'Hong Kong', SG: 'Singapore', MY: 'Malaysia', ID: 'Indonesia', TH: 'Thailand', PH: 'Philippines',
+};
+
+/** Lengte van de opgevraagde toplijsten (2 pagina's van 500). */
+export const LASTFM_LIST_PAGES = 2;
+const LASTFM_PAGE_SIZE = 500;
+/** Hooguit zoveel landen per run (de landen met de meeste komende datums gaan voor). */
+const LASTFM_MAX_COUNTRIES = 20;
 
 export class LastFmConnector implements Connector {
   name = 'Last.fm';
@@ -79,43 +96,89 @@ export class LastFmConnector implements Connector {
     const res = emptyResult(this.name, this.kind);
     const key = ctx.cfg.keys.lastfm;
     if (!key) return { ...res, skipped: true, message: 'Niet ingesteld (LASTFM_API_KEY ontbreekt).' };
-    const src: SourceRef = { name: 'Last.fm', kind: 'aggregator', url: 'https://www.last.fm', fetchedAt: ctx.now };
-    const artists = new Set(upcomingEvents(ctx).flatMap((e) => e.artistIds));
+    const upcoming = upcomingEvents(ctx);
+    const artists = new Set(upcoming.flatMap((e) => e.artistIds));
+    const api = async (params: Record<string, string>) => {
+      const qs = new URLSearchParams({ ...params, api_key: key, format: 'json' });
+      const r = await ctx.http.get(`https://ws.audioscrobbler.com/2.0/?${qs}`);
+      if (!r.ok) return null;
+      const d = JSON.parse(r.text) as { error?: number; message?: string } & Record<string, unknown>;
+      if (d.error === 10 || d.error === 26) throw new Error('Last.fm weigert de sleutel.');
+      if (d.error === 29) throw new Error('Last.fm: te veel verzoeken; volgende run opnieuw.');
+      return d.error ? null : d;
+    };
+
+    // 1. Luisteraars en afspeelaantal per artiest (wereldwijd), met een link naar de artiestpagina.
     let calls = 0;
     for (const id of artists) {
       if (calls >= 300) break;
       const a = ctx.catalog.artists.get(id);
       if (!a) continue;
       calls++;
-      const qs = new URLSearchParams({ method: 'artist.getinfo', artist: a.name, api_key: key, format: 'json', autocorrect: '1' });
-      const r = await ctx.http.get(`https://ws.audioscrobbler.com/2.0/?${qs}`);
-      if (!r.ok) continue;
-      const d = JSON.parse(r.text) as { artist?: { stats?: { listeners?: string; playcount?: string } }; error?: number };
-      if (d.error === 10 || d.error === 26) throw new Error('Last.fm weigert de sleutel.');
-      const listeners = Number(d.artist?.stats?.listeners);
+      const d = (await api({ method: 'artist.getinfo', artist: a.name, autocorrect: '1' })) as { artist?: { url?: string; stats?: { listeners?: string; playcount?: string } } } | null;
+      const src: SourceRef = { name: 'Last.fm', kind: 'aggregator', url: d?.artist?.url ?? 'https://www.last.fm', fetchedAt: ctx.now };
+      const listeners = Number(d?.artist?.stats?.listeners);
+      const plays = Number(d?.artist?.stats?.playcount);
       if (Number.isFinite(listeners) && listeners > 0) res.observations.push(obs(`artist:${id}`, 'lastfm_listeners', listeners, src, ctx.now));
+      if (Number.isFinite(plays) && plays > 0) res.observations.push(obs(`artist:${id}`, 'lastfm_playcount', plays, src, ctx.now));
     }
-    // Nederlandse toplijst (500 artiesten) als signaal voor de vraag in Nederland.
-    calls++;
-    const qs = new URLSearchParams({ method: 'geo.gettopartists', country: 'netherlands', api_key: key, format: 'json', limit: '500' });
-    const r = await ctx.http.get(`https://ws.audioscrobbler.com/2.0/?${qs}`);
-    if (r.ok) {
-      const d = JSON.parse(r.text) as { topartists?: { artist?: { name: string }[] } };
-      const rankByName = new Map((d.topartists?.artist ?? []).map((x, i) => [normalizeName(x.name), i + 1]));
-      for (const id of artists) {
-        const a = ctx.catalog.artists.get(id);
-        const rank = a ? rankByName.get(normalizeName(a.name)) : undefined;
-        if (rank) res.observations.push(obs(`artist:${id}`, 'lastfm_rank', rank, src, ctx.now, 'NL'));
+
+    // 2. Toplijsten: wereldwijd en per land waar komende datums zijn. Een positie in de lijst van een land
+    //    vergeleken met de wereldwijde positie zegt hoe populair de artiest juist daar is.
+    const byName = new Map<string, string>();
+    for (const id of artists) {
+      const a = ctx.catalog.artists.get(id);
+      if (!a) continue;
+      byName.set(normalizeName(a.name), id);
+      for (const al of a.aliases ?? []) byName.set(normalizeName(al), id);
+    }
+    const lists = (ctx.state.kv['lastfm:lists'] ?? {}) as Record<string, { at: string; size: number }>;
+    const fetchList = async (dimension: string, params: Record<string, string>, pick: (d: Record<string, unknown>) => { name: string; listeners?: string }[] | undefined) => {
+      // Toplijsten veranderen langzaam: hooguit één keer per dag ophalen (de vorige meting blijft gelden).
+      const prev = lists[dimension];
+      if (prev && DateTime.fromISO(ctx.now).diff(DateTime.fromISO(prev.at), 'hours').hours < 20) return;
+      let size = 0;
+      for (let page = 1; page <= LASTFM_LIST_PAGES; page++) {
+        const d = await api({ ...params, limit: String(LASTFM_PAGE_SIZE), page: String(page) });
+        const items = d ? pick(d) : undefined;
+        if (!items || items.length === 0) break;
+        const src: SourceRef = { name: 'Last.fm', kind: 'aggregator', url: 'https://www.last.fm/charts', fetchedAt: ctx.now };
+        items.forEach((x, i) => {
+          const id = byName.get(normalizeName(x.name));
+          if (!id) return;
+          const rank = (page - 1) * LASTFM_PAGE_SIZE + i + 1;
+          res.observations.push(obs(`artist:${id}`, 'lastfm_rank', rank, src, ctx.now, dimension));
+          const l = Number(x.listeners);
+          if (dimension !== 'world' && Number.isFinite(l) && l > 0) res.observations.push(obs(`artist:${id}`, 'lastfm_country_listeners', l, src, ctx.now, dimension));
+        });
+        size += items.length;
+        if (items.length < LASTFM_PAGE_SIZE) break;
       }
+      if (size > 0) lists[dimension] = { at: ctx.now, size };
+    };
+    await fetchList('world', { method: 'chart.gettopartists' }, (d) => (d.artists as { artist?: { name: string; listeners?: string }[] } | undefined)?.artist);
+    const perCountry = new Map<string, number>();
+    for (const e of upcoming) {
+      const c = ctx.catalog.venues.get(e.venueId)?.country;
+      if (c && LASTFM_COUNTRY[c]) perCountry.set(c, (perCountry.get(c) ?? 0) + 1);
     }
-    res.message = `${res.observations.length} metingen.`;
+    const countries = [...perCountry.entries()].sort((a, b) => b[1] - a[1]).slice(0, LASTFM_MAX_COUNTRIES).map(([c]) => c);
+    for (const c of countries) {
+      await fetchList(c, { method: 'geo.gettopartists', country: LASTFM_COUNTRY[c]! }, (d) => (d.topartists as { artist?: { name: string; listeners?: string }[] } | undefined)?.artist);
+    }
+    ctx.state.kv['lastfm:lists'] = lists;
+    res.message = `${res.observations.length} metingen (${countries.length} landen).`;
     return res;
   }
 }
 
 // ---------------------------------------------------------------------------
-// YouTube Data API: totaal aantal weergaven van het kanaal (groei = momentum)
-// Voorwaarden: https://developers.google.com/youtube/terms/api-services-terms-of-service
+// YouTube Data API: abonnees en weergaven van het kanaal, alleen om te tonen.
+// Voorwaarden: https://developers.google.com/youtube/terms/developer-policies
+//  - statistieken die zonder toestemming van de kanaaleigenaar zijn opgehaald, niet langer dan 30 dagen
+//    bewaren (III.E.4.b); daarom ruimt de updater ze na 30 dagen op;
+//  - geen nieuwe of afgeleide maten of scores uit API-data maken (III.E.4.h); daarom telt YouTube niet
+//    mee in de scores en berekenen we geen groei.
 // ---------------------------------------------------------------------------
 
 export class YouTubeConnector implements Connector {
@@ -126,7 +189,6 @@ export class YouTubeConnector implements Connector {
     const res = emptyResult(this.name, this.kind);
     const key = ctx.cfg.keys.youtube;
     if (!key) return { ...res, skipped: true, message: 'Niet ingesteld (YOUTUBE_API_KEY ontbreekt).' };
-    const src: SourceRef = { name: 'YouTube', kind: 'aggregator', url: 'https://www.youtube.com', fetchedAt: ctx.now };
     const cache = (ctx.state.kv['yt:channels'] ?? {}) as Record<string, string | null>;
     const artists = [...new Set(upcomingEvents(ctx).flatMap((e) => e.artistIds))];
     let searches = 0;
@@ -155,14 +217,18 @@ export class YouTubeConnector implements Connector {
       const qs = new URLSearchParams({ part: 'statistics', id: part.map((x) => x.channelId).join(','), key });
       const r = await ctx.http.get(`https://www.googleapis.com/youtube/v3/channels?${qs}`);
       if (!r.ok) continue;
-      const d = JSON.parse(r.text) as { items?: { id: string; statistics?: { viewCount?: string } }[] };
+      const d = JSON.parse(r.text) as { items?: { id: string; statistics?: { viewCount?: string; subscriberCount?: string; hiddenSubscriberCount?: boolean } }[] };
       for (const item of d.items ?? []) {
         const who = part.find((x) => x.channelId === item.id);
+        if (!who) continue;
+        const src: SourceRef = { name: 'YouTube', kind: 'aggregator', url: `https://www.youtube.com/channel/${item.id}`, fetchedAt: ctx.now };
         const views = Number(item.statistics?.viewCount);
-        if (who && Number.isFinite(views)) res.observations.push(obs(`artist:${who.artistId}`, 'youtube_views', views, src, ctx.now));
+        const subs = item.statistics?.hiddenSubscriberCount ? NaN : Number(item.statistics?.subscriberCount);
+        if (Number.isFinite(views)) res.observations.push(obs(`artist:${who.artistId}`, 'youtube_views', views, src, ctx.now));
+        if (Number.isFinite(subs)) res.observations.push(obs(`artist:${who.artistId}`, 'youtube_subscribers', subs, src, ctx.now));
       }
     }
-    res.message = `${res.observations.length} metingen.`;
+    res.message = `${res.observations.length} metingen (alleen ter informatie).`;
     return res;
   }
 }

@@ -1,23 +1,28 @@
 import { DateTime } from 'luxon';
 import type { EventType } from '../types';
 import { applyIsotonic, type IsotonicMap } from './calibration';
-import { FACTOR_FUNCTIONS, FACTORS, type FactorResult, type ScoreInputs } from './factors';
+import { factorDefs, factorFunctions, type FactorResult, type ScoreInputs, type ScoreKind } from './factors';
 import type { ConfidenceLevel } from './labels';
 
 /**
- * Sellout-score = kans (0–100) dat deze datum via de officiële verkoop uitverkocht raakt
- * vóór de showdag.
+ * Twee scores met hetzelfde rekenwerk:
  *
  *   logit(p) = b + b_type + Σ w_i · c_i · s_i
  *
  * s_i ∈ [−1, 1] is het signaal van factor i, c_i ∈ [0, 1] de dekking (hoeveel data er is),
  * w_i het gewicht. Ontbrekende data geeft c_i = 0: neutraal, maar lagere betrouwbaarheid.
+ *
+ *  - Verwachte drukte ('rush'): p = kans dat de datum bij de eerste verkoop uitverkoopt
+ *    (in de presale of binnen 24 uur na de eerste verkoopstart). Hoe hoger, hoe moeilijker
+ *    het wordt om een kaart te krijgen.
+ *  - Uitverkoopkans ('sellout'): p = kans dat de datum vóór de showdag uitverkoopt.
  */
 
-/** Startgewichten, van zwaar naar licht in de volgorde van de opdracht. */
-export const DEFAULT_WEIGHTS: readonly number[] = [2.4, 1.8, 1.5, 1.3, 1.1, 0.9, 0.8, 0.5, 0.4];
+export type { ScoreKind } from './factors';
 
 export interface ScoreModel {
+  /** Ontbreekt bij het oude formaat (één score); dat telt als 'sellout'. */
+  kind?: ScoreKind;
   version: string;
   /** Basiskans zonder enige informatie. */
   baseRate: number;
@@ -33,13 +38,36 @@ export interface ScoreModel {
   trainedAt?: string;
 }
 
-export const DEFAULT_MODEL: ScoreModel = {
-  version: 'start-2026-10',
-  baseRate: 0.3,
+/** Startgewichten Verwachte drukte: populariteit/plekken, groei, vorige tour, schaarste, fanbase, vraag elders. */
+export const DEFAULT_RUSH_WEIGHTS: readonly number[] = [1.6, 0.9, 1.5, 1.3, 1.0, 1.8];
+/** Startgewichten Uitverkoopkans: drukte vooraf, uitverkochte datums, extra shows, snelheid, doorverkoop, bijna uitverkocht. */
+export const DEFAULT_SELLOUT_WEIGHTS: readonly number[] = [3.0, 2.0, 1.2, 1.5, 1.3, 2.0];
+
+export const DEFAULT_RUSH_MODEL: ScoreModel = {
+  kind: 'rush',
+  version: 'drukte-start-2026-10',
+  baseRate: 0.25,
   typeOffsets: {},
-  weights: [...DEFAULT_WEIGHTS],
+  weights: [...DEFAULT_RUSH_WEIGHTS],
   outcomesUsed: 0,
 };
+
+export const DEFAULT_SELLOUT_MODEL: ScoreModel = {
+  kind: 'sellout',
+  version: 'kans-start-2026-10',
+  baseRate: 0.3,
+  typeOffsets: {},
+  weights: [...DEFAULT_SELLOUT_WEIGHTS],
+  outcomesUsed: 0,
+};
+
+export const DEFAULT_MODELS: Record<ScoreKind, ScoreModel> = { rush: DEFAULT_RUSH_MODEL, sellout: DEFAULT_SELLOUT_MODEL };
+
+/** Past dit opgeslagen model bij de huidige factoren? Anders het startmodel (bijv. na een update van de app). */
+export function usableModel(kind: ScoreKind, model: ScoreModel | undefined): ScoreModel {
+  if (model && (model.kind ?? 'sellout') === kind && model.weights.length === factorDefs(kind).length) return model;
+  return structuredClone(DEFAULT_MODELS[kind]);
+}
 
 /** Onder dit aantal uitkomsten is de betrouwbaarheid hooguit "middel". */
 export const MIN_OUTCOMES_FOR_HIGH_CONFIDENCE = 50;
@@ -61,6 +89,7 @@ export interface FactorContribution extends FactorResult {
 }
 
 export interface ScoreResult {
+  kind: ScoreKind;
   eventId: string;
   state: 'scored' | 'soldout' | 'cancelled';
   /** 0–100. Een voorspelling blijft tussen 1 en 99; 100 betekent echt uitverkocht. */
@@ -73,7 +102,7 @@ export interface ScoreResult {
   factors: FactorContribution[];
   /** De (hooguit) drie factoren met de grootste invloed. */
   top: FactorContribution[];
-  /** Verwachte snelheid van uitverkopen (schatting), alleen bij score ≥ 50. */
+  /** Verwachte snelheid van uitverkopen (schatting), alleen bij de uitverkoopkans en score ≥ 50. */
   speed?: SpeedClass;
   modelVersion: string;
   computedAt: string;
@@ -82,11 +111,12 @@ export interface ScoreResult {
 const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
 const logit = (p: number) => Math.log(p / (1 - p));
 
-export function computeFactors(inp: ScoreInputs, model: ScoreModel = DEFAULT_MODEL): FactorContribution[] {
-  return FACTOR_FUNCTIONS.map((fn, i) => {
+export function computeFactors(kind: ScoreKind, inp: ScoreInputs, model: ScoreModel = DEFAULT_MODELS[kind]): FactorContribution[] {
+  const defs = factorDefs(kind);
+  return factorFunctions(kind).map((fn, i) => {
     const r = fn(inp);
     const weight = model.weights[i] ?? 0;
-    return { ...r, name: FACTORS[i]!.name, weight, contribution: weight * r.coverage * r.signal };
+    return { ...r, name: defs[i]!.name, weight, contribution: weight * r.coverage * r.signal };
   });
 }
 
@@ -122,17 +152,12 @@ export function estimateSpeed(inp: ScoreInputs, p: number): SpeedClass | undefin
   return p >= 0.9 ? 'day1' : p >= 0.75 ? 'week1' : 'later';
 }
 
-export function scoreEvent(inp: ScoreInputs, model: ScoreModel = DEFAULT_MODEL): ScoreResult {
-  const factors = computeFactors(inp, model);
+export function scoreWith(kind: ScoreKind, inp: ScoreInputs, modelIn?: ScoreModel): ScoreResult {
+  const model = usableModel(kind, modelIn);
+  const factors = computeFactors(kind, inp, model);
   const wsum = model.weights.reduce((a, b) => a + b, 0);
   const coverage = wsum > 0 ? factors.reduce((s, f) => s + f.weight * f.coverage, 0) / wsum : 0;
-  const base = {
-    eventId: inp.eventId,
-    coverage,
-    factors,
-    modelVersion: model.version,
-    computedAt: inp.now,
-  };
+  const base = { kind, eventId: inp.eventId, coverage, factors, modelVersion: model.version, computedAt: inp.now };
 
   if (inp.status === 'soldout') {
     return { ...base, state: 'soldout', score: 100, probability: 1, rawProbability: 1, confidence: 'high', top: [] };
@@ -149,7 +174,7 @@ export function scoreEvent(inp: ScoreInputs, model: ScoreModel = DEFAULT_MODEL):
   const top = factors
     .filter((f) => Math.abs(f.contribution) >= 0.05)
     .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
-    .slice(0, 3);
+    .slice(0, 4);
   return {
     ...base,
     state: 'scored',
@@ -158,8 +183,18 @@ export function scoreEvent(inp: ScoreInputs, model: ScoreModel = DEFAULT_MODEL):
     rawProbability: raw,
     confidence: confidenceFromCoverage(coverage, model.outcomesUsed),
     top,
-    speed: estimateSpeed(inp, p),
+    ...(kind === 'sellout' ? { speed: estimateSpeed(inp, p) } : {}),
   };
+}
+
+/** Verwachte drukte (vóór de verkoop). */
+export function scoreRush(inp: ScoreInputs, model?: ScoreModel): ScoreResult {
+  return scoreWith('rush', inp, model);
+}
+
+/** Uitverkoopkans (tijdens de verkoop). */
+export function scoreSellout(inp: ScoreInputs, model?: ScoreModel): ScoreResult {
+  return scoreWith('sellout', inp, model);
 }
 
 // ---------------------------------------------------------------------------
@@ -172,12 +207,7 @@ export type Trend = 'up' | 'down' | 'flat';
  * Vergelijkt de huidige score met die van `hours` uur geleden (of de oudste meting
  * als de reeks korter is). Een verschil van minder dan `threshold` punten is vlak.
  */
-export function scoreTrend(
-  history: { at: string; score: number }[],
-  now: string,
-  hours = 72,
-  threshold = 3,
-): Trend | null {
+export function scoreTrend(history: { at: string; score: number }[], now: string, hours = 72, threshold = 3): Trend | null {
   if (history.length < 2) return null;
   const sorted = [...history].sort((a, b) => a.at.localeCompare(b.at));
   const current = sorted[sorted.length - 1]!;

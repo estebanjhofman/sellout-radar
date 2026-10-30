@@ -10,6 +10,7 @@ const KIND: Record<ChangeLogEntry['kind'], string> = {
   new_phase: 'Nieuwe fase',
   sale_date: 'Verkoopdatum',
   score_jump: 'Score',
+  sale_started: 'Verkoop begonnen',
   soldout: 'Uitverkocht',
   new_event: 'Nieuw',
   conflict: 'Conflict',

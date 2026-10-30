@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import {
-  DEFAULT_MODEL,
   DEFAULT_NOTIFY_SETTINGS,
+  factorDefs,
   earliestInstant,
   isOfficial,
   SOURCE_RANK,
@@ -11,12 +11,13 @@ import {
   type Observation,
   type OutcomeRecord,
   type SalePhase,
+  type ScoreKind,
   type ScoreModel,
   type SourceHealth,
   type SourceKind,
 } from '@sellout/core';
 import type { CatalogEvent, CatalogTour, CatalogVenue } from '../catalog';
-import { emptyState, type RunDelta, type ScorePoint, type State } from '../state';
+import { emptyState, migrateState, YOUTUBE_RETENTION_DAYS, type RunDelta, type ScorePoint, type State } from '../state';
 import type { PushTarget, RunSummary, Store } from './types';
 
 type Row = Record<string, unknown>;
@@ -79,7 +80,7 @@ export class SupabaseStore implements Store {
     const [claims, observations, scores, outcomes, models, kv, sent, changes, sources, conflicts] = await Promise.all([
       this.selectAll('claim', (q: any) => q.gte('fetched_at', since(180)).is('superseded_at', null).order('fetched_at')),
       this.selectAll('observation', (q: any) => q.gte('observed_at', since(180)).order('observed_at')),
-      this.selectAll('score_snapshot', (q: any) => q.gte('at', since(180)).order('at'), 'event_id,at,score,probability,confidence,model_version,features'),
+      this.selectAll('score_snapshot', (q: any) => q.gte('at', since(180)).order('at'), 'event_id,kind,at,score,probability,confidence,coverage,model_version,features'),
       this.selectAll('outcome', id),
       this.selectAll('model_version', (q: any) => q.eq('active', true)),
       this.selectAll('kv', id),
@@ -97,8 +98,14 @@ export class SupabaseStore implements Store {
       source: { name: String(r.source_name), kind: 'aggregator' as SourceKind, fetchedAt: iso(r.observed_at) },
       observedAt: iso(r.observed_at),
     }));
+    // Punten en uitkomsten van het oude model (één score met negen factoren) passen niet bij de huidige
+    // factoren en tellen niet mee.
+    const fits = (kind: ScoreKind, features: unknown) => Array.isArray(features) && features.length === factorDefs(kind).length;
     for (const r of scores) {
+      if (!fits((r.kind as ScoreKind | null) ?? 'sellout', r.features)) continue;
       const pt: ScorePoint = {
+        kind: (r.kind as ScoreKind | null) ?? 'sellout',
+        ...(r.coverage !== null && r.coverage !== undefined ? { coverage: Number(r.coverage) } : {}),
         at: iso(r.at),
         score: Number(r.score),
         probability: Number(r.probability ?? Number(r.score) / 100),
@@ -108,21 +115,32 @@ export class SupabaseStore implements Store {
       };
       (s.scoreHistory[String(r.event_id)] ??= []).push(pt);
     }
-    s.outcomes = outcomes.map(
+    const records = outcomes.map(
       (r): OutcomeRecord => ({
         eventId: String(r.event_id),
+        kind: (r.kind as ScoreKind | null) ?? 'sellout',
         predicted: Number(r.predicted ?? 0),
-        outcome: r.sold_out ? 1 : 0,
+        outcome: r.outcome !== null && r.outcome !== undefined ? (Number(r.outcome) === 1 ? 1 : 0) : r.sold_out ? 1 : 0,
         ...(r.features ? { features: r.features as number[] } : {}),
         ...(r.speed ? { speed: r.speed as OutcomeRecord['speed'] } : {}),
         resolvedAt: iso(r.resolved_at),
       }),
     );
-    const active = models[0];
-    s.model = active ? (active.model as ScoreModel) : structuredClone(DEFAULT_MODEL);
+    s.outcomes = records.filter((o) => o.kind === 'sellout' && fits('sellout', o.features));
+    s.rushOutcomes = records.filter((o) => o.kind === 'rush' && fits('rush', o.features));
+    const activeOf = (kind: ScoreKind) => models.find((m) => ((m.kind as string | null) ?? 'sellout') === kind)?.model as ScoreModel | undefined;
     for (const r of kv) s.kv[String(r.key)] = r.value;
     if (s.kv.lastChangeSnapshot) s.lastChangeSnapshot = s.kv.lastChangeSnapshot as State['lastChangeSnapshot'];
-    if (s.kv.lastCalibration) s.lastCalibration = s.kv.lastCalibration as State['lastCalibration'];
+    const cal = s.kv.lastCalibration as State['lastCalibration'] | { at: string; outcomes: number } | null | undefined;
+    if (cal) s.lastCalibration = 'at' in cal ? { sellout: cal as { at: string; outcomes: number } } : (cal as State['lastCalibration']);
+    if (s.kv.rushFinal) s.rushFinal = s.kv.rushFinal as State['rushFinal'];
+    if (s.kv.soldOutSeen) s.soldOutSeen = s.kv.soldOutSeen as State['soldOutSeen'];
+    delete s.kv.lastChangeSnapshot;
+    delete s.kv.lastCalibration;
+    delete s.kv.rushFinal;
+    delete s.kv.soldOutSeen;
+    const version = Number(s.kv.stateVersion ?? 1);
+    delete s.kv.stateVersion;
     for (const r of sent) s.sent[`${r.key}|${r.user_id}`] = iso(r.sent_at);
     s.changes = changes.map(
       (r): ChangeLogEntry => ({
@@ -150,7 +168,7 @@ export class SupabaseStore implements Store {
       alternatives: r.alternatives as State['conflicts'][number]['alternatives'],
       reason: String(r.reason ?? ''),
     }));
-    return s;
+    return migrateState({ ...s, version: version as 2, models: { rush: activeOf('rush')!, sellout: activeOf('sellout')! } });
   }
 
   async save(state: State, delta: RunDelta, run: RunSummary): Promise<void> {
@@ -227,6 +245,8 @@ export class SupabaseStore implements Store {
         .filter((p) => eventIds.has(p.eventId))
         .map((p) => ({
           event_id: p.eventId,
+          kind: p.point.kind ?? 'sellout',
+          coverage: p.point.coverage ?? null,
           at: p.point.at,
           model_version: p.point.modelVersion,
           score: p.point.score,
@@ -243,13 +263,16 @@ export class SupabaseStore implements Store {
         .filter((o) => eventIds.has(o.eventId))
         .map((o) => ({
           event_id: o.eventId,
-          sold_out: o.outcome === 1,
+          kind: o.kind ?? 'sellout',
+          outcome: o.outcome,
+          // Uitverkocht: bij de uitverkoopkans gelijk aan de uitkomst; bij de drukte zegt de snelheid het.
+          sold_out: o.kind === 'rush' ? o.speed !== undefined : o.outcome === 1,
           speed: o.speed ?? null,
           predicted: o.predicted,
           features: o.features ?? null,
           resolved_at: o.resolvedAt ?? this.now,
         })),
-      { upsert: true, onConflict: 'event_id' },
+      { upsert: true, onConflict: 'event_id,kind' },
     );
     await chunks(
       'change_log',
@@ -294,21 +317,31 @@ export class SupabaseStore implements Store {
       { upsert: true, onConflict: 'entity,field' },
     );
 
-    if (delta.modelChanged) {
-      await this.check(db.from('model_version').update({ active: false }).eq('active', true), 'model_version');
+    for (const kind of delta.modelsChanged) {
+      const m = state.models[kind];
+      await this.check(db.from('model_version').update({ active: false }).eq('active', true).eq('kind', kind), 'model_version');
       await this.check(
         db.from('model_version').upsert(
-          { version: state.model.version, model: state.model as never, trained_at: state.model.trainedAt ?? null, outcomes_used: state.model.outcomesUsed, active: true },
+          { version: m.version, kind, model: m as never, trained_at: m.trainedAt ?? null, outcomes_used: m.outcomesUsed, active: true },
           { onConflict: 'version' },
         ),
         'model_version',
       );
     }
 
-    const kvRows = Object.entries({ ...state.kv, lastChangeSnapshot: state.lastChangeSnapshot ?? null, lastCalibration: state.lastCalibration ?? null }).map(
-      ([key, value]) => ({ key, value: (value ?? null) as never, updated_at: this.now }),
-    );
+    const kvRows = Object.entries({
+      ...state.kv,
+      lastChangeSnapshot: state.lastChangeSnapshot ?? null,
+      lastCalibration: state.lastCalibration ?? null,
+      rushFinal: state.rushFinal,
+      soldOutSeen: state.soldOutSeen,
+      stateVersion: state.version,
+    }).map(([key, value]) => ({ key, value: (value ?? null) as never, updated_at: this.now }));
     await chunks('kv', kvRows, { upsert: true, onConflict: 'key' });
+
+    // YouTube-statistieken niet langer dan 30 dagen bewaren (YouTube API Services Developer Policies).
+    const ytCutoff = new Date(Date.parse(this.now) - YOUTUBE_RETENTION_DAYS * DAY).toISOString();
+    await this.check(db.from('observation').delete().like('metric', 'youtube_%').lt('observed_at', ytCutoff), 'observation (YouTube opruimen)');
 
     await chunks(
       'source',

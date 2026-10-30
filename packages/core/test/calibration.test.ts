@@ -10,7 +10,7 @@ import {
   reliabilityBins,
   type OutcomeRecord,
 } from '../src/score/calibration';
-import { DEFAULT_MODEL } from '../src/score/model';
+import { DEFAULT_RUSH_MODEL, DEFAULT_SELLOUT_MODEL } from '../src/score/model';
 
 describe('maten', () => {
   const recs = [
@@ -60,7 +60,7 @@ function synthetic(n: number, seed = 1): OutcomeRecord[] {
   const r = rng(seed);
   const out: OutcomeRecord[] = [];
   for (let i = 0; i < n; i++) {
-    const f = Array.from({ length: 9 }, () => (r() * 2 - 1) * (r() < 0.5 ? 1 : 0));
+    const f = Array.from({ length: 6 }, () => (r() * 2 - 1) * (r() < 0.5 ? 1 : 0));
     // "Werkelijkheid": factor 1 en 2 wegen zwaarder dan gedacht, basiskans lager.
     const z = -1.4 + 3.5 * f[0]! + 2.5 * f[1]! + 0.5 * f[4]!;
     const p = 1 / (1 + Math.exp(-z));
@@ -76,30 +76,46 @@ function synthetic(n: number, seed = 1): OutcomeRecord[] {
 }
 
 describe('hertrainen', () => {
+  it('oude uitkomsten met een ander aantal factoren tellen niet mee', () => {
+    const old = synthetic(40).map((o) => ({ ...o, features: [...o.features!, 0, 0, 0] }));
+    expect(recalibrate(DEFAULT_SELLOUT_MODEL, old, '2027-02-01T00:00:00Z').reason).toBe('Nog te weinig uitkomsten (0 van 30).');
+  });
+
   it('doet niets onder de 30 uitkomsten', () => {
-    const rep = recalibrate(DEFAULT_MODEL, synthetic(20), '2027-02-01T00:00:00Z');
+    const rep = recalibrate(DEFAULT_SELLOUT_MODEL, synthetic(20), '2027-02-01T00:00:00Z');
     expect(rep.applied).toBe(false);
     expect(rep.reason).toBe('Nog te weinig uitkomsten (20 van 30).');
-    expect(rep.model).toBe(DEFAULT_MODEL);
+    expect(rep.model).toBe(DEFAULT_SELLOUT_MODEL);
   });
 
   it('leert van genoeg uitkomsten en wordt beter', () => {
     const data = synthetic(400);
-    const rep = recalibrate(DEFAULT_MODEL, data, '2027-03-01T00:00:00Z');
+    const rep = recalibrate(DEFAULT_SELLOUT_MODEL, data, '2027-03-01T00:00:00Z');
     expect(rep.applied).toBe(true);
-    expect(rep.model.weights[0]!).toBeGreaterThan(DEFAULT_MODEL.weights[0]!);
+    expect(rep.model.weights[0]!).toBeGreaterThan(DEFAULT_SELLOUT_MODEL.weights[0]!);
     expect(rep.model.calibration).toBeDefined();
     expect(rep.model.outcomesUsed).toBe(400);
-    expect(rep.model.version).toBe('fit-2027-03-01-n400');
+    expect(rep.model.version).toBe('kans-fit-2027-03-01-n400');
+    expect(rep.model.kind).toBe('sellout');
+  });
+
+  it('de verwachte drukte leert van haar eigen uitkomsten (bewaarde drukte vóór de verkoop)', () => {
+    const data = synthetic(200, 3).map((o) => ({ ...o, kind: 'rush' as const }));
+    const rep = recalibrate(DEFAULT_RUSH_MODEL, data, '2027-04-01T00:00:00Z');
+    expect(rep.applied).toBe(true);
+    expect(rep.model.kind).toBe('rush');
+    expect(rep.model.version).toBe('drukte-fit-2027-04-01-n200');
+    expect(rep.model.weights).toHaveLength(6);
+    expect(rep.after!.logLoss).toBeLessThan(rep.before.logLoss);
   });
 
   it('gewichten blijven bij weinig data dicht bij de startwaarden', () => {
-    const p = fitWeights(synthetic(40), { intercept: -0.85, weights: [...DEFAULT_MODEL.weights] }, { lambda: 50 });
-    p.weights.forEach((w, i) => expect(Math.abs(w - DEFAULT_MODEL.weights[i]!)).toBeLessThan(1));
+    const p = fitWeights(synthetic(40), { intercept: -0.85, weights: [...DEFAULT_SELLOUT_MODEL.weights] }, { lambda: 50 });
+    p.weights.forEach((w, i) => expect(Math.abs(w - DEFAULT_SELLOUT_MODEL.weights[i]!)).toBeLessThan(1));
   });
 
   it('gewichten worden nooit negatief', () => {
-    const p = fitWeights(synthetic(300, 7), { intercept: -0.85, weights: [...DEFAULT_MODEL.weights] });
+    const p = fitWeights(synthetic(300, 7), { intercept: -0.85, weights: [...DEFAULT_SELLOUT_MODEL.weights] });
     p.weights.forEach((w) => expect(w).toBeGreaterThanOrEqual(0));
   });
 });

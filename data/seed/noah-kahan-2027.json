@@ -1,524 +1,128 @@
 {
-  "artist": {
-    "id": "noah-kahan",
-    "name": "Noah Kahan",
-    "genres": [
-      "folk-pop"
-    ],
-    "fandom": "regular"
-  },
+  "artist": { "id": "noah-kahan", "name": "Noah Kahan", "genres": ["folk-pop"], "fandom": "regular" },
   "tour": {
     "id": "noah-kahan-lotb-2027",
     "name": "The Last Of The Bugs World Tour",
     "leg": "Noord-Amerika en Europa 2027",
     "announcedAt": "2026-10-29",
     "addedForDemand": 2,
-    "addedForDemandSources": [
-      "pollstar",
-      "consequence"
-    ],
+    "addedForDemandSources": ["pollstar", "consequence"],
     "verification": "official"
   },
   "type": "concert",
   "sources": {
-    "pollstar": {
-      "name": "Pollstar",
-      "kind": "news",
-      "url": "https://news.pollstar.com/2026/10/29/noah-kahan-announces-the-last-of-the-bugs-world-tour-for-2027/",
-      "checked": "2026-10-29"
-    },
-    "consequence": {
-      "name": "Consequence",
-      "kind": "news",
-      "url": "https://consequence.net/2026/10/noah-kahan-2027-world-tour-how-to-get-tickets/",
-      "checked": "2026-10-29"
-    },
+    "pollstar": { "name": "Pollstar", "kind": "news", "url": "https://news.pollstar.com/2026/10/29/noah-kahan-announces-the-last-of-the-bugs-world-tour-for-2027/", "checked": "2026-10-29" },
+    "consequence": { "name": "Consequence", "kind": "news", "url": "https://consequence.net/2026/10/noah-kahan-2027-world-tour-how-to-get-tickets/", "checked": "2026-10-29" },
     "wikiStadiums": {
       "name": "Wikipedia: List of European stadiums by capacity",
       "kind": "aggregator",
       "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity",
       "checked": "2026-10-29T21:20:00Z",
       "note": "Sportcapaciteit; de concertopstelling kan afwijken."
-    }
+    },
+    "lastfm": {
+      "name": "Last.fm: Noah Kahan",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/Noah+Kahan",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiTGD": { "name": "Wikipedia: The Great Divide (Noah Kahan album)", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/The_Great_Divide_(Noah_Kahan_album)", "checked": "2026-10-30" },
+    "jambaseZiggo": { "name": "JamBase: Noah Kahan, Ziggo Dome (24 augustus 2024)", "kind": "aggregator", "url": "https://www.jambase.com/show/noah-kahan-ziggo-dome-20240824", "checked": "2026-10-30" },
+    "nieuwsZiggo": {
+      "name": "nieuws.nl: Noah Kahan geeft eind 2026 twee shows in Ziggo Dome",
+      "kind": "news",
+      "url": "https://nieuws.nl/entertainment/noah-kahan-geeft-eind-2026-twee-shows-in-ziggo-dome",
+      "checked": "2026-10-30",
+      "note": "Artikel van 9 april 2026: in 2024 stond hij voor het eerst in de Ziggo Dome."
+    },
+    "udiscover": {
+      "name": "uDiscover Music: Noah Kahan's spring 2024 UK, Europe tour sells out",
+      "kind": "news",
+      "url": "https://www.udiscovermusic.com/news/noah-kahan-uk-well-all-be-here-forever-tour-sells-out",
+      "checked": "2026-10-30"
+    },
+    "wikiZiggo": { "name": "Wikipedia: Ziggo Dome", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Ziggo_Dome", "checked": "2026-10-30" }
   },
   "venues": {
-    "sanford-stadium": {
-      "name": "Sanford Stadium",
-      "city": "Athens",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "protective-stadium": {
-      "name": "Protective Stadium",
-      "city": "Birmingham",
-      "country": "US",
-      "tz": "America/Chicago",
-      "outdoor": true
-    },
-    "raymond-james-stadium": {
-      "name": "Raymond James Stadium",
-      "city": "Tampa",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "nissan-stadium": {
-      "name": "Nissan Stadium",
-      "city": "Nashville",
-      "country": "US",
-      "tz": "America/Chicago",
-      "outdoor": true
-    },
-    "bank-of-america-stadium": {
-      "name": "Bank of America Stadium",
-      "city": "Charlotte",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "gaylord-family-oklahoma-memorial-stadium": {
-      "name": "Gaylord Family-Oklahoma Memorial Stadium",
-      "city": "Norman",
-      "country": "US",
-      "tz": "America/Chicago",
-      "outdoor": true
-    },
-    "nrg-stadium": {
-      "name": "NRG Stadium",
-      "city": "Houston",
-      "country": "US",
-      "tz": "America/Chicago"
-    },
-    "dkr-texas-memorial-stadium": {
-      "name": "Darrell K Royal-Texas Memorial Stadium",
-      "city": "Austin",
-      "country": "US",
-      "tz": "America/Chicago",
-      "outdoor": true
-    },
-    "levis-stadium": {
-      "name": "Levi's Stadium",
-      "city": "Santa Clara",
-      "country": "US",
-      "tz": "America/Los_Angeles",
-      "outdoor": true
-    },
-    "allegiant-stadium": {
-      "name": "Allegiant Stadium",
-      "city": "Las Vegas",
-      "country": "US",
-      "tz": "America/Los_Angeles"
-    },
-    "camp-randall-stadium": {
-      "name": "Camp Randall Stadium",
-      "city": "Madison",
-      "country": "US",
-      "tz": "America/Chicago",
-      "outdoor": true
-    },
-    "fenway-park": {
-      "name": "Fenway Park",
-      "city": "Boston",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "ohio-stadium": {
-      "name": "Ohio Stadium",
-      "city": "Columbus",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "ford-field": {
-      "name": "Ford Field",
-      "city": "Detroit",
-      "country": "US",
-      "tz": "America/Detroit"
-    },
-    "highmark-stadium": {
-      "name": "Highmark Stadium",
-      "city": "Buffalo",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "parc-jean-drapeau": {
-      "name": "Parc Jean-Drapeau",
-      "city": "Montréal",
-      "country": "CA",
-      "tz": "America/Toronto",
-      "outdoor": true
-    },
-    "metlife-stadium": {
-      "name": "MetLife Stadium",
-      "city": "East Rutherford",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "stadspark-groningen": {
-      "name": "Stadspark",
-      "city": "Groningen",
-      "country": "NL",
-      "tz": "Europe/Amsterdam",
-      "outdoor": true,
-      "lat": 53.2045,
-      "lon": 6.5375
-    },
-    "waldbuehne": {
-      "name": "Waldbühne",
-      "city": "Berlin",
-      "country": "DE",
-      "tz": "Europe/Berlin",
-      "outdoor": true
-    },
-    "i-days-milano": {
-      "name": "I-Days",
-      "city": "Milan",
-      "country": "IT",
-      "tz": "Europe/Rome",
-      "outdoor": true
-    },
-    "plaza-de-espana-sevilla": {
-      "name": "Plaza de España",
-      "city": "Seville",
-      "country": "ES",
-      "tz": "Europe/Madrid",
-      "outdoor": true
-    },
-    "hippodrome-longchamp": {
-      "name": "Hippodrome ParisLongchamp",
-      "city": "Paris",
-      "country": "FR",
-      "tz": "Europe/Paris",
-      "outdoor": true
-    },
-    "hampden-park": {
-      "name": "Hampden Park",
-      "city": "Glasgow",
-      "country": "GB",
-      "tz": "Europe/London",
-      "capacity": 52032,
-      "capacitySource": "wikiStadiums",
-      "outdoor": true
-    },
-    "aviva-stadium": {
-      "name": "Aviva Stadium",
-      "city": "Dublin",
-      "country": "IE",
-      "tz": "Europe/Dublin",
-      "capacity": 51711,
-      "capacitySource": "wikiStadiums",
-      "outdoor": true
-    },
-    "wembley-stadium": {
-      "name": "Wembley Stadium",
-      "city": "London",
-      "country": "GB",
-      "tz": "Europe/London",
-      "capacity": 90000,
-      "capacitySource": "wikiStadiums",
-      "outdoor": true
-    }
+    "sanford-stadium": { "name": "Sanford Stadium", "city": "Athens", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "protective-stadium": { "name": "Protective Stadium", "city": "Birmingham", "country": "US", "tz": "America/Chicago", "outdoor": true },
+    "raymond-james-stadium": { "name": "Raymond James Stadium", "city": "Tampa", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "nissan-stadium": { "name": "Nissan Stadium", "city": "Nashville", "country": "US", "tz": "America/Chicago", "outdoor": true },
+    "bank-of-america-stadium": { "name": "Bank of America Stadium", "city": "Charlotte", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "gaylord-family-oklahoma-memorial-stadium": { "name": "Gaylord Family-Oklahoma Memorial Stadium", "city": "Norman", "country": "US", "tz": "America/Chicago", "outdoor": true },
+    "nrg-stadium": { "name": "NRG Stadium", "city": "Houston", "country": "US", "tz": "America/Chicago" },
+    "dkr-texas-memorial-stadium": { "name": "Darrell K Royal-Texas Memorial Stadium", "city": "Austin", "country": "US", "tz": "America/Chicago", "outdoor": true },
+    "levis-stadium": { "name": "Levi's Stadium", "city": "Santa Clara", "country": "US", "tz": "America/Los_Angeles", "outdoor": true },
+    "allegiant-stadium": { "name": "Allegiant Stadium", "city": "Las Vegas", "country": "US", "tz": "America/Los_Angeles" },
+    "camp-randall-stadium": { "name": "Camp Randall Stadium", "city": "Madison", "country": "US", "tz": "America/Chicago", "outdoor": true },
+    "fenway-park": { "name": "Fenway Park", "city": "Boston", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "ohio-stadium": { "name": "Ohio Stadium", "city": "Columbus", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "ford-field": { "name": "Ford Field", "city": "Detroit", "country": "US", "tz": "America/Detroit" },
+    "highmark-stadium": { "name": "Highmark Stadium", "city": "Buffalo", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "parc-jean-drapeau": { "name": "Parc Jean-Drapeau", "city": "Montréal", "country": "CA", "tz": "America/Toronto", "outdoor": true },
+    "metlife-stadium": { "name": "MetLife Stadium", "city": "East Rutherford", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "stadspark-groningen": { "name": "Stadspark", "city": "Groningen", "country": "NL", "tz": "Europe/Amsterdam", "outdoor": true, "lat": 53.2045, "lon": 6.5375 },
+    "waldbuehne": { "name": "Waldbühne", "city": "Berlin", "country": "DE", "tz": "Europe/Berlin", "outdoor": true },
+    "i-days-milano": { "name": "I-Days", "city": "Milan", "country": "IT", "tz": "Europe/Rome", "outdoor": true },
+    "plaza-de-espana-sevilla": { "name": "Plaza de España", "city": "Seville", "country": "ES", "tz": "Europe/Madrid", "outdoor": true },
+    "hippodrome-longchamp": { "name": "Hippodrome ParisLongchamp", "city": "Paris", "country": "FR", "tz": "Europe/Paris", "outdoor": true },
+    "hampden-park": { "name": "Hampden Park", "city": "Glasgow", "country": "GB", "tz": "Europe/London", "capacity": 52032, "capacitySource": "wikiStadiums", "outdoor": true },
+    "aviva-stadium": { "name": "Aviva Stadium", "city": "Dublin", "country": "IE", "tz": "Europe/Dublin", "capacity": 51711, "capacitySource": "wikiStadiums", "outdoor": true },
+    "wembley-stadium": { "name": "Wembley Stadium", "city": "London", "country": "GB", "tz": "Europe/London", "capacity": 90000, "capacitySource": "wikiStadiums", "outdoor": true }
   },
   "events": [
-    {
-      "venue": "sanford-stadium",
-      "date": "2027-04-24",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "protective-stadium",
-      "date": "2027-04-27",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "raymond-james-stadium",
-      "date": "2027-04-29",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "nissan-stadium",
-      "date": "2027-05-04",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "bank-of-america-stadium",
-      "date": "2027-05-06",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "gaylord-family-oklahoma-memorial-stadium",
-      "date": "2027-05-09",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "nrg-stadium",
-      "date": "2027-05-12",
-      "sources": [
-        "pollstar"
-      ],
-      "notes": [
-        "Pollstar noemt de oude naam Reliant Stadium."
-      ]
-    },
-    {
-      "venue": "dkr-texas-memorial-stadium",
-      "date": "2027-05-15",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "levis-stadium",
-      "date": "2027-05-19",
-      "sources": [
-        "pollstar"
-      ],
-      "notes": [
-        "Pollstar noemt de stad San Francisco."
-      ]
-    },
-    {
-      "venue": "allegiant-stadium",
-      "date": "2027-05-21",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "camp-randall-stadium",
-      "date": "2027-05-26",
-      "sources": [
-        "pollstar"
-      ]
-    },
+    { "venue": "sanford-stadium", "date": "2027-04-24", "sources": ["pollstar"] },
+    { "venue": "protective-stadium", "date": "2027-04-27", "sources": ["pollstar"] },
+    { "venue": "raymond-james-stadium", "date": "2027-04-29", "sources": ["pollstar"] },
+    { "venue": "nissan-stadium", "date": "2027-05-04", "sources": ["pollstar"] },
+    { "venue": "bank-of-america-stadium", "date": "2027-05-06", "sources": ["pollstar"] },
+    { "venue": "gaylord-family-oklahoma-memorial-stadium", "date": "2027-05-09", "sources": ["pollstar"] },
+    { "venue": "nrg-stadium", "date": "2027-05-12", "sources": ["pollstar"], "notes": ["Pollstar noemt de oude naam Reliant Stadium."] },
+    { "venue": "dkr-texas-memorial-stadium", "date": "2027-05-15", "sources": ["pollstar"] },
+    { "venue": "levis-stadium", "date": "2027-05-19", "sources": ["pollstar"], "notes": ["Pollstar noemt de stad San Francisco."] },
+    { "venue": "allegiant-stadium", "date": "2027-05-21", "sources": ["pollstar"] },
+    { "venue": "camp-randall-stadium", "date": "2027-05-26", "sources": ["pollstar"] },
     {
       "venue": "fenway-park",
       "date": "2027-05-29",
-      "sources": [
-        "pollstar"
-      ],
-      "inputs": {
-        "previousVisit": {
-          "scope": "city",
-          "soldOut": true,
-          "yearsAgo": 1,
-          "venueName": "Fenway Park",
-          "place": "Boston",
-          "sources": [
-            "consequence"
-          ]
-        }
-      }
+      "sources": ["pollstar"],
+      "inputs": { "previousVisit": { "scope": "city", "soldOut": true, "yearsAgo": 1, "venueName": "Fenway Park", "place": "Boston", "sources": ["consequence"] } }
     },
     {
       "venue": "fenway-park",
       "date": "2027-05-30",
-      "sources": [
-        "pollstar"
-      ],
-      "inputs": {
-        "previousVisit": {
-          "scope": "city",
-          "soldOut": true,
-          "yearsAgo": 1,
-          "venueName": "Fenway Park",
-          "place": "Boston",
-          "sources": [
-            "consequence"
-          ]
-        }
-      }
+      "sources": ["pollstar"],
+      "inputs": { "previousVisit": { "scope": "city", "soldOut": true, "yearsAgo": 1, "venueName": "Fenway Park", "place": "Boston", "sources": ["consequence"] } }
     },
     {
       "venue": "fenway-park",
       "date": "2027-06-01",
-      "sources": [
-        "pollstar"
-      ],
-      "inputs": {
-        "previousVisit": {
-          "scope": "city",
-          "soldOut": true,
-          "yearsAgo": 1,
-          "venueName": "Fenway Park",
-          "place": "Boston",
-          "sources": [
-            "consequence"
-          ]
-        }
-      }
+      "sources": ["pollstar"],
+      "inputs": { "previousVisit": { "scope": "city", "soldOut": true, "yearsAgo": 1, "venueName": "Fenway Park", "place": "Boston", "sources": ["consequence"] } }
     },
     {
       "venue": "fenway-park",
       "date": "2027-06-02",
-      "sources": [
-        "pollstar"
-      ],
-      "inputs": {
-        "previousVisit": {
-          "scope": "city",
-          "soldOut": true,
-          "yearsAgo": 1,
-          "venueName": "Fenway Park",
-          "place": "Boston",
-          "sources": [
-            "consequence"
-          ]
-        }
-      }
+      "sources": ["pollstar"],
+      "inputs": { "previousVisit": { "scope": "city", "soldOut": true, "yearsAgo": 1, "venueName": "Fenway Park", "place": "Boston", "sources": ["consequence"] } }
     },
-    {
-      "venue": "ohio-stadium",
-      "date": "2027-06-05",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "ford-field",
-      "date": "2027-06-10",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "highmark-stadium",
-      "date": "2027-06-12",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "parc-jean-drapeau",
-      "date": "2027-06-15",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "metlife-stadium",
-      "date": "2027-06-18",
-      "sources": [
-        "pollstar",
-        "consequence"
-      ]
-    },
-    {
-      "venue": "stadspark-groningen",
-      "date": "2027-07-01",
-      "sources": [
-        "pollstar",
-        "consequence"
-      ],
-      "notes": [
-        "Geen Live Nation-show volgens Pollstar."
-      ]
-    },
-    {
-      "venue": "waldbuehne",
-      "date": "2027-07-02",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "i-days-milano",
-      "date": "2027-07-04",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "plaza-de-espana-sevilla",
-      "date": "2027-07-07",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "hippodrome-longchamp",
-      "date": "2027-07-10",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "hampden-park",
-      "date": "2027-07-13",
-      "status": "onsale",
-      "sources": [
-        "pollstar"
-      ],
-      "notes": [
-        "Eerder aangekondigd; de verkoop liep al vóór deze tourbekendmaking."
-      ]
-    },
-    {
-      "venue": "aviva-stadium",
-      "date": "2027-07-17",
-      "status": "soldout",
-      "sources": [
-        "pollstar",
-        "consequence"
-      ]
-    },
-    {
-      "venue": "aviva-stadium",
-      "date": "2027-07-18",
-      "status": "onsale",
-      "addedShow": true,
-      "addedShowReason": "Tweede avond in Dublin na de uitverkochte eerste",
-      "sources": [
-        "pollstar"
-      ]
-    },
-    {
-      "venue": "wembley-stadium",
-      "date": "2027-07-23",
-      "status": "soldout",
-      "sources": [
-        "pollstar",
-        "consequence"
-      ],
-      "notes": [
-        "Geen Live Nation-show volgens Pollstar."
-      ]
-    },
-    {
-      "venue": "wembley-stadium",
-      "date": "2027-07-24",
-      "status": "soldout",
-      "sources": [
-        "pollstar",
-        "consequence"
-      ]
-    },
-    {
-      "venue": "wembley-stadium",
-      "date": "2027-07-25",
-      "status": "onsale",
-      "addedShow": true,
-      "addedShowReason": "Derde avond op Wembley na twee uitverkochte",
-      "sources": [
-        "pollstar"
-      ]
-    }
+    { "venue": "ohio-stadium", "date": "2027-06-05", "sources": ["pollstar"] },
+    { "venue": "ford-field", "date": "2027-06-10", "sources": ["pollstar"] },
+    { "venue": "highmark-stadium", "date": "2027-06-12", "sources": ["pollstar"] },
+    { "venue": "parc-jean-drapeau", "date": "2027-06-15", "sources": ["pollstar"] },
+    { "venue": "metlife-stadium", "date": "2027-06-18", "sources": ["pollstar", "consequence"] },
+    { "venue": "stadspark-groningen", "date": "2027-07-01", "sources": ["pollstar", "consequence"], "notes": ["Geen Live Nation-show volgens Pollstar."] },
+    { "venue": "waldbuehne", "date": "2027-07-02", "sources": ["pollstar"] },
+    { "venue": "i-days-milano", "date": "2027-07-04", "sources": ["pollstar"] },
+    { "venue": "plaza-de-espana-sevilla", "date": "2027-07-07", "sources": ["pollstar"] },
+    { "venue": "hippodrome-longchamp", "date": "2027-07-10", "sources": ["pollstar"] },
+    { "venue": "hampden-park", "date": "2027-07-13", "status": "onsale", "sources": ["pollstar"], "notes": ["Eerder aangekondigd; de verkoop liep al vóór deze tourbekendmaking."] },
+    { "venue": "aviva-stadium", "date": "2027-07-17", "status": "soldout", "sources": ["pollstar", "consequence"] },
+    { "venue": "aviva-stadium", "date": "2027-07-18", "status": "onsale", "addedShow": true, "addedShowReason": "Tweede avond in Dublin na de uitverkochte eerste", "sources": ["pollstar"] },
+    { "venue": "wembley-stadium", "date": "2027-07-23", "status": "soldout", "sources": ["pollstar", "consequence"], "notes": ["Geen Live Nation-show volgens Pollstar."] },
+    { "venue": "wembley-stadium", "date": "2027-07-24", "status": "soldout", "sources": ["pollstar", "consequence"] },
+    { "venue": "wembley-stadium", "date": "2027-07-25", "status": "onsale", "addedShow": true, "addedShowReason": "Derde avond op Wembley na twee uitverkochte", "sources": ["pollstar"] }
   ],
   "phases": [
     {
@@ -526,24 +130,15 @@
       "kind": "registration",
       "name": "Inschrijving artist presale Noord-Amerika",
       "region": "NA",
-      "events": {
-        "countries": [
-          "US",
-          "CA"
-        ]
-      },
+      "events": { "countries": ["US", "CA"] },
       "start": null,
       "deadline": "2026-11-05",
       "tz": "America/New_York",
       "whereToRegister": "Aanmeldlink in de aankondiging (presales via meerdere ticketsites)",
       "conditions": "Iedereen die zich aanmeldt kan meedoen; soms is een selfiecheck of ID-controle via Persona nodig om doorverkoop met winst te voorkomen.",
-      "notes": [
-        "Pollstar noemt '11:5 9.p.m ET' (tikfout, vermoedelijk 23:59 ET = vr 6 nov 05:59 Nederlandse tijd). Het uur is daarom als onzeker opgenomen."
-      ],
+      "notes": ["Pollstar noemt '11:5 9.p.m ET' (tikfout, vermoedelijk 23:59 ET = vr 6 nov 05:59 Nederlandse tijd). Het uur is daarom als onzeker opgenomen."],
       "unlocks": "na-artist-presale",
-      "sources": [
-        "pollstar"
-      ]
+      "sources": ["pollstar"]
     },
     {
       "key": "na-citi-field-presale",
@@ -551,15 +146,11 @@
       "type": "ticketmaster",
       "name": "Presale voor kaarthouders van het geannuleerde Citi Field-concert",
       "region": "US",
-      "events": [
-        "2027-06-18@metlife-stadium"
-      ],
+      "events": ["2027-06-18@metlife-stadium"],
       "start": "2026-11-10T09:00",
       "end": "2026-11-10T11:00",
       "conditions": "Voor wie via Ticketmaster of Face Value Exchange kaarten had voor het geannuleerde concert op 18 juli 2026 in Citi Field; gebruik het e-mailadres van die kaarten.",
-      "sources": [
-        "consequence"
-      ]
+      "sources": ["consequence"]
     },
     {
       "key": "na-artist-presale",
@@ -567,19 +158,10 @@
       "type": "artist",
       "name": "Artist presale Noord-Amerika",
       "region": "NA",
-      "events": {
-        "countries": [
-          "US",
-          "CA"
-        ]
-      },
+      "events": { "countries": ["US", "CA"] },
       "start": "2026-11-10",
-      "notes": [
-        "Pollstar noemt 12:00 ('12 p.m.') zonder tijdzone; daarom alleen de datum."
-      ],
-      "sources": [
-        "pollstar"
-      ]
+      "notes": ["Pollstar noemt 12:00 ('12 p.m.') zonder tijdzone; daarom alleen de datum."],
+      "sources": ["pollstar"]
     },
     {
       "key": "na-spotify-presale",
@@ -587,17 +169,11 @@
       "type": "spotify",
       "name": "Reserved by Spotify-presale",
       "region": "US",
-      "events": {
-        "countries": [
-          "US"
-        ]
-      },
+      "events": { "countries": ["US"] },
       "start": "2026-11-11T09:00",
       "ticketLimit": 2,
       "conditions": "Voor geselecteerde Spotify Premium-gebruikers in de VS, met uitnodiging per e-mail en in de app; max. 2 tickets.",
-      "sources": [
-        "consequence"
-      ]
+      "sources": ["consequence"]
     },
     {
       "key": "na-mastercard",
@@ -605,62 +181,33 @@
       "type": "card",
       "name": "Mastercard Preferred Tickets",
       "region": "NA",
-      "events": {
-        "countries": [
-          "US",
-          "CA"
-        ]
-      },
+      "events": { "countries": ["US", "CA"] },
       "start": null,
-      "notes": [
-        "Voor geselecteerde Noord-Amerikaanse data; datum nog niet aangekondigd."
-      ],
-      "sources": [
-        "consequence"
-      ]
+      "notes": ["Voor geselecteerde Noord-Amerikaanse data; datum nog niet aangekondigd."],
+      "sources": ["consequence"]
     },
     {
       "key": "na-general",
       "kind": "general_sale",
       "name": "Algemene verkoop",
       "region": "NA",
-      "events": {
-        "countries": [
-          "US",
-          "CA"
-        ]
-      },
+      "events": { "countries": ["US", "CA"] },
       "start": "2026-11-12T12:00",
-      "notes": [
-        "Ticketmaster Face Value Exchange: kaarten zijn niet overdraagbaar en alleen tegen de nominale prijs door te verkopen (behalve in New York)."
-      ],
-      "sources": [
-        "consequence",
-        "pollstar"
-      ]
+      "notes": ["Ticketmaster Face Value Exchange: kaarten zijn niet overdraagbaar en alleen tegen de nominale prijs door te verkopen (behalve in New York)."],
+      "sources": ["consequence", "pollstar"]
     },
     {
       "key": "eu-registration",
       "kind": "registration",
       "name": "Inschrijving artist presale (Laylo)",
       "region": "EU",
-      "events": {
-        "venues": [
-          "stadspark-groningen",
-          "waldbuehne",
-          "i-days-milano",
-          "plaza-de-espana-sevilla",
-          "hippodrome-longchamp"
-        ]
-      },
+      "events": { "venues": ["stadspark-groningen", "waldbuehne", "i-days-milano", "plaza-de-espana-sevilla", "hippodrome-longchamp"] },
       "start": null,
       "deadline": "2026-11-09T17:00",
       "whereToRegister": "Laylo",
       "url": "https://laylo.com/noahkahan/m/Yt6aa5",
       "unlocks": "eu-presale",
-      "sources": [
-        "consequence"
-      ]
+      "sources": ["consequence"]
     },
     {
       "key": "eu-presale",
@@ -668,40 +215,84 @@
       "type": "artist",
       "name": "Artist presale (Laylo)",
       "region": "EU",
-      "events": {
-        "venues": [
-          "stadspark-groningen",
-          "waldbuehne",
-          "i-days-milano",
-          "plaza-de-espana-sevilla",
-          "hippodrome-longchamp"
-        ]
-      },
+      "events": { "venues": ["stadspark-groningen", "waldbuehne", "i-days-milano", "plaza-de-espana-sevilla", "hippodrome-longchamp"] },
       "start": "2026-11-10T12:00",
-      "sources": [
-        "pollstar",
-        "consequence"
-      ]
+      "sources": ["pollstar", "consequence"]
     },
     {
       "key": "eu-general",
       "kind": "general_sale",
       "name": "Algemene verkoop",
       "region": "EU",
-      "events": {
-        "venues": [
-          "stadspark-groningen",
-          "waldbuehne",
-          "i-days-milano",
-          "plaza-de-espana-sevilla",
-          "hippodrome-longchamp"
-        ]
-      },
+      "events": { "venues": ["stadspark-groningen", "waldbuehne", "i-days-milano", "plaza-de-espana-sevilla", "hippodrome-longchamp"] },
       "start": "2026-11-12T12:00",
-      "sources": [
-        "pollstar",
-        "consequence"
-      ]
+      "sources": ["pollstar", "consequence"]
     }
-  ]
+  ],
+  "popularity": {
+    "metrics": [
+      { "metric": "lastfm_listeners", "value": 1700000, "source": "lastfm", "note": "1.7M op de pagina" },
+      { "metric": "lastfm_playcount", "value": 223300000, "source": "lastfm", "note": "223.3M op de pagina" }
+    ],
+    "charts": [
+      { "chart": "Album Top 100", "country": "NL", "title": "The Great Divide", "kind": "album", "peak": 1, "year": 2026, "source": "wikiTGD" },
+      { "chart": "UK Albums Chart", "country": "GB", "title": "The Great Divide", "kind": "album", "peak": 1, "year": 2026, "source": "wikiTGD" },
+      { "chart": "Billboard 200", "country": "US", "title": "The Great Divide", "kind": "album", "peak": 1, "year": 2026, "source": "wikiTGD" },
+      { "chart": "Irish Albums Chart", "country": "IE", "title": "The Great Divide", "kind": "album", "peak": 1, "year": 2026, "source": "wikiTGD" },
+      { "chart": "Offizielle Top 100", "country": "DE", "title": "The Great Divide", "kind": "album", "peak": 1, "year": 2026, "source": "wikiTGD" },
+      { "chart": "Ultratop Vlaanderen", "country": "BE", "title": "The Great Divide", "kind": "album", "peak": 3, "year": 2026, "source": "wikiTGD" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "We'll All Be Here Forever Tour",
+        "year": 2024,
+        "date": "2024-08-24",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "Ziggo Dome",
+        "capacity": 17000,
+        "shows": 1,
+        "detail": "Zijn eerste show in de Ziggo Dome. Of die uitverkocht was, noemen de bronnen niet.",
+        "sources": ["jambaseZiggo", "nieuwsZiggo", "wikiZiggo"]
+      },
+      {
+        "tour": "We'll All Be Here Forever Tour",
+        "year": 2024,
+        "date": "2024-02-14",
+        "city": "London",
+        "country": "GB",
+        "venue": "OVO Arena Wembley",
+        "shows": 2,
+        "soldOut": true,
+        "detail": "Direct bij de start van de verkoop uitverkocht.",
+        "sources": ["udiscover"]
+      },
+      {
+        "tour": "We'll All Be Here Forever Tour",
+        "year": 2024,
+        "date": "2024-02-17",
+        "city": "Paris",
+        "country": "FR",
+        "venue": "L'Olympia",
+        "shows": 1,
+        "soldOut": true,
+        "detail": "Direct bij de start van de verkoop uitverkocht.",
+        "sources": ["udiscover"]
+      },
+      {
+        "tour": "We'll All Be Here Forever Tour",
+        "year": 2024,
+        "date": "2024-02-21",
+        "city": "Berlin",
+        "country": "DE",
+        "venue": "Columbiahalle",
+        "shows": 1,
+        "soldOut": true,
+        "detail": "Direct bij de start van de verkoop uitverkocht.",
+        "sources": ["udiscover"]
+      }
+    ]
+  }
 }

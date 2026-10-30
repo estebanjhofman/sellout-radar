@@ -1,85 +1,28 @@
 {
-  "artist": {
-    "id": "rock-werchter",
-    "name": "Rock Werchter",
-    "genres": [
-      "festival"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "rock-werchter-2027",
-    "name": "Rock Werchter 2027",
-    "verification": "official"
-  },
+  "artist": { "id": "rock-werchter", "name": "Rock Werchter", "genres": ["festival"], "fandom": "regular" },
+  "tour": { "id": "rock-werchter-2027", "name": "Rock Werchter 2027", "verification": "official" },
   "type": "festival",
   "sources": {
-    "site": {
-      "name": "Rock Werchter: tickets",
-      "kind": "promoter",
-      "url": "https://www.rockwerchter.be/nl/tickets",
-      "checked": "2026-10-30"
-    },
-    "festivalinfo": {
-      "name": "Festivalinfo.nl",
-      "kind": "news",
-      "url": "https://www.festivalinfo.nl/news/overzicht/0/",
-      "checked": "2026-10-30"
-    },
-    "festileaks": {
-      "name": "Festileaks",
-      "kind": "news",
-      "url": "https://festileaks.com/2026/06/combitickets-rock-werchter-2026-uitverkocht/",
-      "checked": "2026-10-30"
-    }
+    "site": { "name": "Rock Werchter: tickets", "kind": "promoter", "url": "https://www.rockwerchter.be/nl/tickets", "checked": "2026-10-30" },
+    "festivalinfo": { "name": "Festivalinfo.nl", "kind": "news", "url": "https://www.festivalinfo.nl/news/overzicht/0/", "checked": "2026-10-30" },
+    "festileaks": { "name": "Festileaks", "kind": "news", "url": "https://festileaks.com/2026/06/combitickets-rock-werchter-2026-uitverkocht/", "checked": "2026-10-30" }
   },
-  "venues": {
-    "festivalpark-werchter": {
-      "name": "Festivalpark",
-      "city": "Werchter",
-      "country": "BE",
-      "tz": "Europe/Brussels",
-      "outdoor": true
-    }
-  },
+  "venues": { "festivalpark-werchter": { "name": "Festivalpark", "city": "Werchter", "country": "BE", "tz": "Europe/Brussels", "outdoor": true } },
   "events": [
     {
       "venue": "festivalpark-werchter",
       "date": "2027-07-01",
       "title": "Rock Werchter 2027 (1–4 juli)",
-      "sources": [
-        "site",
-        "festivalinfo"
-      ],
-      "priceRange": {
-        "min": 143,
-        "max": 320,
-        "currency": "EUR"
-      },
+      "sources": ["site", "festivalinfo"],
+      "priceRange": { "min": 143, "max": 320, "currency": "EUR" },
       "ticketLimit": 6,
-      "officialSellers": [
-        {
-          "name": "Ticketmaster.be",
-          "url": "https://www.rockwerchter.be/nl/tickets"
-        }
-      ],
+      "officialSellers": [{ "name": "Ticketmaster.be", "url": "https://www.rockwerchter.be/nl/tickets" }],
       "notes": [
         "Donderdag 1 t/m zondag 4 juli 2027. Combitickets €143, €259 en €320; Backyard-dagtickets €242 (alles incl. kosten).",
         "Bevestigd o.a. Massive Attack (openingsdag), Sam Fender (zaterdag) en Turnstile.",
         "Rock Werchter 2026: combitickets uitverkocht (Festileaks, 29 juni 2026); zaterdag en zondag waren eerder al uitverkocht, voor donderdag en vrijdag waren nog dagtickets."
       ],
-      "inputs": {
-        "previousVisit": {
-          "scope": "city",
-          "soldOut": true,
-          "yearsAgo": 1,
-          "venueName": "Festivalpark",
-          "place": "Werchter",
-          "sources": [
-            "festileaks"
-          ]
-        }
-      }
+      "inputs": { "previousVisit": { "scope": "city", "soldOut": true, "yearsAgo": 1, "venueName": "Festivalpark", "place": "Werchter", "sources": ["festileaks"] } }
     }
   ],
   "phases": [
@@ -91,12 +34,20 @@
       "start": "2026-10-30T10:00",
       "ticketLimit": 6,
       "url": "https://www.rockwerchter.be/nl/tickets",
-      "notes": [
-        "Ticketmaster.be is de enige officiële verkoper."
-      ],
-      "sources": [
-        "site"
-      ]
+      "notes": ["Ticketmaster.be is de enige officiële verkoper."],
+      "sources": ["site"]
     }
-  ]
+  ],
+  "history": {
+    "previousEditions": [
+      {
+        "year": 2026,
+        "city": "Werchter",
+        "country": "BE",
+        "venue": "Festivalpark",
+        "detail": "Combitickets uitverkocht (29 juni 2026); zaterdag en zondag waren eerder al uitverkocht, voor donderdag en vrijdag waren nog dagtickets.",
+        "sources": ["festileaks"]
+      }
+    ]
+  }
 }

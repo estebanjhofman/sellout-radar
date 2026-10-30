@@ -10,13 +10,14 @@ import {
   slug,
   unknownTime,
   type Claim,
+  type PastVisit,
   type SalePhase,
   type SourceRef,
   type TimePoint,
 } from '@sellout/core';
 import { emptyCatalog, type Catalog, type CatalogEvent } from '../catalog';
 import { continentOf } from '../geo';
-import type { SeedEventSelector, SeedFile, SeedSource } from './schema';
+import type { SeedEventSelector, SeedFile, SeedMetric, SeedPastVisit, SeedSource } from './schema';
 
 export interface SeedIssue {
   file: string;
@@ -112,8 +113,11 @@ export function compileSeedFile(seed: SeedFile, file: string, into: Catalog, iss
     sources: tourSources.filter((s, i, a) => a.findIndex((x) => x.name === s.name) === i),
   });
 
+  compilePopularityAndHistory(seed, into, refs, err);
+
   for (const [k, v] of Object.entries(seed.venues)) {
     if (!/^[A-Z]{2}$/.test(v.country)) err(`venue ${k}: landcode "${v.country}" is geen ISO-code`);
+    if (v.capacity !== undefined && (!v.capacitySource || !refs.has(v.capacitySource))) err(`venue ${k}: capaciteit zonder (bekende) bron`);
     try {
       DateTime.now().setZone(v.tz);
       if (!DateTime.now().setZone(v.tz).isValid) err(`venue ${k}: ongeldige tijdzone ${v.tz}`);
@@ -311,6 +315,86 @@ export function compileSeedFile(seed: SeedFile, file: string, into: Catalog, iss
   // Controle: continent bekend voor elk land.
   for (const v of Object.values(seed.venues)) {
     if (continentOf(v.country) === 'OTHER') warn(`venue ${v.name}: land ${v.country} heeft geen werelddeel in geo.ts`);
+  }
+}
+
+const METRICS: Record<SeedMetric, string> = {
+  lastfm_listeners: 'Luisteraars op Last.fm',
+  lastfm_playcount: 'Keer afgespeeld op Last.fm',
+  spotify_monthly_listeners: 'Maandelijkse luisteraars op Spotify',
+  listener_growth_pct: 'Groei van het aantal luisteraars',
+};
+
+/**
+ * Populariteit en geschiedenis: elk cijfer moet naar een bron met controledatum verwijzen.
+ * Last.fm-luisteraars worden een meting (zelfde maat die de updater later met de API ophaalt, zodat
+ * de groei vanzelf doorloopt); de rest wordt per artiest of tour bewaard voor de score en de app.
+ */
+function compilePopularityAndHistory(seed: SeedFile, into: Catalog, refs: Map<string, SourceRef>, err: (m: string) => void): void {
+  const artistId = seed.artist.id;
+  const one = (key: string, where: string): SourceRef | undefined => {
+    const r = refs.get(key);
+    if (!r) err(`${where}: onbekende bron "${key}"`);
+    return r;
+  };
+  const many = (keys: string[] | undefined, where: string): SourceRef[] => {
+    if (!keys || keys.length === 0) {
+      err(`${where}: geen bron opgegeven`);
+      return [];
+    }
+    return keys.map((k) => one(k, where)).filter((r): r is SourceRef => !!r);
+  };
+  const facts = into.facts.get(artistId) ?? { charts: [], other: [] };
+  const thisYear = DateTime.now().year + 1;
+
+  for (const m of seed.popularity?.metrics ?? []) {
+    const where = `populariteit ${m.metric}`;
+    if (!(m.metric in METRICS)) {
+      err(`${where}: onbekende maat`);
+      continue;
+    }
+    if (!Number.isFinite(m.value) || (m.metric !== 'listener_growth_pct' && m.value <= 0)) {
+      err(`${where}: ongeldige waarde ${m.value}`);
+      continue;
+    }
+    const src = one(m.source, where);
+    if (!src) continue;
+    if (m.metric === 'lastfm_listeners' || m.metric === 'lastfm_playcount') {
+      into.observations.push({ entity: `artist:${artistId}`, metric: m.metric, value: m.value, source: src, observedAt: src.fetchedAt });
+    } else {
+      facts.other.push({ label: `${METRICS[m.metric]}${m.period ? ` (${m.period})` : ''}`, value: m.value, at: src.fetchedAt, source: src });
+    }
+  }
+  for (const c of seed.popularity?.charts ?? []) {
+    const where = `hitnotering ${c.title}`;
+    if (!Number.isInteger(c.peak) || c.peak < 1 || c.peak > 200) err(`${where}: ongeldige positie ${c.peak}`);
+    if (!Number.isInteger(c.year) || c.year < 1950 || c.year > thisYear) err(`${where}: ongeldig jaar ${c.year}`);
+    if (!/^[A-Z]{2}$/.test(c.country)) err(`${where}: landcode "${c.country}" is geen ISO-code`);
+    const src = one(c.source, where);
+    if (src) facts.charts.push({ chart: c.chart, country: c.country, title: c.title, kind: c.kind, peak: c.peak, year: c.year, source: src });
+  }
+  if (facts.charts.length || facts.other.length) into.facts.set(artistId, facts);
+
+  const tour = into.tours.get(seed.tour.id);
+  const visit = (v: SeedPastVisit, where: string): PastVisit | null => {
+    if (!Number.isInteger(v.year) || v.year < 1950 || v.year > thisYear) {
+      err(`${where}: ongeldig jaar ${v.year}`);
+      return null;
+    }
+    if (v.country && !/^[A-Z]{2}$/.test(v.country)) err(`${where}: landcode "${v.country}" is geen ISO-code`);
+    if (v.capacity !== undefined && !(v.capacity > 0)) err(`${where}: ongeldige capaciteit`);
+    if (v.date && !/^\d{4}-\d{2}(-\d{2})?$/.test(v.date)) err(`${where}: ongeldige datum ${v.date}`);
+    if (v.date && !v.date.startsWith(String(v.year))) err(`${where}: datum ${v.date} past niet bij jaar ${v.year}`);
+    const sources = many(v.sources, where);
+    if (sources.length === 0) return null;
+    const { sources: _s, ...rest } = v;
+    return { ...rest, sources };
+  };
+  const prev = (seed.history?.previousVisits ?? []).map((v, i) => visit(v, `vorige tour #${i + 1}${v.city ? ` (${v.city})` : ''}`)).filter((v): v is PastVisit => !!v);
+  const editions = (seed.history?.previousEditions ?? []).map((v, i) => visit(v, `vorige editie ${v.year ?? i + 1}`)).filter((v): v is PastVisit => !!v);
+  if (tour) {
+    if (prev.length) tour.previousVisits = prev;
+    if (editions.length) tour.previousEditions = editions;
   }
 }
 

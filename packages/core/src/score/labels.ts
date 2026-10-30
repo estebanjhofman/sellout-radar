@@ -1,16 +1,20 @@
+import type { ScoreKind } from './factors';
+
 /**
- * Labels en kleuren bij de score. De kleur staat nooit alleen: elk getal krijgt een label,
- * zodat de score ook leesbaar is bij kleurenblindheid.
+ * Labels en kleuren bij de scores. De kleur staat nooit alleen: elk getal krijgt een label,
+ * zodat de score ook leesbaar is bij kleurenblindheid. Beide scores gebruiken dezelfde vloeiende
+ * kleurschaal (groen–geel–oranje–rood).
  */
 
 export interface ScoreBand {
   min: number;
   max: number;
-  key: 'very_likely' | 'likely' | 'possible' | 'unlikely' | 'very_unlikely';
+  key: string;
   label: string;
 }
 
-export const SCORE_BANDS: ScoreBand[] = [
+/** Uitverkoopkans (Al in de verkoop). */
+export const SELLOUT_BANDS: ScoreBand[] = [
   { min: 80, max: 100, key: 'very_likely', label: 'Zeer waarschijnlijk uitverkocht' },
   { min: 60, max: 79, key: 'likely', label: 'Waarschijnlijk uitverkocht' },
   { min: 40, max: 59, key: 'possible', label: 'Mogelijk uitverkocht' },
@@ -18,10 +22,36 @@ export const SCORE_BANDS: ScoreBand[] = [
   { min: 0, max: 19, key: 'very_unlikely', label: 'Waarschijnlijk niet uitverkocht' },
 ];
 
-export function scoreBand(score: number): ScoreBand {
-  const s = Math.max(0, Math.min(100, Math.round(score)));
-  return SCORE_BANDS.find((b) => s >= b.min && s <= b.max)!;
+/** Verwachte drukte (Nog niet in de verkoop). */
+export const RUSH_BANDS: ScoreBand[] = [
+  { min: 80, max: 100, key: 'extreme', label: 'Extreem druk verwacht' },
+  { min: 60, max: 79, key: 'very_busy', label: 'Zeer druk' },
+  { min: 40, max: 59, key: 'busy', label: 'Druk' },
+  { min: 20, max: 39, key: 'moderate', label: 'Matig druk' },
+  { min: 0, max: 19, key: 'quiet', label: 'Rustig' },
+];
+
+/** Oude naam (één score); gelijk aan de banden van de uitverkoopkans. */
+export const SCORE_BANDS = SELLOUT_BANDS;
+
+export function bandsFor(kind: ScoreKind): ScoreBand[] {
+  return kind === 'rush' ? RUSH_BANDS : SELLOUT_BANDS;
 }
+
+export function scoreBand(score: number, kind: ScoreKind = 'sellout'): ScoreBand {
+  const s = Math.max(0, Math.min(100, Math.round(score)));
+  return bandsFor(kind).find((b) => s >= b.min && s <= b.max)!;
+}
+
+export const SCORE_KIND_LABEL: Record<ScoreKind, string> = {
+  rush: 'Verwachte drukte',
+  sellout: 'Uitverkoopkans',
+};
+
+export const SCORE_KIND_HELP: Record<ScoreKind, string> = {
+  rush: 'Hoe moeilijk het wordt om bij de eerste verkoop een kaart te krijgen: de kans dat de datum in de presale of binnen een dag na de eerste verkoopstart uitverkoopt.',
+  sellout: 'De kans dat de datum vóór de showdag uitverkoopt, op basis van echte verkoopsignalen.',
+};
 
 export type ConfidenceLevel = 'low' | 'medium' | 'high';
 

@@ -1,139 +1,62 @@
 {
-  "artist": {
-    "id": "enhypen",
-    "name": "ENHYPEN",
-    "genres": [
-      "k-pop"
-    ],
-    "fandom": "organized"
-  },
-  "tour": {
-    "id": "enhypen-blood-saga-2027",
-    "name": "ENHYPEN WORLD TOUR 'BLOOD SAGA'",
-    "leg": "Europa en VK 2027",
-    "announcedAt": "2026-04-14",
-    "verification": "official"
-  },
+  "artist": { "id": "enhypen", "name": "ENHYPEN", "genres": ["k-pop"], "fandom": "organized" },
+  "tour": { "id": "enhypen-blood-saga-2027", "name": "ENHYPEN WORLD TOUR 'BLOOD SAGA'", "leg": "Europa en VK 2027", "announcedAt": "2026-04-14", "verification": "official" },
   "type": "concert",
   "sources": {
-    "bww": {
-      "name": "BroadwayWorld",
-      "kind": "news",
-      "url": "https://www.broadwayworld.com/article/ENHYPEN-Reveal-Venues-and-Ticket-Information-for-Blood-Saga-World-Tour-20260414",
-      "checked": "2026-10-30"
-    },
+    "bww": { "name": "BroadwayWorld", "kind": "news", "url": "https://www.broadwayworld.com/article/ENHYPEN-Reveal-Venues-and-Ticket-Information-for-Blood-Saga-World-Tour-20260414", "checked": "2026-10-30" },
     "soompi27": {
       "name": "Soompi: 2027 K-Pop Tour Masterlist",
       "kind": "news",
       "url": "https://www.soompi.com/article/1880039wpp/2027-k-pop-tour-masterlist-concerts-fan-meetings-and-more",
       "checked": "2026-10-30",
       "note": "Lijst bijgewerkt op 29 oktober 2026."
-    }
+    },
+    "lastfm": {
+      "name": "Last.fm: ENHYPEN",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/ENHYPEN",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiDisc": { "name": "Wikipedia: Enhypen discography", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Enhypen_discography", "checked": "2026-10-30" },
+    "touringdata": {
+      "name": "Touring Data: ENHYPEN Walk the Line Tour",
+      "kind": "aggregator",
+      "url": "https://touringdata.org/2025/10/09/enhypen-walk-the-line-tour",
+      "checked": "2026-10-30",
+      "note": "Box office per show: verkochte kaarten en percentage."
+    },
+    "wikiZiggo": { "name": "Wikipedia: Ziggo Dome", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Ziggo_Dome", "checked": "2026-10-30" }
   },
   "venues": {
-    "unipol-dome": {
-      "name": "Unipol Dome",
-      "city": "Milan",
-      "country": "IT",
-      "tz": "Europe/Rome"
-    },
-    "la-defense-arena": {
-      "name": "La Défense Arena",
-      "city": "Paris",
-      "country": "FR",
-      "tz": "Europe/Paris"
-    },
-    "ziggo-dome": {
-      "name": "Ziggo Dome",
-      "city": "Amsterdam",
-      "country": "NL",
-      "tz": "Europe/Amsterdam",
-      "lat": 52.3134,
-      "lon": 4.9372
-    },
-    "uber-arena": {
-      "name": "Uber Arena",
-      "city": "Berlin",
-      "country": "DE",
-      "tz": "Europe/Berlin"
-    },
-    "the-o2": {
-      "name": "The O2",
-      "city": "London",
-      "country": "GB",
-      "tz": "Europe/London"
-    }
+    "unipol-dome": { "name": "Unipol Dome", "city": "Milan", "country": "IT", "tz": "Europe/Rome" },
+    "la-defense-arena": { "name": "La Défense Arena", "city": "Paris", "country": "FR", "tz": "Europe/Paris" },
+    "ziggo-dome": { "name": "Ziggo Dome", "city": "Amsterdam", "country": "NL", "tz": "Europe/Amsterdam", "lat": 52.3134, "lon": 4.9372, "capacity": 17000, "capacitySource": "wikiZiggo" },
+    "uber-arena": { "name": "Uber Arena", "city": "Berlin", "country": "DE", "tz": "Europe/Berlin" },
+    "the-o2": { "name": "The O2", "city": "London", "country": "GB", "tz": "Europe/London" }
   },
   "events": [
-    {
-      "venue": "unipol-dome",
-      "date": "2027-02-24",
-      "status": "onsale",
-      "sources": [
-        "bww",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "la-defense-arena",
-      "date": "2027-02-27",
-      "status": "onsale",
-      "sources": [
-        "bww",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "ziggo-dome",
-      "date": "2027-03-02",
-      "status": "onsale",
-      "sources": [
-        "bww",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "uber-arena",
-      "date": "2027-03-05",
-      "status": "onsale",
-      "sources": [
-        "bww",
-        "soompi27"
-      ]
-    },
+    { "venue": "unipol-dome", "date": "2027-02-24", "status": "onsale", "sources": ["bww", "soompi27"] },
+    { "venue": "la-defense-arena", "date": "2027-02-27", "status": "onsale", "sources": ["bww", "soompi27"] },
+    { "venue": "ziggo-dome", "date": "2027-03-02", "status": "onsale", "sources": ["bww", "soompi27"] },
+    { "venue": "uber-arena", "date": "2027-03-05", "status": "onsale", "sources": ["bww", "soompi27"] },
     {
       "venue": "uber-arena",
       "date": "2027-03-06",
-      "sources": [
-        "soompi27"
-      ],
+      "sources": ["soompi27"],
       "addedShow": true,
       "addedShowReason": "Niet in de lijst bij de verkoopstart (BroadwayWorld, april 2026); wel in de lijst van Soompi (29 oktober 2026).",
-      "notes": [
-        "Verkoopdatum van deze extra show staat niet in de bronnen."
-      ]
+      "notes": ["Verkoopdatum van deze extra show staat niet in de bronnen."]
     },
     {
       "venue": "the-o2",
       "date": "2027-03-08",
-      "sources": [
-        "soompi27"
-      ],
+      "sources": ["soompi27"],
       "addedShow": true,
       "addedShowReason": "Niet in de lijst bij de verkoopstart (BroadwayWorld, april 2026); wel in de lijst van Soompi (29 oktober 2026).",
-      "notes": [
-        "Verkoopdatum van deze extra show staat niet in de bronnen."
-      ]
+      "notes": ["Verkoopdatum van deze extra show staat niet in de bronnen."]
     },
-    {
-      "venue": "the-o2",
-      "date": "2027-03-09",
-      "status": "onsale",
-      "sources": [
-        "bww",
-        "soompi27"
-      ]
-    }
+    { "venue": "the-o2", "date": "2027-03-09", "status": "onsale", "sources": ["bww", "soompi27"] }
   ],
   "phases": [
     {
@@ -141,35 +64,97 @@
       "kind": "presale",
       "type": "fanclub",
       "name": "Engene Membership-presale",
-      "events": [
-        "2027-02-24@unipol-dome",
-        "2027-02-27@la-defense-arena",
-        "2027-03-02@ziggo-dome",
-        "2027-03-05@uber-arena",
-        "2027-03-09@the-o2"
-      ],
+      "events": ["2027-02-24@unipol-dome", "2027-02-27@la-defense-arena", "2027-03-02@ziggo-dome", "2027-03-05@uber-arena", "2027-03-09@the-o2"],
       "start": "2026-04-22T10:00",
       "end": "2026-04-23T22:00",
       "conditions": "Alleen met een Engene Membership.",
-      "sources": [
-        "bww"
-      ]
+      "sources": ["bww"]
     },
     {
       "key": "general",
       "kind": "general_sale",
       "name": "Algemene verkoop",
-      "events": [
-        "2027-02-24@unipol-dome",
-        "2027-02-27@la-defense-arena",
-        "2027-03-02@ziggo-dome",
-        "2027-03-05@uber-arena",
-        "2027-03-09@the-o2"
-      ],
+      "events": ["2027-02-24@unipol-dome", "2027-02-27@la-defense-arena", "2027-03-02@ziggo-dome", "2027-03-05@uber-arena", "2027-03-09@the-o2"],
       "start": "2026-04-24T10:00",
-      "sources": [
-        "bww"
-      ]
+      "sources": ["bww"]
     }
-  ]
+  ],
+  "popularity": {
+    "metrics": [{ "metric": "lastfm_listeners", "value": 1203252, "source": "lastfm" }, { "metric": "lastfm_playcount", "value": 373512645, "source": "lastfm" }],
+    "charts": [
+      { "chart": "Circle Album Chart", "country": "KR", "title": "The Sin: Bliss", "kind": "album", "peak": 1, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Offizielle Top 100", "country": "DE", "title": "The Sin: Bliss", "kind": "album", "peak": 4, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Billboard 200", "country": "US", "title": "The Sin: Vanish", "kind": "album", "peak": 2, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Oricon Albums", "country": "JP", "title": "The Sin: Vanish", "kind": "album", "peak": 2, "year": 2026, "source": "wikiDisc" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "Walk the Line",
+        "year": 2025,
+        "date": "2025-08-28",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "Ziggo Dome",
+        "capacity": 13526,
+        "shows": 1,
+        "sellThrough": 0.9951,
+        "detail": "13.460 kaarten verkocht (99,51%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Walk the Line",
+        "year": 2025,
+        "date": "2025-08-22",
+        "city": "London",
+        "country": "GB",
+        "venue": "The O2",
+        "capacity": 15758,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "15.758 kaarten verkocht (100%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Walk the Line",
+        "year": 2025,
+        "date": "2025-08-25",
+        "city": "Manchester",
+        "country": "GB",
+        "venue": "Manchester Arena",
+        "capacity": 11412,
+        "shows": 1,
+        "sellThrough": 0.8391,
+        "detail": "9.576 kaarten verkocht (83,91%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Walk the Line",
+        "year": 2025,
+        "date": "2025-09-01",
+        "city": "Berlin",
+        "country": "DE",
+        "venue": "Uber Arena",
+        "capacity": 12999,
+        "shows": 1,
+        "sellThrough": 0.9691,
+        "detail": "12.597 kaarten verkocht (96,91%).",
+        "sources": ["touringdata"]
+      },
+      {
+        "tour": "Walk the Line",
+        "year": 2025,
+        "date": "2025-09-03",
+        "city": "Paris",
+        "country": "FR",
+        "venue": "Accor Arena",
+        "capacity": 12898,
+        "shows": 1,
+        "soldOut": true,
+        "detail": "12.898 kaarten verkocht (100%).",
+        "sources": ["touringdata"]
+      }
+    ]
+  }
 }

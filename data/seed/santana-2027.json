@@ -1,221 +1,52 @@
 {
-  "artist": {
-    "id": "santana",
-    "name": "Santana",
-    "genres": [
-      "rock",
-      "latin"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "santana-europe-2027",
-    "name": "Santana Europa 2027",
-    "announcedAt": "2026-10-27",
-    "verification": "official"
-  },
+  "artist": { "id": "santana", "name": "Santana", "genres": ["rock", "latin"], "fandom": "regular" },
+  "tour": { "id": "santana-europe-2027", "name": "Santana Europa 2027", "announcedAt": "2026-10-27", "verification": "official" },
   "type": "concert",
   "sources": {
-    "ticketnews": {
-      "name": "TicketNews",
-      "kind": "news",
-      "url": "https://www.ticketnews.com/2026/10/santana-2027-european-tour-dates/",
-      "checked": "2026-10-30"
+    "ticketnews": { "name": "TicketNews", "kind": "news", "url": "https://www.ticketnews.com/2026/10/santana-2027-european-tour-dates/", "checked": "2026-10-30" },
+    "lastfm": {
+      "name": "Last.fm: Santana",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/Santana",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
     }
   },
   "venues": {
-    "london-the-o2": {
-      "name": "The O2",
-      "city": "London",
-      "country": "GB",
-      "tz": "Europe/London"
-    },
-    "paris-accor-arena": {
-      "name": "Accor Arena",
-      "city": "Paris",
-      "country": "FR",
-      "tz": "Europe/Paris"
-    },
-    "kestenholz-festival-st-peter-at-sunset": {
-      "name": "Festival St. Peter at Sunset",
-      "city": "Kestenholz",
-      "country": "CH",
-      "tz": "Europe/Zurich",
-      "outdoor": true
-    },
-    "monchengladbach-sparkassenpark": {
-      "name": "SparkassenPark",
-      "city": "Mönchengladbach",
-      "country": "DE",
-      "tz": "Europe/Berlin",
-      "outdoor": true
-    },
-    "wiesbaden-brita-arena": {
-      "name": "BRITA Arena",
-      "city": "Wiesbaden",
-      "country": "DE",
-      "tz": "Europe/Berlin",
-      "outdoor": true
-    },
-    "pordenone-pordenone-capitale-italiana-della-cultura-2027": {
-      "name": "Pordenone Capitale italiana della Cultura 2027",
-      "city": "Pordenone",
-      "country": "IT",
-      "tz": "Europe/Rome",
-      "outdoor": true
-    },
-    "lucca-lucca-summer-festival": {
-      "name": "Lucca Summer Festival",
-      "city": "Lucca",
-      "country": "IT",
-      "tz": "Europe/Rome",
-      "outdoor": true
-    },
-    "klam-burg-clam": {
-      "name": "Burg Clam",
-      "city": "Klam",
-      "country": "AT",
-      "tz": "Europe/Vienna",
-      "outdoor": true
-    },
-    "slavkov-u-brna-zamecka-zahrada": {
-      "name": "Zámecká zahrada",
-      "city": "Slavkov u Brna",
-      "country": "CZ",
-      "tz": "Europe/Prague",
-      "outdoor": true
-    },
-    "kraków-tauron-arena": {
-      "name": "TAURON Arena",
-      "city": "Kraków",
-      "country": "PL",
-      "tz": "Europe/Warsaw"
-    },
-    "halle-freilichtbühne-peissnitz": {
-      "name": "Freilichtbühne Peißnitz",
-      "city": "Halle",
-      "country": "DE",
-      "tz": "Europe/Berlin",
-      "outdoor": true
-    },
-    "oslo-oslo-spektrum": {
-      "name": "Oslo Spektrum",
-      "city": "Oslo",
-      "country": "NO",
-      "tz": "Europe/Oslo"
-    },
-    "helsinki-kaivopuisto-blues": {
-      "name": "Kaivopuisto Blues",
-      "city": "Helsinki",
-      "country": "FI",
-      "tz": "Europe/Helsinki",
-      "outdoor": true
-    }
+    "london-the-o2": { "name": "The O2", "city": "London", "country": "GB", "tz": "Europe/London" },
+    "paris-accor-arena": { "name": "Accor Arena", "city": "Paris", "country": "FR", "tz": "Europe/Paris" },
+    "kestenholz-festival-st-peter-at-sunset": { "name": "Festival St. Peter at Sunset", "city": "Kestenholz", "country": "CH", "tz": "Europe/Zurich", "outdoor": true },
+    "monchengladbach-sparkassenpark": { "name": "SparkassenPark", "city": "Mönchengladbach", "country": "DE", "tz": "Europe/Berlin", "outdoor": true },
+    "wiesbaden-brita-arena": { "name": "BRITA Arena", "city": "Wiesbaden", "country": "DE", "tz": "Europe/Berlin", "outdoor": true },
+    "pordenone-pordenone-capitale-italiana-della-cultura-2027": { "name": "Pordenone Capitale italiana della Cultura 2027", "city": "Pordenone", "country": "IT", "tz": "Europe/Rome", "outdoor": true },
+    "lucca-lucca-summer-festival": { "name": "Lucca Summer Festival", "city": "Lucca", "country": "IT", "tz": "Europe/Rome", "outdoor": true },
+    "klam-burg-clam": { "name": "Burg Clam", "city": "Klam", "country": "AT", "tz": "Europe/Vienna", "outdoor": true },
+    "slavkov-u-brna-zamecka-zahrada": { "name": "Zámecká zahrada", "city": "Slavkov u Brna", "country": "CZ", "tz": "Europe/Prague", "outdoor": true },
+    "kraków-tauron-arena": { "name": "TAURON Arena", "city": "Kraków", "country": "PL", "tz": "Europe/Warsaw" },
+    "halle-freilichtbühne-peissnitz": { "name": "Freilichtbühne Peißnitz", "city": "Halle", "country": "DE", "tz": "Europe/Berlin", "outdoor": true },
+    "oslo-oslo-spektrum": { "name": "Oslo Spektrum", "city": "Oslo", "country": "NO", "tz": "Europe/Oslo" },
+    "helsinki-kaivopuisto-blues": { "name": "Kaivopuisto Blues", "city": "Helsinki", "country": "FI", "tz": "Europe/Helsinki", "outdoor": true }
   },
   "events": [
-    {
-      "venue": "london-the-o2",
-      "date": "2027-06-30",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "paris-accor-arena",
-      "date": "2027-07-07",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "kestenholz-festival-st-peter-at-sunset",
-      "date": "2027-07-08",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "monchengladbach-sparkassenpark",
-      "date": "2027-07-10",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "wiesbaden-brita-arena",
-      "date": "2027-07-14",
-      "sources": [
-        "ticketnews"
-      ]
-    },
+    { "venue": "london-the-o2", "date": "2027-06-30", "sources": ["ticketnews"] },
+    { "venue": "paris-accor-arena", "date": "2027-07-07", "sources": ["ticketnews"] },
+    { "venue": "kestenholz-festival-st-peter-at-sunset", "date": "2027-07-08", "sources": ["ticketnews"] },
+    { "venue": "monchengladbach-sparkassenpark", "date": "2027-07-10", "sources": ["ticketnews"] },
+    { "venue": "wiesbaden-brita-arena", "date": "2027-07-14", "sources": ["ticketnews"] },
     {
       "venue": "pordenone-pordenone-capitale-italiana-della-cultura-2027",
       "date": "2027-07-17",
-      "sources": [
-        "ticketnews"
-      ],
+      "sources": ["ticketnews"],
       "status": "onsale",
-      "notes": [
-        "Kaarten waren al te koop toen de tour werd aangekondigd."
-      ]
+      "notes": ["Kaarten waren al te koop toen de tour werd aangekondigd."]
     },
-    {
-      "venue": "lucca-lucca-summer-festival",
-      "date": "2027-07-18",
-      "sources": [
-        "ticketnews"
-      ],
-      "status": "onsale",
-      "notes": [
-        "Kaarten waren al te koop toen de tour werd aangekondigd."
-      ]
-    },
-    {
-      "venue": "klam-burg-clam",
-      "date": "2027-07-21",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "slavkov-u-brna-zamecka-zahrada",
-      "date": "2027-07-22",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "kraków-tauron-arena",
-      "date": "2027-07-24",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "halle-freilichtbühne-peissnitz",
-      "date": "2027-07-25",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "oslo-oslo-spektrum",
-      "date": "2027-07-28",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "helsinki-kaivopuisto-blues",
-      "date": "2027-07-31",
-      "sources": [
-        "ticketnews"
-      ],
-      "status": "onsale",
-      "notes": [
-        "Kaarten waren al te koop toen de tour werd aangekondigd."
-      ]
-    }
+    { "venue": "lucca-lucca-summer-festival", "date": "2027-07-18", "sources": ["ticketnews"], "status": "onsale", "notes": ["Kaarten waren al te koop toen de tour werd aangekondigd."] },
+    { "venue": "klam-burg-clam", "date": "2027-07-21", "sources": ["ticketnews"] },
+    { "venue": "slavkov-u-brna-zamecka-zahrada", "date": "2027-07-22", "sources": ["ticketnews"] },
+    { "venue": "kraków-tauron-arena", "date": "2027-07-24", "sources": ["ticketnews"] },
+    { "venue": "halle-freilichtbühne-peissnitz", "date": "2027-07-25", "sources": ["ticketnews"] },
+    { "venue": "oslo-oslo-spektrum", "date": "2027-07-28", "sources": ["ticketnews"] },
+    { "venue": "helsinki-kaivopuisto-blues", "date": "2027-07-31", "sources": ["ticketnews"], "status": "onsale", "notes": ["Kaarten waren al te koop toen de tour werd aangekondigd."] }
   ],
   "phases": [
     {
@@ -223,55 +54,21 @@
       "kind": "presale",
       "type": "artist",
       "name": "Fan-presale",
-      "events": {
-        "exceptCities": [
-          "Paris",
-          "Pordenone",
-          "Lucca",
-          "Helsinki"
-        ]
-      },
+      "events": { "exceptCities": ["Paris", "Pordenone", "Lucca", "Helsinki"] },
       "start": "2026-10-27",
-      "notes": [
-        "Het tijdstip van de fan-presales staat niet in de bron."
-      ],
-      "sources": [
-        "ticketnews"
-      ]
+      "notes": ["Het tijdstip van de fan-presales staat niet in de bron."],
+      "sources": ["ticketnews"]
     },
     {
       "key": "general",
       "kind": "general_sale",
       "name": "Algemene verkoop",
-      "events": {
-        "exceptCities": [
-          "Paris",
-          "Pordenone",
-          "Lucca",
-          "Helsinki"
-        ]
-      },
+      "events": { "exceptCities": ["Paris", "Pordenone", "Lucca", "Helsinki"] },
       "start": "2026-10-30T10:00",
-      "notes": [
-        "Controleer per show de officiële verkooppagina; tijden kunnen per land verschillen."
-      ],
-      "sources": [
-        "ticketnews"
-      ]
+      "notes": ["Controleer per show de officiële verkooppagina; tijden kunnen per land verschillen."],
+      "sources": ["ticketnews"]
     },
-    {
-      "key": "paris-general",
-      "kind": "general_sale",
-      "name": "Algemene verkoop",
-      "events": {
-        "cities": [
-          "Paris"
-        ]
-      },
-      "start": "2026-11-20",
-      "sources": [
-        "ticketnews"
-      ]
-    }
-  ]
+    { "key": "paris-general", "kind": "general_sale", "name": "Algemene verkoop", "events": { "cities": ["Paris"] }, "start": "2026-11-20", "sources": ["ticketnews"] }
+  ],
+  "popularity": { "metrics": [{ "metric": "lastfm_listeners", "value": 2974067, "source": "lastfm" }, { "metric": "lastfm_playcount", "value": 54836301, "source": "lastfm" }] }
 }

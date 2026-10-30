@@ -1,53 +1,15 @@
 {
-  "artist": {
-    "id": "glastonbury",
-    "name": "Glastonbury Festival",
-    "genres": [
-      "festival"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "glastonbury-2027",
-    "name": "Glastonbury 2027",
-    "verification": "official"
-  },
+  "artist": { "id": "glastonbury", "name": "Glastonbury Festival", "genres": ["festival"], "fandom": "regular" },
+  "tour": { "id": "glastonbury-2027", "name": "Glastonbury 2027", "verification": "official" },
   "type": "festival",
   "sources": {
-    "nme": {
-      "name": "NME",
-      "kind": "news",
-      "url": "https://www.nme.com/news/music/glastonbury-2027-ticket-sale-dates-revealed-3967684",
-      "checked": "2026-10-30"
-    },
-    "itvCoach": {
-      "name": "ITV News (coachtickets)",
-      "kind": "news",
-      "url": "https://www.itv.com/news/westcountry/2026-10-02/first-glastonbury-2027-tickets-sell-out-in-30-minutes",
-      "checked": "2026-10-30"
-    },
-    "itv": {
-      "name": "ITV News",
-      "kind": "news",
-      "url": "https://www.itv.com/news/2026-10-04/tickets-for-glastonbury-festival-2027-sell-out-in-less-than-45-minutes",
-      "checked": "2026-10-30"
-    },
-    "euronews": {
-      "name": "Euronews",
-      "kind": "news",
-      "url": "https://www.euronews.com/2026/10/05/glastonbury-2027-tickets-sell-out-in-42-minutes-with-line-up-still-unannounced",
-      "checked": "2026-10-30"
-    }
+    "nme": { "name": "NME", "kind": "news", "url": "https://www.nme.com/news/music/glastonbury-2027-ticket-sale-dates-revealed-3967684", "checked": "2026-10-30" },
+    "itvCoach": { "name": "ITV News (coachtickets)", "kind": "news", "url": "https://www.itv.com/news/westcountry/2026-10-02/first-glastonbury-2027-tickets-sell-out-in-30-minutes", "checked": "2026-10-30" },
+    "itv": { "name": "ITV News", "kind": "news", "url": "https://www.itv.com/news/2026-10-04/tickets-for-glastonbury-festival-2027-sell-out-in-less-than-45-minutes", "checked": "2026-10-30" },
+    "euronews": { "name": "Euronews", "kind": "news", "url": "https://www.euronews.com/2026/10/05/glastonbury-2027-tickets-sell-out-in-42-minutes-with-line-up-still-unannounced", "checked": "2026-10-30" },
+    "dork2025": { "name": "Dork: Glastonbury 2025 tickets sell out in 35 minutes", "kind": "news", "url": "https://readdork.com/news/glastonbury-2025-tickets-sold", "checked": "2026-10-30" }
   },
-  "venues": {
-    "worthy-farm": {
-      "name": "Worthy Farm",
-      "city": "Pilton",
-      "country": "GB",
-      "tz": "Europe/London",
-      "outdoor": true
-    }
-  },
+  "venues": { "worthy-farm": { "name": "Worthy Farm", "city": "Pilton", "country": "GB", "tz": "Europe/London", "outdoor": true } },
   "events": [
     {
       "venue": "worthy-farm",
@@ -55,20 +17,9 @@
       "title": "Glastonbury 2027 (23–27 juni)",
       "status": "soldout",
       "soldOutAt": "2026-10-04T08:42:00Z",
-      "sources": [
-        "nme",
-        "itv",
-        "euronews"
-      ],
-      "priceRange": {
-        "min": 408,
-        "max": 408,
-        "currency": "GBP"
-      },
-      "notes": [
-        "Woensdag 23 t/m zondag 27 juni 2027. Uitverkocht in ongeveer 42 minuten, zonder bekende line-up.",
-        "£408 inclusief £5 boekingskosten; £100 aanbetaling, rest te betalen 1–7 april 2027."
-      ]
+      "sources": ["nme", "itv", "euronews"],
+      "priceRange": { "min": 408, "max": 408, "currency": "GBP" },
+      "notes": ["Woensdag 23 t/m zondag 27 juni 2027. Uitverkocht in ongeveer 42 minuten, zonder bekende line-up.", "£408 inclusief £5 boekingskosten; £100 aanbetaling, rest te betalen 1–7 april 2027."]
     }
   ],
   "phases": [
@@ -79,13 +30,8 @@
       "name": "Coach + ticket",
       "events": "all",
       "start": "2026-10-01T18:00",
-      "notes": [
-        "Binnen 30 minuten uitverkocht."
-      ],
-      "sources": [
-        "nme",
-        "itvCoach"
-      ]
+      "notes": ["Binnen 30 minuten uitverkocht."],
+      "sources": ["nme", "itvCoach"]
     },
     {
       "key": "general",
@@ -95,10 +41,7 @@
       "start": "2026-10-04T09:00",
       "ticketLimit": 6,
       "conditions": "Vooraf registreren verplicht; max. 6 tickets per persoon.",
-      "sources": [
-        "nme",
-        "itv"
-      ]
+      "sources": ["nme", "itv"]
     },
     {
       "key": "resale",
@@ -106,12 +49,11 @@
       "name": "Officiële resale",
       "events": "all",
       "start": null,
-      "notes": [
-        "Volgens NME in het voorjaar van 2027, na de bekendmaking van de line-up; exacte datum nog niet bekend."
-      ],
-      "sources": [
-        "nme"
-      ]
+      "notes": ["Volgens NME in het voorjaar van 2027, na de bekendmaking van de line-up; exacte datum nog niet bekend."],
+      "sources": ["nme"]
     }
-  ]
+  ],
+  "history": {
+    "previousEditions": [{ "year": 2025, "city": "Pilton", "country": "GB", "venue": "Worthy Farm", "soldOut": true, "withinHours": 1, "detail": "Uitverkocht in 35 minuten.", "sources": ["dork2025"] }]
+  }
 }

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { emptyState, type RunDelta, type State } from '../state';
+import { emptyState, migrateState, type RunDelta, type State } from '../state';
 import type { PushTarget, RunSummary, Store } from './types';
 
 /**
@@ -21,7 +21,7 @@ export class FileStore implements Store {
   async load(): Promise<State> {
     if (!fs.existsSync(this.file)) return emptyState();
     const parsed = JSON.parse(fs.readFileSync(this.file, 'utf8')) as Partial<State>;
-    return { ...emptyState(), ...parsed };
+    return migrateState(parsed);
   }
 
   async save(state: State, _delta: RunDelta, run: RunSummary): Promise<void> {

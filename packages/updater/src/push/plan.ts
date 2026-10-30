@@ -25,6 +25,7 @@ export interface PushMessage extends PlannedNotification {
 export interface EventInfo {
   id: string;
   title: string;
+  /** De score die bij het tabblad hoort (verwachte drukte of uitverkoopkans). */
   score?: number;
   tourId?: string;
   artistIds: string[];
@@ -112,6 +113,8 @@ export function planPushes(args: {
 
     // 1. Wijzigingen (extra show, nieuwe fase, nieuwe verkoopdatum, scoresprong, uitverkocht).
     for (const c of args.changes) {
+      // "Verkoop begonnen" staat alleen in het logboek; de herinneringen voor de verkoop zelf gaan al.
+      if (c.type === 'sale_started') continue;
       const ids = 'eventIds' in c ? c.eventIds : [c.eventId];
       if (!ids.some(inScope)) continue;
       const urgent = isUrgentChange(c, args.phases, now, t.settings.leadHours);

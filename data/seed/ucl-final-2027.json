@@ -1,17 +1,6 @@
 {
-  "artist": {
-    "id": "uefa-champions-league",
-    "name": "UEFA Champions League",
-    "genres": [
-      "voetbal"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "ucl-final-2027",
-    "name": "Champions League-finale 2027",
-    "verification": "official"
-  },
+  "artist": { "id": "uefa-champions-league", "name": "UEFA Champions League", "genres": ["voetbal"], "fandom": "regular" },
+  "tour": { "id": "ucl-final-2027", "name": "Champions League-finale 2027", "verification": "official" },
   "type": "sport",
   "sources": {
     "uefa": {
@@ -20,37 +9,36 @@
       "url": "https://www.uefa.com/uefachampionsleague/news/029d-1eb2d5faf53c-d67c9fed04fa-1000--2027-uefa-champions-league-final-estadio-metropolitano",
       "checked": "2026-10-30"
     },
-    "wiki": {
-      "name": "Wikipedia: 2027 UEFA Champions League final",
-      "kind": "aggregator",
-      "url": "https://en.wikipedia.org/wiki/2027_UEFA_Champions_League_final",
-      "checked": "2026-10-30"
+    "wiki": { "name": "Wikipedia: 2027 UEFA Champions League final", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/2027_UEFA_Champions_League_final", "checked": "2026-10-30" },
+    "xpat2026": {
+      "name": "Xpatloop: Preview UEFA Champions League Final in Budapest",
+      "kind": "news",
+      "url": "https://xpatloop.com/channels/2026/05/preview-uefa-champions-league-final-in-budapest---how-to-buy-or-win-a-ticket.html",
+      "checked": "2026-10-30",
+      "note": "Artikel van 12 mei 2026."
     }
   },
-  "venues": {
-    "estadio-metropolitano": {
-      "name": "Estadio Metropolitano",
-      "city": "Madrid",
-      "country": "ES",
-      "tz": "Europe/Madrid",
-      "capacity": 70692,
-      "capacitySource": "wiki",
-      "outdoor": true
-    }
-  },
+  "venues": { "estadio-metropolitano": { "name": "Estadio Metropolitano", "city": "Madrid", "country": "ES", "tz": "Europe/Madrid", "capacity": 70692, "capacitySource": "wiki", "outdoor": true } },
   "events": [
     {
       "venue": "estadio-metropolitano",
       "date": "2027-06-05",
       "title": "Champions League-finale 2027",
-      "sources": [
-        "uefa",
-        "wiki"
-      ],
-      "notes": [
-        "UEFA noemt \"a capacity of around 70,000\".",
-        "Over de kaartverkoop staat nog niets in de bronnen."
-      ]
+      "sources": ["uefa", "wiki"],
+      "notes": ["UEFA noemt \"a capacity of around 70,000\".", "Over de kaartverkoop staat nog niets in de bronnen."]
     }
-  ]
+  ],
+  "history": {
+    "previousEditions": [
+      {
+        "year": 2026,
+        "city": "Budapest",
+        "country": "HU",
+        "venue": "Puskás Aréna",
+        "capacity": 67215,
+        "detail": "Ongeveer 39.000 kaarten voor publiek: 17.200 per finalist en bijna 5.000 voor neutrale fans via de officiële loting. Hoeveel mensen meededen aan de loting, staat er niet in.",
+        "sources": ["xpat2026"]
+      }
+    ]
+  }
 }

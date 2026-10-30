@@ -1,17 +1,6 @@
 {
-  "artist": {
-    "id": "evnne",
-    "name": "EVNNE",
-    "genres": [
-      "k-pop"
-    ],
-    "fandom": "organized"
-  },
-  "tour": {
-    "id": "evnne-one-take-2027",
-    "name": "EVNNE 'ONE TAKE'",
-    "leg": "Europa 2027"
-  },
+  "artist": { "id": "evnne", "name": "EVNNE", "genres": ["k-pop"], "fandom": "organized" },
+  "tour": { "id": "evnne-one-take-2027", "name": "EVNNE 'ONE TAKE'", "leg": "Europa 2027" },
   "type": "concert",
   "sources": {
     "soompi27": {
@@ -20,104 +9,38 @@
       "url": "https://www.soompi.com/article/1880039wpp/2027-k-pop-tour-masterlist-concerts-fan-meetings-and-more",
       "checked": "2026-10-30",
       "note": "Lijst bijgewerkt op 29 oktober 2026."
+    },
+    "lastfm": {
+      "name": "Last.fm: EVNNE",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/EVNNE",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
     }
   },
   "venues": {
-    "durer-kert": {
-      "name": "Dürer Kert",
-      "city": "Budapest",
-      "country": "HU",
-      "tz": "Europe/Budapest"
-    },
-    "apollo-live-club": {
-      "name": "Apollo Live Club",
-      "city": "Helsinki",
-      "country": "FI",
-      "tz": "Europe/Helsinki"
-    },
-    "bataclan": {
-      "name": "Bataclan",
-      "city": "Paris",
-      "country": "FR",
-      "tz": "Europe/Paris"
-    },
-    "klub-palladium": {
-      "name": "Klub Palladium",
-      "city": "Warsaw",
-      "country": "PL",
-      "tz": "Europe/Warsaw"
-    },
-    "q-factory": {
-      "name": "Q-Factory",
-      "city": "Amsterdam",
-      "country": "NL",
-      "tz": "Europe/Amsterdam"
-    },
-    "kantine": {
-      "name": "Kantine",
-      "city": "Cologne",
-      "country": "DE",
-      "tz": "Europe/Berlin"
-    },
-    "kesselhaus": {
-      "name": "Kesselhaus",
-      "city": "Berlin",
-      "country": "DE",
-      "tz": "Europe/Berlin"
-    }
+    "durer-kert": { "name": "Dürer Kert", "city": "Budapest", "country": "HU", "tz": "Europe/Budapest" },
+    "apollo-live-club": { "name": "Apollo Live Club", "city": "Helsinki", "country": "FI", "tz": "Europe/Helsinki" },
+    "bataclan": { "name": "Bataclan", "city": "Paris", "country": "FR", "tz": "Europe/Paris" },
+    "klub-palladium": { "name": "Klub Palladium", "city": "Warsaw", "country": "PL", "tz": "Europe/Warsaw" },
+    "q-factory": { "name": "Q-Factory", "city": "Amsterdam", "country": "NL", "tz": "Europe/Amsterdam" },
+    "kantine": { "name": "Kantine", "city": "Cologne", "country": "DE", "tz": "Europe/Berlin" },
+    "kesselhaus": { "name": "Kesselhaus", "city": "Berlin", "country": "DE", "tz": "Europe/Berlin" }
   },
   "events": [
-    {
-      "venue": "durer-kert",
-      "date": "2027-02-08",
-      "sources": [
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "apollo-live-club",
-      "date": "2027-02-11",
-      "sources": [
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "bataclan",
-      "date": "2027-02-14",
-      "sources": [
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "klub-palladium",
-      "date": "2027-02-16",
-      "sources": [
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "q-factory",
-      "date": "2027-02-17",
-      "sources": [
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "kantine",
-      "date": "2027-02-19",
-      "sources": [
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "kesselhaus",
-      "date": "2027-02-21",
-      "sources": [
-        "soompi27"
-      ]
-    }
+    { "venue": "durer-kert", "date": "2027-02-08", "sources": ["soompi27"] },
+    { "venue": "apollo-live-club", "date": "2027-02-11", "sources": ["soompi27"] },
+    { "venue": "bataclan", "date": "2027-02-14", "sources": ["soompi27"] },
+    { "venue": "klub-palladium", "date": "2027-02-16", "sources": ["soompi27"] },
+    { "venue": "q-factory", "date": "2027-02-17", "sources": ["soompi27"] },
+    { "venue": "kantine", "date": "2027-02-19", "sources": ["soompi27"] },
+    { "venue": "kesselhaus", "date": "2027-02-21", "sources": ["soompi27"] }
   ],
-  "notes": [
-    "Clubtour. Of en wanneer de kaartverkoop begint, staat niet in de bron."
-  ]
+  "notes": ["Clubtour. Of en wanneer de kaartverkoop begint, staat niet in de bron."],
+  "popularity": {
+    "metrics": [
+      { "metric": "lastfm_listeners", "value": 99400, "source": "lastfm", "note": "99.4K op de pagina" },
+      { "metric": "lastfm_playcount", "value": 5200000, "source": "lastfm", "note": "5.2M op de pagina" }
+    ]
+  }
 }

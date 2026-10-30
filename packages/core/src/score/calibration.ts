@@ -1,20 +1,26 @@
 import type { EventType } from '../types';
+import type { ScoreKind } from './factors';
 import type { ScoreModel, SpeedClass } from './model';
 
 /**
- * Kalibratie: voorspellingen naast echte uitkomsten leggen en het model bijstellen.
+ * Kalibratie: voorspellingen naast echte uitkomsten leggen en het model bijstellen. Elk van de twee
+ * scores heeft een eigen model en eigen uitkomsten.
  *
- * Uitkomst = 1 als de datum via de officiële verkoop uitverkocht raakte vóór de showdag, anders 0.
- * Voorspelling = de score van vlak vóór de eerste verkoopstart. Latere scores bevatten
- * live-signalen die de uitkomst al verraden en tellen dus niet mee.
+ *  - Verwachte drukte: voorspelling = de laatste verwachte drukte vóór de eerste verkoop (bij de overgang
+ *    bewaard). Uitkomst = 1 als de datum in de presale of binnen 24 uur na de eerste verkoopstart uitverkocht
+ *    raakte, anders 0 (vastgesteld na een week, of eerder als hij later uitverkocht raakte).
+ *  - Uitverkoopkans: voorspelling = de laatste uitverkoopkans in de eerste week van de verkoop, vóór de
+ *    uitkomst bekend was. Uitkomst = 1 als de datum vóór de showdag uitverkocht raakte, anders 0.
  */
 
 export interface OutcomeRecord {
   eventId: string;
+  /** Welke score deze uitkomst toetst; ontbreekt = 'sellout' (oud formaat). */
+  kind?: ScoreKind;
   /** Voorspelde kans 0..1 op het meetmoment. */
   predicted: number;
   outcome: 0 | 1;
-  /** Per factor dekking × signaal op het meetmoment (9 waarden), voor het hertrainen. */
+  /** Per factor dekking × signaal op het meetmoment, voor het hertrainen. */
   features?: number[];
   type?: EventType;
   /** Werkelijke snelheid als de datum uitverkocht raakte. */
@@ -244,9 +250,10 @@ export function recalibrate(model: ScoreModel, records: OutcomeRecord[], now: st
     usable.length >= MIN_OUTCOMES_FOR_ISOTONIC
       ? isotonicFit(usable.map((r) => ({ p: predictLinear(finalParams, r.features!), y: r.outcome })))
       : undefined;
+  const prefix = model.kind === 'rush' ? 'drukte-' : model.kind === 'sellout' ? 'kans-' : '';
   const next: ScoreModel = {
     ...model,
-    version: `fit-${now.slice(0, 10)}-n${usable.length}`,
+    version: `${prefix}fit-${now.slice(0, 10)}-n${usable.length}`,
     intercept: finalParams.intercept,
     weights: finalParams.weights,
     calibration: finalIso,
@@ -274,9 +281,9 @@ export interface AccuracySummary {
   brier: number | null;
   logLoss: number | null;
   bins: ReliabilityBin[];
-  /** Aandeel van de shows met score ≥ 70 dat echt uitverkocht raakte. */
+  /** Aandeel van de datums met score ≥ 70 waarbij de uitkomst 1 was (uitverkocht, of bij de drukte: binnen een dag). */
   highScoreHitRate: number | null;
-  /** Aantal shows met score < 40 die tóch uitverkocht raakten. */
+  /** Aantal datums met score < 40 waarbij de uitkomst tóch 1 was. */
   lowScoreSurprises: number;
   /** Werkelijke snelheid van de uitverkochte shows. */
   bySpeed: Record<SpeedClass, number>;

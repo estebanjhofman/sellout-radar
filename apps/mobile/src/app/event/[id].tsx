@@ -1,9 +1,22 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { confidenceLabel, eventBadges, formatTimePoint, isOfficial, type Conflict } from '@sellout/core';
+import { DateTime } from 'luxon';
+import {
+  confidenceLabel,
+  eventBadges,
+  eventScoreView,
+  formatTimePoint,
+  isOfficial,
+  SCORE_KIND_HELP,
+  SCORE_KIND_LABEL,
+  STAGE_LABEL,
+  type Conflict,
+  type EventScoreView,
+} from '@sellout/core';
 import { cityNl, placeText, shortDate, showDateText, SOURCE_KIND_NL, timeAgo, typeLabel } from '../../lib/view';
 import { useData } from '../../state/data';
 import { usePrefs } from '../../state/prefs';
+import { PastVisitsBlock, PopularityBlock } from '../../ui/Background';
 import { BadgeView, Banner, Card, KeyValue, LinkText, ScorePill, SectionTitle, TrendArrow, useNow } from '../../ui/components';
 import { IconArrow, IconBell, IconStar } from '../../ui/icons';
 import { ScoreChart } from '../../ui/ScoreChart';
@@ -20,6 +33,8 @@ function conflictValue(v: unknown): string {
   if (v && typeof v === 'object' && 'precision' in (v as object)) return formatTimePoint(v as never);
   return String(v);
 }
+
+const nlTime = (iso: string) => DateTime.fromISO(iso).setZone('Europe/Amsterdam').setLocale('nl').toFormat("ccc d LLL yyyy 'om' HH:mm");
 
 function ConflictBox({ c }: { c: Conflict }) {
   const t = useTheme();
@@ -38,12 +53,44 @@ function ConflictBox({ c }: { c: Conflict }) {
   );
 }
 
+/** De verwachte drukte van vlak vóór de verkoop, met de uitkomst zodra die bekend is. */
+function RushBefore({ before }: { before: NonNullable<EventScoreView['before']> }) {
+  const t = useTheme();
+  const how = before.pending
+    ? 'Verwachting van vlak vóór de verkoop. De volgende update legt die vast.'
+    : before.reconstructed
+      ? 'Achteraf geschat: de datum was al in de verkoop toen de radar hem vond. Deze verwachting is dus niet vóór de verkoop vastgelegd en telt niet mee bij het leren.'
+      : `Vastgelegd vlak vóór de eerste verkoop${before.firstSaleAt ? ` (${nlTime(before.firstSaleAt)}, Nederlandse tijd)` : ''}.`;
+  return (
+    <Card>
+      <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}>
+        <ScorePill score={before.value} size={52} />
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>{before.label}</Text>
+          <Text style={{ color: t.muted, fontSize: 13 }}>Betrouwbaarheid {confidenceLabel(before.confidence)}</Text>
+        </View>
+      </View>
+      <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 10, lineHeight: 19 }}>{how}</Text>
+      {before.outcome ? (
+        <Text style={{ color: t.text, fontSize: 14.5, marginTop: 8, lineHeight: 20 }}>
+          <Text style={{ fontWeight: '800' }}>Uitkomst: </Text>
+          {before.outcome.text}
+        </Text>
+      ) : !before.reconstructed ? (
+        <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 8, lineHeight: 19 }}>
+          Uitkomst: nog niet bekend. De radar kijkt of de datum in de presale of binnen een dag na de eerste verkoop uitverkoopt.
+        </Text>
+      ) : null}
+    </Card>
+  );
+}
+
 export default function EventDetail() {
   const t = useTheme();
   const now = useNow(30_000);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { index, snapshot } = useData();
-  const { prefs, isFollowing, toggleEvent, toggleTour, setMuted } = usePrefs();
+  const { prefs, isFollowing, toggleEvent, toggleTour, toggleArtist, setMuted } = usePrefs();
   const ev = index?.events.get(String(id));
 
   if (!snapshot || !index) return <Text style={{ color: t.muted, padding: 20 }}>Data laden…</Text>;
@@ -55,29 +102,43 @@ export default function EventDetail() {
       </View>
     );
   }
+  const nowIso = now.toISOString();
   const venue = index.venues.get(ev.venueId);
   const tour = ev.tourId ? index.tours.get(ev.tourId) : undefined;
   const phases = index.phasesByEvent.get(ev.id) ?? [];
+  const view = eventScoreView(ev, phases, nowIso);
+  const s = view.score;
+  const artist = index.artists.get(ev.artistIds[0] ?? '');
   const followedDirect = prefs.followedEvents.includes(ev.id);
   const followedTour = !!tour && prefs.followedTours.includes(tour.id);
+  const followedArtist = !!artist && prefs.followedArtists.includes(artist.id);
   const followed = isFollowing(ev.id, ev.tourId, ev.artistIds);
   const muted = prefs.mutedEvents.includes(ev.id);
   const badges = eventBadges(ev, phases, { hasConflict: ev.conflicts.length > 0 });
   const siblings = (tour ? (index.eventsByTour.get(tour.id) ?? []) : []).filter((x) => x.id !== ev.id);
-  const s = ev.score;
   const allSources = [...ev.sources].sort((a, b) => Number(isOfficial(b)) - Number(isOfficial(a)) || a.name.localeCompare(b.name));
-  const artistName = index.artists.get(ev.artistIds[0] ?? '')?.name ?? ev.title;
+  const artistName = artist?.name ?? ev.title;
+  const chartKind = ev.score.kind ?? (ev.stage === 'upcoming' ? 'rush' : 'sellout');
+  const performer = ev.type === 'concert' || ev.type === 'comedy' || ev.type === 'theatre';
+  const visits = tour?.previousVisits ?? [];
+  const editions = tour?.previousEditions ?? [];
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 48, maxWidth: 860, width: '100%', alignSelf: 'center' }}>
       <Stack.Screen options={{ title: artistName }} />
 
       <Text style={{ color: t.text, fontSize: 24, fontWeight: '800' }}>{ev.title}</Text>
-      {tour ? <Text style={{ color: t.muted, fontSize: 14.5, marginTop: 2 }}>{tour.name}{tour.leg ? ` · ${tour.leg}` : ''}</Text> : null}
+      {tour ? (
+        <Text style={{ color: t.muted, fontSize: 14.5, marginTop: 2 }}>
+          {tour.name}
+          {tour.leg ? ` · ${tour.leg}` : ''}
+        </Text>
+      ) : null}
       <Text style={{ color: t.text, fontSize: 15.5, marginTop: 8, fontWeight: '600' }}>{showDateText(ev)}</Text>
       <Text style={{ color: t.muted, fontSize: 14.5, marginTop: 2 }}>
         {placeText(venue)} · {typeLabel(ev.type)}
       </Text>
+      <Text style={{ color: t.accent, fontSize: 13, marginTop: 4, fontWeight: '700' }}>{STAGE_LABEL[view.stage]}</Text>
       {badges.length ? <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 }}>{badges.map((b) => <BadgeView key={b.key} badge={b} />)}</View> : null}
 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
@@ -98,6 +159,15 @@ export default function EventDetail() {
             <Text style={{ color: followedTour ? t.chipActiveText : t.text, fontWeight: '700' }}>{followedTour ? 'Hele tour gevolgd' : 'Volg hele tour'}</Text>
           </Pressable>
         ) : null}
+        {artist ? (
+          <Pressable
+            onPress={() => toggleArtist(artist.id)}
+            accessibilityRole="button"
+            style={{ flexDirection: 'row', gap: 6, alignItems: 'center', backgroundColor: followedArtist ? t.chipActive : t.chip, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10 }}
+          >
+            <Text style={{ color: followedArtist ? t.chipActiveText : t.text, fontWeight: '700' }}>{followedArtist ? `${artist.name} gevolgd` : `Volg ${artist.name}`}</Text>
+          </Pressable>
+        ) : null}
         {followed || s.value >= (prefs.settings.scoreThreshold ?? 101) ? (
           <Pressable
             onPress={() => setMuted(ev.id, !muted)}
@@ -112,28 +182,30 @@ export default function EventDetail() {
 
       <View style={{ marginTop: 16 }}>
         {ev.stale ? <Banner tone="warn">{ev.stale.message}</Banner> : null}
+        {view.movedLocally ? (
+          <Banner tone="info">
+            De eerste verkoop is begonnen sinds de laatste update. Deze datum staat nu bij "Al in de verkoop". De uitverkoopkans is alvast berekend; de volgende update werkt hem bij met echte verkoopsignalen.
+          </Banner>
+        ) : null}
         {ev.conflicts.map((c, i) => (
           <ConflictBox key={i} c={c} />
         ))}
       </View>
 
-      <SectionTitle>Sellout-score</SectionTitle>
+      <SectionTitle>{SCORE_KIND_LABEL[view.kind]}</SectionTitle>
       <Card>
         <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}>
           <ScorePill score={s.value} size={68} state={s.state} />
           <View style={{ flex: 1 }}>
             <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>{s.label}</Text>
-            {s.state === 'scored' ? (
-              <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 2 }}>
-                Betrouwbaarheid {confidenceLabel(s.confidence)} · kans op uitverkopen vóór de showdag
-              </Text>
-            ) : null}
+            {s.state === 'scored' ? <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 2 }}>Betrouwbaarheid {confidenceLabel(s.confidence)}</Text> : null}
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
-              <TrendArrow trend={ev.trend} />
+              {view.movedLocally ? null : <TrendArrow trend={ev.trend} />}
               <Text style={{ color: t.faint, fontSize: 12.5 }}>berekend {timeAgo(s.computedAt, now)}</Text>
             </View>
           </View>
         </View>
+        <Text style={{ color: t.muted, fontSize: 13, marginTop: 10, lineHeight: 18 }}>{SCORE_KIND_HELP[view.kind]}</Text>
         {s.lines.length ? (
           <View style={{ marginTop: 12, gap: 8 }}>
             {s.lines.map((l, i) => (
@@ -149,9 +221,16 @@ export default function EventDetail() {
         {s.speedText ? <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 10 }}>{s.speedText}</Text> : null}
         {s.caveat ? <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 8, fontStyle: 'italic' }}>{s.caveat}</Text> : null}
         <Pressable onPress={() => router.push('/accuracy')} style={{ marginTop: 10 }}>
-          <Text style={{ color: t.accent, fontWeight: '600', fontSize: 13.5 }}>Hoe goed klopt de score?</Text>
+          <Text style={{ color: t.accent, fontWeight: '600', fontSize: 13.5 }}>Hoe goed kloppen de scores?</Text>
         </Pressable>
       </Card>
+
+      {view.stage === 'onsale' && view.before ? (
+        <>
+          <SectionTitle>Verwachte drukte vooraf</SectionTitle>
+          <RushBefore before={view.before} />
+        </>
+      ) : null}
 
       <SectionTitle>Verkoopmomenten</SectionTitle>
       <Card>
@@ -174,24 +253,51 @@ export default function EventDetail() {
         </>
       ) : null}
 
+      {artist?.popularity || performer ? (
+        <>
+          <SectionTitle>Populariteit</SectionTitle>
+          <Card>
+            {artist?.popularity ? <PopularityBlock pop={artist.popularity} name={artist.name} /> : <Text style={{ color: t.muted }}>Nog niet bekend: geen openbare cijfers met bron gevonden.</Text>}
+          </Card>
+        </>
+      ) : null}
+
+      {editions.length ? (
+        <>
+          <SectionTitle>Eerdere edities</SectionTitle>
+          <Card>
+            <PastVisitsBlock visits={editions} near={{ city: venue?.city, country: venue?.country }} />
+          </Card>
+        </>
+      ) : null}
+      {visits.length || (performer && !editions.length) ? (
+        <>
+          <SectionTitle>Vorige tour</SectionTitle>
+          <Card>{visits.length ? <PastVisitsBlock visits={visits} near={{ city: venue?.city, country: venue?.country }} /> : <Text style={{ color: t.muted }}>Nog niet bekend: geen eerder bezoek met bron gevonden.</Text>}</Card>
+        </>
+      ) : null}
+
       {siblings.length ? (
         <>
           <SectionTitle>Andere data van deze tour</SectionTitle>
           <Card style={{ paddingVertical: 6 }}>
             {siblings.map((x) => {
               const v = index.venues.get(x.venueId);
+              const sv = eventScoreView(x, index.phasesByEvent.get(x.id) ?? [], nowIso);
               return (
                 <Pressable
                   key={x.id}
                   onPress={() => router.push({ pathname: '/event/[id]', params: { id: x.id } })}
                   style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, opacity: pressed ? 0.7 : 1 })}
                 >
-                  <ScorePill score={x.score.value} size={32} state={x.score.state} />
+                  <ScorePill score={sv.score.value} size={32} state={sv.score.state} />
                   <View style={{ flex: 1 }}>
                     <Text style={{ color: t.text, fontSize: 14.5, fontWeight: '600' }}>
                       {shortDate(x)} · {cityNl(v?.city ?? '', v?.country)}
                     </Text>
-                    <Text style={{ color: t.muted, fontSize: 12.5 }}>{x.score.label}</Text>
+                    <Text style={{ color: t.muted, fontSize: 12.5 }}>
+                      {sv.score.state === 'scored' ? `${SCORE_KIND_LABEL[sv.kind]}: ${sv.score.label.toLowerCase()}` : sv.score.label}
+                    </Text>
                   </View>
                 </Pressable>
               );
@@ -200,7 +306,7 @@ export default function EventDetail() {
         </>
       ) : null}
 
-      <SectionTitle>Scoreverloop</SectionTitle>
+      <SectionTitle>{`Verloop van de ${SCORE_KIND_LABEL[chartKind].toLowerCase()}`}</SectionTitle>
       <Card>
         <ScoreChart history={ev.history} />
       </Card>

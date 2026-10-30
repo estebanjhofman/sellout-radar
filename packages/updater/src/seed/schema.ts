@@ -144,6 +144,49 @@ export interface SeedClaim {
   evidence?: string;
 }
 
+/** Openbare cijfers die de score gebruikt. Elk cijfer verwijst naar een bron in `sources` (met controledatum). */
+export type SeedMetric =
+  /** Luisteraars op Last.fm, wereldwijd (zelfde maat als de updater met LASTFM_API_KEY ophaalt). */
+  | 'lastfm_listeners'
+  /** Aantal keer afgespeeld (scrobbles) op Last.fm, wereldwijd. */
+  | 'lastfm_playcount'
+  /** Maandelijkse luisteraars op Spotify volgens de bron (alleen ter informatie, niet in de score). */
+  | 'spotify_monthly_listeners'
+  /** Groei van de luisteraars in procenten over `period`, als een bron dat noemt. */
+  | 'listener_growth_pct';
+
+export interface SeedPopularity {
+  metrics?: { metric: SeedMetric; value: number; period?: string; source: string; note?: string }[];
+  /** Hitnoteringen: hoogste positie van een album of single in een officiële hitlijst. */
+  charts?: { chart: string; country: string; title: string; kind: 'album' | 'single'; peak: number; year: number; source: string }[];
+}
+
+/** Een vorig bezoek van de artiest (vorige tour), of een vorige editie van een festival of terugkerend evenement. */
+export interface SeedPastVisit {
+  tour?: string;
+  year: number;
+  /** YYYY-MM-DD (of YYYY-MM), als bekend. */
+  date?: string;
+  city?: string;
+  country?: string;
+  venue?: string;
+  capacity?: number;
+  /** Aantal shows op die plek bij dat bezoek. */
+  shows?: number;
+  soldOut?: boolean;
+  /** Deel van de kaarten dat verkocht werd (0–1), als een bron dat noemt (bijv. 0,98 = 98%). */
+  sellThrough?: number;
+  /** Binnen hoeveel uur uitverkocht (of, met sellThrough, binnen hoeveel uur dat deel weg was), als een bron dat noemt. */
+  withinHours?: number;
+  detail?: string;
+  sources: string[];
+}
+
+export interface SeedHistory {
+  previousVisits?: SeedPastVisit[];
+  previousEditions?: SeedPastVisit[];
+}
+
 export interface SeedFile {
   artist: SeedArtist;
   /** Extra artiesten (co-headliners, festival-line-up). */
@@ -158,4 +201,8 @@ export interface SeedFile {
   phases?: SeedPhase[];
   claims?: SeedClaim[];
   notes?: string[];
+  /** Populariteit van de artiest of het evenement. Geen bron, dan niet invullen. */
+  popularity?: SeedPopularity;
+  /** Vorige tour (per stad of land) of vorige edities. Geen bron, dan niet invullen. */
+  history?: SeedHistory;
 }

@@ -52,7 +52,10 @@ export default function Settings() {
           opent en {Math.max(12, s.leadHours)} uur vóór de deadline. Valt een melding in je stille uren, dan komt hij eerder, nooit later.
         </Text>
 
-        <Text style={{ color: t.text, fontWeight: '700', marginTop: 16, marginBottom: 8 }}>Automatisch meldingen vanaf score</Text>
+        <Text style={{ color: t.text, fontWeight: '700', marginTop: 16, marginBottom: 4 }}>Automatisch meldingen vanaf score</Text>
+        <Text style={{ color: t.muted, fontSize: 13, marginBottom: 8, lineHeight: 18 }}>
+          Vóór de verkoop telt de verwachte drukte, daarna de uitverkoopkans. Gevolgde datums krijgen altijd meldingen.
+        </Text>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {[null, 40, 50, 60, 70, 80, 90].map((v) => (
             <Chip key={String(v)} label={v === null ? 'Alleen gevolgd' : `${v}+`} active={s.scoreThreshold === v} onPress={() => updateSettings({ scoreThreshold: v })} />
@@ -107,7 +110,14 @@ export default function Settings() {
         <KeyValue k="Laatste update" v={snapshot ? timeAgo(snapshot.generatedAt) : 'nog niet'} />
         <KeyValue k="Opgehaald" v={fetchedAt ? timeAgo(fetchedAt) : 'nog niet'} />
         <KeyValue k="Datums" v={snapshot ? String(snapshot.events.length) : '–'} />
-        <KeyValue k="Model" v={snapshot ? `${snapshot.model.version} (${snapshot.model.outcomesUsed} uitkomsten)` : '–'} />
+        <KeyValue
+          k="Model verwachte drukte"
+          v={snapshot?.models?.rush ? `${snapshot.models.rush.version} (${snapshot.models.rush.outcomesUsed} uitkomsten)` : '–'}
+        />
+        <KeyValue
+          k="Model uitverkoopkans"
+          v={snapshot ? `${(snapshot.models?.sellout ?? snapshot.model).version} (${(snapshot.models?.sellout ?? snapshot.model).outcomesUsed} uitkomsten)` : '–'}
+        />
         <Text style={{ color: t.faint, fontSize: 12, marginTop: 6 }} selectable>
           Bron: {snapshotUrl() || 'niet ingesteld'}
         </Text>
@@ -139,13 +149,13 @@ export default function Settings() {
       <SectionTitle>Meer</SectionTitle>
       <Card>
         <Pressable onPress={() => router.push('/accuracy')} style={{ paddingVertical: 8 }}>
-          <Text style={{ color: t.accent, fontWeight: '700' }}>Nauwkeurigheid van de score</Text>
+          <Text style={{ color: t.accent, fontWeight: '700' }}>Nauwkeurigheid van de scores</Text>
         </Pressable>
         <Pressable onPress={() => router.push('/changes')} style={{ paddingVertical: 8 }}>
           <Text style={{ color: t.accent, fontWeight: '700' }}>Recente wijzigingen</Text>
         </Pressable>
         <Text style={{ color: t.muted, fontSize: 12.5, marginTop: 8, lineHeight: 18 }}>
-          De score is een kans, geen garantie. Verkoopdata komen uit de genoemde bronnen; wat geen bron noemt, staat er als "nog niet bekend". Versie {APP_VERSION}.
+          De scores zijn kansen, geen garantie. Verkoopdata komen uit de genoemde bronnen; wat geen bron noemt, staat er als "nog niet bekend". Versie {APP_VERSION}.
         </Text>
       </Card>
     </ScrollView>

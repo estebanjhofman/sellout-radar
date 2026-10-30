@@ -1,5 +1,6 @@
+import { countryNl } from '../geo';
 import { cityNl } from '../names';
-import type { FactorKey } from './factors';
+import type { FactorKey, ScoreKind } from './factors';
 import { confidenceLabel, scoreBand } from './labels';
 import { SPEED_LABELS, type FactorContribution, type ScoreResult } from './model';
 
@@ -21,13 +22,20 @@ export interface Explanation {
   caveat?: string;
 }
 
-const WEEKDAYS = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
-
 /** 12500 → "12.500" (zonder Intl, zodat het overal hetzelfde werkt). */
 export function formatNumber(n: number): string {
   const s = String(Math.round(Math.abs(n)));
   const withDots = s.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   return n < 0 ? `−${withDots}` : withDots;
+}
+
+/** 5612345 → "5,6 mln"; 84000 → "84.000". */
+export function formatCompact(n: number): string {
+  if (Math.abs(n) >= 1_000_000) {
+    const v = n / 1_000_000;
+    return `${(v >= 10 ? Math.round(v).toString() : v.toFixed(1)).replace('.', ',')} mln`;
+  }
+  return formatNumber(n);
 }
 
 /** ["A","B","C","D"] → "A, B, C en nog 1". */
@@ -42,77 +50,85 @@ export function joinList(items: string[], max = 3): string {
 
 const num = (v: unknown) => (typeof v === 'number' ? v : undefined);
 const str = (v: unknown) => (typeof v === 'string' ? v : undefined);
+const cap = (s: string) => `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
+const sentence = (parts: string[]) => (parts.length ? `${cap(parts.join('; '))}.` : null);
+const cities = (x: unknown) =>
+  Array.isArray(x)
+    ? (x as string[]).map((c) => {
+        const [city, cc] = c.split('|');
+        return cityNl(city ?? c, cc);
+      })
+    : [];
 
 function lineFor(f: FactorContribution): string | null {
   const x = f.facts;
   const up = f.signal > 0;
   switch (f.key) {
-    case 'proven_demand': {
-      const cities = Array.isArray(x.soldCities) ? (x.soldCities as string[]).map((c) => { const [city, cc] = c.split('|'); return cityNl(city ?? c, cc); }) : [];
-      const soldCount = num(x.soldCount) ?? 0;
-      const added = num(x.added) ?? 0;
-      const fastest = num(x.fastestHours);
-      if (up) {
-        const parts: string[] = [];
-        if (soldCount > 0) {
-          parts.push(
-            soldCount === 1
-              ? `Een andere datum van deze tour is al uitverkocht (${joinList(cities)})`
-              : `${soldCount} andere data van deze tour zijn al uitverkocht (${joinList(cities)})`,
-          );
-        }
-        if (added > 0) parts.push(added === 1 ? 'er is al een extra show bijgekomen' : `er zijn al ${added} extra shows bijgekomen`);
-        if (fastest !== undefined && fastest <= 24) parts.push('elders binnen een dag uitverkocht');
-        if (parts.length === 0) return 'Andere data van deze tour verkopen goed.';
-        const s = parts.join('; ');
-        return `${s.charAt(0).toUpperCase()}${s.slice(1)}.`;
-      }
-      return 'Andere data van deze tour zijn al even in de verkoop en nog niet uitverkocht.';
+    // ----- Verwachte drukte -----
+    case 'demand_supply': {
+      const listeners = num(x.listeners);
+      const seats = num(x.seats);
+      if (listeners === undefined || seats === undefined) return null;
+      const shows = num(x.shows) ?? 1;
+      const land = countryNl(str(x.country) ?? '');
+      const level = str(x.level);
+      const verdict =
+        level === 'krap' ? 'naar verhouding veel vraag voor weinig plekken' : level === 'ruim' ? 'naar verhouding ruim voldoende plekken' : 'vraag en plekken ongeveer in evenwicht';
+      let s = `${formatCompact(listeners)} luisteraars op Last.fm tegenover ${formatNumber(seats)} plekken in ${land}${shows > 1 ? ` (${shows} shows)` : ''}: ${verdict}.`;
+      const local = num(x.localFactor);
+      const rank = num(x.countryRank);
+      if (local !== undefined && local >= 1.3) s += ` In ${land} populairder dan gemiddeld${rank ? ` (#${rank} in de Last.fm-toplijst)` : ''}.`;
+      else if (local !== undefined && local <= 0.77) s += ` In ${land} minder populair dan gemiddeld.`;
+      return s;
     }
-    case 'resale': {
-      const prem = num(x.premiumPct);
-      if (prem !== undefined) {
-        return prem >= 0
-          ? `Doorverkoopprijzen liggen ${prem}% boven de nominale prijs.`
-          : `Op doorverkoopsites zijn kaarten onder de nominale prijs te koop (${prem}%).`;
+    case 'growth': {
+      const parts: string[] = [];
+      const lg = num(x.listenerGrowthPct);
+      if (lg !== undefined && lg >= 10) parts.push(`${lg}% meer luisteraars dan drie maanden geleden`);
+      if (lg !== undefined && lg <= -10) parts.push(`${Math.abs(lg)}% minder luisteraars dan drie maanden geleden`);
+      const rank = num(x.countryRank);
+      if (rank !== undefined) parts.push(`#${rank} in de Last.fm-toplijst van ${countryNl(str(x.country) ?? '')}`);
+      const peak = num(x.chartPeak);
+      if (peak !== undefined && str(x.chartTitle)) {
+        parts.push(`'${str(x.chartTitle)}' kwam op ${peak === 1 ? 'nummer 1' : `#${peak}`} in de ${str(x.chartName)} (${num(x.chartYear)})`);
       }
-      const l = num(x.listingsPer1000);
-      if (l !== undefined) {
-        return up ? 'Er worden weinig kaarten doorverkocht.' : 'Er worden veel kaarten doorverkocht.';
-      }
-      return null;
+      if (x.newRelease === true) parts.push('nieuwe release rond de verkoopstart');
+      return sentence(parts);
     }
-    case 'scale_jump': {
-      const ratio = num(x.ratio);
-      const where = str(x.place) ? cityNl(str(x.place)!) : x.scope === 'country' ? 'dit land' : 'deze stad';
-      const prev = str(x.venueName);
-      const prevTxt = prev ? ` (${prev})` : '';
-      if (ratio === undefined) return null;
-      // Terugkerende evenementen (festival, sport, Songfestival) op dezelfde plek: vergelijk met de vorige editie.
-      if (x.edition === true && x.sameVenue === true) {
-        if (x.prevSoldOut === true) return `De vorige editie op dezelfde plek${prevTxt} was uitverkocht.`;
-        if (x.prevSoldOut === false) return `De vorige editie op dezelfde plek${prevTxt} was niet uitverkocht.`;
+    case 'previous_tour': {
+      const year = num(x.year);
+      const fastH = num(x.fastHours);
+      const fastTxt = x.fast === true && fastH !== undefined ? ` (binnen ${fastH <= 1 ? 'een uur' : `${Math.round(fastH)} uur`})` : '';
+      const pct = num(x.sellThroughPct);
+      if (x.edition === true) {
+        const which = year ? `De editie van ${year}` : 'De vorige editie';
+        if (x.prevSoldOut === true) return `${which} was uitverkocht${fastTxt}.`;
+        if (pct !== undefined) return x.fast === true ? `Van ${which.charAt(0).toLowerCase()}${which.slice(1)} was binnen ${fastH} uur ${pct}% van de kaarten verkocht.` : `${which} was voor ${pct}% uitverkocht.`;
+        if (x.prevSoldOut === false) return `${which} was niet uitverkocht.`;
         return null;
       }
-      if (ratio > 1.15) {
-        return up
-          ? `De zaal is ${String(ratio).replace('.', ',')}× zo groot als bij het vorige bezoek aan ${where}${prevTxt}, maar dat was uitverkocht.`
-          : `De zaal is ${String(ratio).replace('.', ',')}× zo groot als bij het vorige bezoek aan ${where}${prevTxt}.`;
+      const where = str(x.place) ? cityNl(str(x.place)!) : x.scope === 'country' ? 'dit land' : 'deze stad';
+      const detail = [str(x.tourName), str(x.venueName), year ? String(year) : undefined].filter(Boolean).join(', ');
+      const prevTxt = detail ? ` (${detail})` : '';
+      const ratio = num(x.ratio);
+      const partTxt = pct !== undefined ? `, dat voor ${pct}% uitverkocht was` : '';
+      if (ratio === undefined) {
+        if (pct !== undefined) return `Het vorige bezoek aan ${where}${prevTxt} was voor ${pct}% uitverkocht.`;
+        if (x.prevSoldOut === true) return `Het vorige bezoek aan ${where}${prevTxt} was uitverkocht${fastTxt}.`;
+        if (x.prevSoldOut === false) return `Het vorige bezoek aan ${where}${prevTxt} was niet uitverkocht.`;
+        return null;
       }
-      if (ratio < 0.87) return `De zaal is kleiner dan bij het vorige bezoek aan ${where}${prevTxt}.`;
-      return x.prevSoldOut === true
-        ? `Ongeveer even grote zaal als bij het vorige, uitverkochte bezoek aan ${where}${prevTxt}.`
-        : `Ongeveer even grote zaal als bij het vorige bezoek aan ${where}${prevTxt}.`;
-    }
-    case 'market': {
-      const shows = num(x.showsInCity) ?? 1;
-      const idx = num(x.indexInCity) ?? 0;
-      const city = str(x.city) ? cityNl(str(x.city)!, str(x.country)) : 'deze stad';
-      if (x.isAddedShow === true) return 'Dit is een extra toegevoegde show; die verkopen meestal trager.';
-      if ((num(x.addedInCity) ?? 0) > 0 && up) return `${city} kreeg er extra shows bij.`;
-      if (shows <= 1) return up ? `Dit is de enige show in ${city}.` : `De markt in ${city} is klein voor deze capaciteit.`;
-      if (idx > 0) return `${city} krijgt ${shows} shows; dit is nummer ${idx + 1}.`;
-      return up ? `${city} krijgt ${shows} shows; dit is de eerste.` : `${city} krijgt ${shows} shows, dat spreidt de vraag.`;
+      const r = String(ratio).replace('.', ',');
+      if (ratio > 1.15) {
+        return x.prevSoldOut === true
+          ? `Nu ${r}× zo veel plekken als bij het vorige bezoek aan ${where}${prevTxt}, maar dat was uitverkocht${fastTxt}.`
+          : `Nu ${r}× zo veel plekken als bij het vorige bezoek aan ${where}${prevTxt}${partTxt || (x.prevSoldOut === false ? ', dat niet uitverkocht was' : '')}.`;
+      }
+      if (ratio < 0.87) return `Minder plekken dan bij het vorige bezoek aan ${where}${prevTxt}${x.prevSoldOut === true ? ', dat uitverkocht was' : partTxt}.`;
+      if (x.prevSoldOut === true) return `Ongeveer even veel plekken als bij het vorige, uitverkochte bezoek aan ${where}${prevTxt}${fastTxt}.`;
+      if (pct !== undefined) return `Ongeveer even veel plekken als bij het vorige bezoek aan ${where}${prevTxt}${partTxt}.`;
+      if (x.prevSoldOut === false) return `Ongeveer even veel plekken als bij het vorige bezoek aan ${where}${prevTxt}; dat was niet uitverkocht.`;
+      return `Ongeveer even veel plekken als bij het vorige bezoek aan ${where}${prevTxt}.`;
     }
     case 'scarcity': {
       const parts: string[] = [];
@@ -126,64 +142,112 @@ function lineFor(f: FactorContribution): string | null {
       const years = num(x.yearsSinceLastVisit);
       if (years !== undefined && years >= 3) parts.push(`al ${years} jaar niet meer in het land geweest`);
       if (!up && years !== undefined && years <= 1) return 'Was hier minder dan een jaar geleden nog.';
-      if (parts.length === 0) return null;
-      const s = parts.join('; ');
-      return `${s.charAt(0).toUpperCase()}${s.slice(1)}.`;
-    }
-    case 'momentum': {
-      const parts: string[] = [];
-      if (x.newRelease === true) parts.push('nieuwe release rond de verkoopstart');
-      const lg = num(x.listenerGrowthPct);
-      if (lg !== undefined && lg >= 10) parts.push(`${lg}% meer luisteraars dan drie maanden geleden`);
-      if (lg !== undefined && lg <= -10) parts.push(`${Math.abs(lg)}% minder luisteraars dan drie maanden geleden`);
-      const vg = num(x.videoGrowthPct);
-      if (vg !== undefined && Math.abs(vg) >= 10) parts.push(`video's ${vg > 0 ? 'groeien' : 'krimpen'} (${vg > 0 ? '+' : ''}${vg}%)`);
-      if (x.charting === true) parts.push('staat in de hitlijsten');
-      if (parts.length === 0) return null;
-      const s = parts.join('; ');
-      return `${s.charAt(0).toUpperCase()}${s.slice(1)}.`;
+      return sentence(parts);
     }
     case 'fandom':
       return x.organized === true ? 'Georganiseerde fanbase: fans kopen massaal en snel, vaak al in de presale.' : null;
-    case 'practical': {
-      const parts: string[] = [];
-      const wd = num(x.weekday);
-      if (wd !== undefined) {
-        const name = WEEKDAYS[wd - 1]!;
-        if (wd === 5 || wd === 6) parts.push(`valt op een ${name}`);
-        else if (wd !== 7 && !up) parts.push(`valt op een ${name}`);
+    case 'tour_demand': {
+      const soldCities = cities(x.soldCities);
+      const soldCount = num(x.soldCount) ?? 0;
+      const added = num(x.added) ?? 0;
+      const fastest = num(x.fastestHours);
+      if (up) {
+        const parts: string[] = [];
+        if (soldCount > 0) {
+          parts.push(
+            soldCount === 1
+              ? `een andere datum van deze tour is al uitverkocht (${joinList(soldCities)})`
+              : `${soldCount} andere data van deze tour zijn al uitverkocht (${joinList(soldCities)})`,
+          );
+        }
+        if (added > 0) parts.push(added === 1 ? 'er is al een extra show bijgekomen' : `er zijn al ${added} extra shows bijgekomen`);
+        if (fastest !== undefined && fastest <= 24) parts.push('elders binnen een dag uitverkocht');
+        return sentence(parts) ?? 'Andere data van deze tour verkopen goed.';
       }
-      if (x.outdoorWinter === true) parts.push('openlucht in de winter');
-      const exp = num(x.expensive);
-      if (exp !== undefined) parts.push(`${exp}% duurder dan vergelijkbare shows`);
-      const cheap = num(x.cheap);
-      if (cheap !== undefined) parts.push(`${cheap}% goedkoper dan vergelijkbare shows`);
-      if (x.poorAccess === true) parts.push('slecht bereikbaar');
-      if (parts.length === 0) return null;
-      const s = parts.join('; ');
-      return `${s.charAt(0).toUpperCase()}${s.slice(1)}.`;
+      return 'Andere data van deze tour zijn al even in de verkoop en nog niet uitverkocht.';
     }
-    case 'live': {
+
+    // ----- Uitverkoopkans -----
+    case 'prior': {
+      const rush = num(x.rush);
+      if (rush === undefined) return null;
+      const label = scoreBand(rush, 'rush').label.toLowerCase();
+      return x.frozen === true
+        ? `Verwachte drukte vlak vóór de verkoop: ${rush} (${label}).`
+        : `Geschatte drukte vooraf: ${rush} (${label}). Die is niet vóór de verkoop vastgelegd.`;
+    }
+    case 'sold_out_dates': {
+      const soldCities = cities(x.soldCities);
+      const soldCount = num(x.soldCount) ?? 0;
+      const sameCity = num(x.soldSameCity) ?? 0;
+      const lingering = num(x.lingering) ?? 0;
+      if (up) {
+        if (sameCity > 0) return sameCity === 1 ? 'Een andere datum in dezelfde stad is al uitverkocht.' : `${sameCity} andere data in dezelfde stad zijn al uitverkocht.`;
+        if (soldCount > 0) {
+          return soldCount === 1
+            ? `Een andere datum van deze tour is al uitverkocht (${joinList(soldCities)}).`
+            : `${soldCount} andere data van deze tour zijn al uitverkocht (${joinList(soldCities)}).`;
+        }
+        return null;
+      }
+      if (lingering > 0) {
+        return lingering === 1
+          ? 'Een andere datum van deze tour is al meer dan een week te koop en nog niet uitverkocht.'
+          : `${lingering} andere data van deze tour zijn al meer dan een week te koop en nog niet uitverkocht.`;
+      }
+      return null;
+    }
+    case 'added_shows': {
+      if (x.isAddedShow === true) return 'Dit is een extra toegevoegde show; die verkopen meestal trager.';
+      const inCity = num(x.addedInCity) ?? 0;
+      const added = num(x.added) ?? 0;
+      const city = str(x.city) ? cityNl(str(x.city)!, str(x.country)) : 'deze stad';
+      if (inCity > 0) return `${city} kreeg er ${inCity === 1 ? 'een extra show' : `${inCity} extra shows`} bij wegens de vraag.`;
+      if (added > 0) return added === 1 ? 'Er is al een extra show bijgekomen wegens de vraag.' : `Er zijn al ${added} extra shows bijgekomen wegens de vraag.`;
+      return null;
+    }
+    case 'sales_speed': {
       const parts: string[] = [];
-      if (x.fewTicketsLeft === true) parts.push('de ticketverkoper meldt dat er nog weinig kaarten zijn');
+      if (x.presaleSellout === true) parts.push('elders al in de presale uitverkocht');
+      const h = num(x.fastestHours);
+      if (h !== undefined && h <= 24) parts.push(`elders binnen ${h <= 1 ? 'een uur' : `${h} uur`} uitverkocht`);
+      else if (h !== undefined && h <= 24 * 7) parts.push(`elders binnen ${Math.ceil(h / 24)} dagen uitverkocht`);
+      const d = num(x.daysOnSale);
+      if (d !== undefined && d >= 7) parts.push(`al ${d} dagen te koop zonder melding dat de datum uitverkocht is`);
+      const left = num(x.daysLeft);
+      if (left !== undefined) parts.push(left <= 1 ? 'de show is al heel dichtbij' : `nog ${left} dagen tot de show`);
       const q = num(x.queueSize);
       if (q !== undefined) parts.push(`wachtrij van ${formatNumber(q)} mensen`);
+      return sentence(parts);
+    }
+    case 'resale': {
+      const prem = num(x.premiumPct);
+      if (prem !== undefined) {
+        return prem >= 0
+          ? `Doorverkoopprijzen liggen ${prem}% boven de nominale prijs.`
+          : `Op doorverkoopsites zijn kaarten onder de nominale prijs te koop (${prem}%).`;
+      }
+      if (num(x.listingsPer1000) !== undefined) return up ? 'Er worden weinig kaarten doorverkocht.' : 'Er worden veel kaarten doorverkocht.';
+      return null;
+    }
+    case 'few_left': {
+      const parts: string[] = [];
+      if (x.fewTicketsLeft === true) parts.push('de ticketverkoper meldt dat er nog weinig kaarten zijn');
       if (x.extraRelease === true) parts.push('er zijn extra kaarten vrijgegeven');
-      if (parts.length === 0) return null;
-      const s = parts.join('; ');
-      return `${s.charAt(0).toUpperCase()}${s.slice(1)}.`;
+      return sentence(parts);
     }
   }
 }
 
+const CAVEAT: Record<ScoreKind, string> = {
+  rush: 'Nog weinig gegevens over deze datum. De verwachting leunt vooral op het gemiddelde en wordt scherper zodra er cijfers over de artiest of verkoop elders bijkomen.',
+  sellout: 'Nog weinig verkoopsignalen. De kans leunt vooral op de verwachte drukte vooraf en verandert zodra er data uitverkopen of extra shows bijkomen.',
+};
+
 export function explainScore(r: ScoreResult): Explanation {
-  if (r.state === 'soldout') {
-    return { headline: 'Uitverkocht', lines: [] };
-  }
-  if (r.state === 'cancelled') {
-    return { headline: 'Geannuleerd', lines: [] };
-  }
-  const band = scoreBand(r.score);
+  if (r.state === 'soldout') return { headline: 'Uitverkocht', lines: [] };
+  if (r.state === 'cancelled') return { headline: 'Geannuleerd', lines: [] };
+  const band = scoreBand(r.score, r.kind);
   const lines: ExplanationLine[] = [];
   for (const f of r.top) {
     const text = lineFor(f);
@@ -194,9 +258,6 @@ export function explainScore(r: ScoreResult): Explanation {
     lines,
   };
   if (r.speed) explanation.speed = `Verwachte snelheid (schatting): ${SPEED_LABELS[r.speed]}.`;
-  if (r.confidence === 'low') {
-    explanation.caveat =
-      'Nog weinig gegevens over deze datum. De score leunt vooral op het gemiddelde en verandert zodra de verkoop elders begint.';
-  }
+  if (r.confidence === 'low') explanation.caveat = CAVEAT[r.kind];
   return explanation;
 }

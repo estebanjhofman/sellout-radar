@@ -4,9 +4,12 @@ import { DateTime } from 'luxon';
 import {
   diffSnapshots,
   featureVector,
+  firstSaleMoment,
   formatTimePoint,
   recalibrate,
-  scoreEvent,
+  saleStage,
+  scoreRush,
+  scoreSellout,
   type Change,
   type ChangeLogEntry,
   type ChangeSnapshot,
@@ -27,10 +30,10 @@ import { planPushes, type EventInfo, type PushMessage } from '../push/plan';
 import { compileSeedDir } from '../seed/compile';
 import { emptyDelta, pruneState, serializeCatalog, type RunDelta, type ScorePoint } from '../state';
 import type { RunSummary, Store } from '../store/types';
-import { buildScoreInputs, indexObservations } from './inputs';
+import { buildScoreInputs, indexObservations, type InputContext } from './inputs';
 import { mergeAll } from './merge';
-import { detectOutcomes } from './outcomes';
-import { buildSnapshot } from './snapshot';
+import { detectRushOutcomes, detectSelloutOutcomes } from './outcomes';
+import { buildSnapshot, type EventScores } from './snapshot';
 
 export interface RunDeps {
   store: Store;
@@ -93,6 +96,13 @@ function changeText(c: Change, events: Map<string, { title: string; localDate?: 
         eventIds: c.eventIds,
         phaseId: c.phaseId,
         text: `Verkoopdatum gewijzigd: ${c.name}: ${formatTimePoint(c.before)} → ${formatTimePoint(c.after)} – ${title(c.eventIds[0] ?? '')}`,
+      };
+    case 'sale_started':
+      return {
+        at,
+        kind: 'sale_started',
+        eventIds: [c.eventId],
+        text: `Verkoop begonnen: ${title(c.eventId)}${c.rush !== undefined ? ` (verwachte drukte vooraf ${c.rush})` : ''}`,
       };
   }
 }
@@ -169,47 +179,130 @@ export async function runUpdate(cfg: Config, deps: RunDeps): Promise<RunOutput> 
     }
   }
 
-  // Scores
+  // Scores: verwachte drukte vóór de verkoop, uitverkoopkans zodra de verkoop begint
   const phasesByEvent = new Map<string, SalePhase[]>();
   for (const p of cat.phases.values()) for (const e of p.eventIds) phasesByEvent.set(e, [...(phasesByEvent.get(e) ?? []), p]);
-  const obsIndex = indexObservations(state.observations);
-  const setlistVisits = (state.kv['setlistfm:visits'] ?? {}) as Parameters<typeof buildScoreInputs>[2]['setlistVisits'];
-  const scores = new Map<string, ScoreResult>();
+  // Seedmetingen (bijv. Last.fm-luisteraars op de controledatum) tellen mee, maar worden niet opgeslagen:
+  // ze komen elke run opnieuw uit de bestanden.
+  const allObservations = [...seed.catalog.observations, ...state.observations];
+  const obsIndex = indexObservations(allObservations);
+  const setlistVisits = (state.kv['setlistfm:visits'] ?? {}) as InputContext['setlistVisits'];
+  const lastfmLists = (state.kv['lastfm:lists'] ?? {}) as InputContext['lastfmLists'];
+  const ictx: InputContext = { now, setlistVisits, phasesByEvent, ...(lastfmLists ? { lastfmLists } : {}) };
+  const scores = new Map<string, EventScores>();
   const today = DateTime.fromISO(now).toISODate()!;
+  const nowMs = Date.parse(now);
   for (const ev of cat.events.values()) {
-    const inputs = buildScoreInputs(ev, cat, { now, observations: state.observations, setlistVisits, phasesByEvent }, obsIndex);
-    const r = scoreEvent(inputs, state.model);
-    scores.set(ev.id, r);
-    if ((ev.date.localDate ?? '9999') < today) continue;
+    if (ev.status === 'soldout' && !state.soldOutSeen[ev.id]) state.soldOutSeen[ev.id] = now;
+    const phases = phasesByEvent.get(ev.id) ?? [];
+    const inputs = buildScoreInputs(ev, cat, ictx, obsIndex);
+    const stage = saleStage(ev, phases, now);
+    const first = firstSaleMoment(phases);
     const hist = (state.scoreHistory[ev.id] ??= []);
-    const last = hist[hist.length - 1];
-    const stale = last ? DateTime.fromISO(now).diff(DateTime.fromISO(last.at), 'days').days >= 3 : true;
-    if (!last || last.score !== r.score || last.confidence !== r.confidence || stale) {
-      const point: ScorePoint = { at: now, score: r.score, probability: r.probability, confidence: r.confidence, modelVersion: r.modelVersion, features: featureVector(r.factors) };
+
+    // De verkoop is (volgens de fases) verschoven naar later: bewaarde drukte vervalt.
+    const prevFrozen = state.rushFinal[ev.id];
+    if (prevFrozen && stage === 'upcoming') delete state.rushFinal[ev.id];
+
+    let rush: ScoreResult;
+    if (stage === 'upcoming') {
+      rush = scoreRush(inputs, state.models.rush);
+    } else {
+      // Overgang: bewaar de laatste verwachte drukte van vóór de eerste verkoop.
+      if (!state.rushFinal[ev.id]) {
+        const firstIso = first?.toUTC().toISO() ?? null;
+        const pre = hist.filter((p) => p.kind === 'rush' && (!firstIso || p.at <= firstIso)).at(-1);
+        if (pre && firstIso) {
+          state.rushFinal[ev.id] = {
+            at: pre.at,
+            score: pre.score,
+            probability: pre.probability,
+            confidence: pre.confidence,
+            ...(pre.coverage !== undefined ? { coverage: pre.coverage } : {}),
+            modelVersion: pre.modelVersion,
+            features: pre.features,
+            firstSaleAt: firstIso,
+            frozenAt: now,
+          };
+        }
+      }
+      // Zonder bewaarde drukte (de datum was al in de verkoop toen de radar hem vond): achteraf geschat,
+      // zonder de verkoop elders, want die telt al mee in de uitverkoopkans.
+      rush = scoreRush({ ...inputs, siblings: [], addedForDemand: 0 }, state.models.rush);
+    }
+    const frozen = state.rushFinal[ev.id];
+    const prior = frozen
+      ? { probability: frozen.probability, score: frozen.score, coverage: frozen.coverage ?? 0.5, frozen: true }
+      : rush.state === 'scored'
+        ? { probability: rush.probability, score: rush.score, coverage: rush.coverage, frozen: stage === 'upcoming' }
+        : undefined;
+    const sellout = scoreSellout({ ...inputs, ...(prior ? { rushPrior: prior } : {}) }, state.models.sellout);
+    scores.set(ev.id, { stage, ...(first ? { firstSaleAt: first.toUTC().toISO()! } : {}), rush, sellout });
+
+    if ((ev.date.localDate ?? '9999') < today) continue;
+    const r = stage === 'upcoming' ? rush : sellout;
+    const last = hist.filter((p) => p.kind === r.kind).at(-1);
+    const stalePoint = last ? (nowMs - Date.parse(last.at)) / 86_400_000 >= 3 : true;
+    if (!last || last.score !== r.score || last.confidence !== r.confidence || stalePoint) {
+      const point: ScorePoint = {
+        kind: r.kind,
+        at: now,
+        score: r.score,
+        probability: r.probability,
+        confidence: r.confidence,
+        coverage: Math.round(r.coverage * 1000) / 1000,
+        modelVersion: r.modelVersion,
+        features: featureVector(r.factors),
+      };
       hist.push(point);
-      delta.scorePoints.push({ eventId: ev.id, point, factors: r.factors.map((f) => ({ key: f.key, signal: f.signal, coverage: f.coverage, contribution: f.contribution })), explanation: r.top.map((f) => f.key) });
+      delta.scorePoints.push({
+        eventId: ev.id,
+        point,
+        factors: r.factors.map((f) => ({ key: f.key, signal: f.signal, coverage: f.coverage, contribution: f.contribution })),
+        explanation: r.top.map((f) => f.key),
+      });
     }
   }
+  // Opruimen: bewaarde drukte en uitverkocht-momenten van datums die niet meer bestaan.
+  for (const id of Object.keys(state.rushFinal)) if (!cat.events.has(id)) delete state.rushFinal[id];
+  for (const id of Object.keys(state.soldOutSeen)) if (!cat.events.has(id)) delete state.soldOutSeen[id];
 
-  // Uitkomsten en kalibratie
-  const outcomes = detectOutcomes(cat, phasesByEvent, state.scoreHistory, state.outcomes, now);
-  state.outcomes.push(...outcomes);
-  delta.outcomes.push(...outcomes);
-  const lastCal = state.lastCalibration;
-  const due = !lastCal || state.outcomes.length - lastCal.outcomes >= 30 || DateTime.fromISO(now).diff(DateTime.fromISO(lastCal.at), 'days').days >= 30;
-  if (due && state.outcomes.length >= 30) {
-    const rep = recalibrate(state.model, state.outcomes, now);
-    log(`  kalibratie: ${rep.reason}`);
-    if (rep.applied) {
-      state.model = rep.model;
-      delta.modelChanged = true;
+  // Uitkomsten en kalibratie, per score
+  const rushOutcomes = detectRushOutcomes(cat, phasesByEvent, state.rushFinal, state.soldOutSeen, state.rushOutcomes, now);
+  const selloutOutcomes = detectSelloutOutcomes(cat, phasesByEvent, state.scoreHistory, state.soldOutSeen, state.outcomes, now);
+  state.rushOutcomes.push(...rushOutcomes);
+  state.outcomes.push(...selloutOutcomes);
+  delta.outcomes.push(...rushOutcomes, ...selloutOutcomes);
+  state.lastCalibration ??= {};
+  for (const kind of ['rush', 'sellout'] as const) {
+    const records = kind === 'rush' ? state.rushOutcomes : state.outcomes;
+    const lastCal = state.lastCalibration[kind];
+    const due = !lastCal || records.length - lastCal.outcomes >= 30 || DateTime.fromISO(now).diff(DateTime.fromISO(lastCal.at), 'days').days >= 30;
+    if (due && records.length >= 30) {
+      const rep = recalibrate(state.models[kind], records, now);
+      log(`  kalibratie ${kind === 'rush' ? 'verwachte drukte' : 'uitverkoopkans'}: ${rep.reason}`);
+      if (rep.applied) {
+        state.models[kind] = rep.model;
+        delta.modelsChanged.push(kind);
+      }
+      state.lastCalibration[kind] = { at: now, outcomes: records.length };
     }
-    state.lastCalibration = { at: now, outcomes: state.outcomes.length };
   }
 
   // Wijzigingen sinds de vorige run
+  const currentScore = (id: string) => {
+    const s = scores.get(id);
+    return s ? (s.stage === 'onsale' ? s.sellout.score : s.rush.score) : undefined;
+  };
   const current: ChangeSnapshot = {
-    events: [...cat.events.values()].map((e) => ({ id: e.id, title: e.title, status: e.status, ...(e.addedShow ? { addedShow: true } : {}), score: scores.get(e.id)?.score })),
+    events: [...cat.events.values()].map((e) => ({
+      id: e.id,
+      title: e.title,
+      status: e.status,
+      ...(e.addedShow ? { addedShow: true } : {}),
+      score: currentScore(e.id),
+      stage: scores.get(e.id)?.stage ?? 'upcoming',
+    })),
     phases: [...cat.phases.values()].map((p) => ({ id: p.id, name: p.name, kind: p.kind, start: p.start, eventIds: p.eventIds })),
   };
   const changes = state.lastChangeSnapshot ? diffSnapshots(state.lastChangeSnapshot, current) : [];
@@ -235,7 +328,7 @@ export async function runUpdate(cfg: Config, deps: RunDeps): Promise<RunOutput> 
   });
   if (targets.length) {
     const events = new Map<string, EventInfo>(
-      [...cat.events.values()].map((e) => [e.id, { id: e.id, title: e.title, score: scores.get(e.id)?.score, ...(e.tourId ? { tourId: e.tourId } : {}), artistIds: e.artistIds }]),
+      [...cat.events.values()].map((e) => [e.id, { id: e.id, title: e.title, score: currentScore(e.id), ...(e.tourId ? { tourId: e.tourId } : {}), artistIds: e.artistIds }]),
     );
     messages = planPushes({ targets, events, phases: [...cat.phases.values()], changes, now: DateTime.fromISO(now), sent: state.sent });
     for (const m of messages) {
@@ -262,14 +355,17 @@ export async function runUpdate(cfg: Config, deps: RunDeps): Promise<RunOutput> 
   // Snapshot
   const pinned = new Set<string>([...seed.catalog.events.keys(), ...targets.flatMap((t) => [...t.followedEvents])]);
   const snapshot = buildSnapshot({
-    catalog: cat,
+    catalog: { ...cat, facts: seed.catalog.facts },
     scores,
     history: state.scoreHistory,
+    rushFinal: state.rushFinal,
     conflicts: merged.conflicts,
     health: state.health,
     changes: state.changes,
     outcomes: state.outcomes,
-    model: state.model,
+    rushOutcomes: state.rushOutcomes,
+    models: state.models,
+    observations: obsIndex,
     now,
     pinned,
   });

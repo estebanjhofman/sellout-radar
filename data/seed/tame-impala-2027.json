@@ -1,18 +1,6 @@
 {
-  "artist": {
-    "id": "tame-impala",
-    "name": "Tame Impala",
-    "genres": [
-      "psychedelic"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "tame-impala-europe-2027",
-    "name": "Tame Impala Europa 2027",
-    "announcedAt": "2026-08-24",
-    "verification": "official"
-  },
+  "artist": { "id": "tame-impala", "name": "Tame Impala", "genres": ["psychedelic"], "fandom": "regular" },
+  "tour": { "id": "tame-impala-europe-2027", "name": "Tame Impala Europa 2027", "announcedAt": "2026-08-24", "verification": "official" },
   "type": "concert",
   "sources": {
     "officialcharts": {
@@ -20,129 +8,55 @@
       "kind": "news",
       "url": "https://www.officialcharts.com/chart-news/tame-impala-2027-european-tour-uk-dates-london-manchester-buy-tickets-sale-when/",
       "checked": "2026-10-30"
+    },
+    "lastfm": {
+      "name": "Last.fm: Tame Impala",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/Tame+Impala",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiDeadbeat": { "name": "Wikipedia: Deadbeat (album)", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Deadbeat_(album)", "checked": "2026-10-30" },
+    "wikiTour": {
+      "name": "Wikipedia: Deadbeat Tour",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/Deadbeat_Tour",
+      "checked": "2026-10-30",
+      "note": "Noemt voor Rotterdam Ahoy 7–9 juni 2027; de seed heeft (nog) alleen 7 en 8 juni."
+    },
+    "afasLiveNews": {
+      "name": "AFAS Live: Throwback, 4 jaar geleden stond Tame Impala in AFAS Live",
+      "kind": "venue",
+      "url": "https://www.afaslive.nl/en/news/throwback-4-jaar-geleden-stond-tame-impala-in-afas-live",
+      "checked": "2026-10-30",
+      "note": "Citeert NRC (30 augustus 2022) over de uitverkochte AFAS Live."
+    },
+    "wikiZiggo": { "name": "Wikipedia: Ziggo Dome", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Ziggo_Dome", "checked": "2026-10-30" },
+    "wikiAfasLive": { "name": "Wikipedia: AFAS Live", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/AFAS_Live", "checked": "2026-10-30" },
+    "wikiAhoy": {
+      "name": "Wikipedia: Rotterdam Ahoy",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/Rotterdam_Ahoy",
+      "checked": "2026-10-30",
+      "note": "Capaciteit van de Ahoy Arena volgens de pagina (16.426, stand mei 2019)."
     }
   },
   "venues": {
-    "co-op-live": {
-      "name": "Co-op Live",
-      "city": "Manchester",
-      "country": "GB",
-      "tz": "Europe/London"
-    },
-    "the-o2": {
-      "name": "The O2",
-      "city": "London",
-      "country": "GB",
-      "tz": "Europe/London"
-    },
-    "rotterdam-ahoy": {
-      "name": "Rotterdam Ahoy",
-      "city": "Rotterdam",
-      "country": "NL",
-      "tz": "Europe/Amsterdam"
-    },
-    "accor-arena": {
-      "name": "Accor Arena",
-      "city": "Paris",
-      "country": "FR",
-      "tz": "Europe/Paris"
-    },
-    "lanxess-arena": {
-      "name": "Lanxess Arena",
-      "city": "Cologne",
-      "country": "DE",
-      "tz": "Europe/Berlin"
-    }
+    "co-op-live": { "name": "Co-op Live", "city": "Manchester", "country": "GB", "tz": "Europe/London" },
+    "the-o2": { "name": "The O2", "city": "London", "country": "GB", "tz": "Europe/London" },
+    "rotterdam-ahoy": { "name": "Rotterdam Ahoy", "city": "Rotterdam", "country": "NL", "tz": "Europe/Amsterdam", "capacity": 16426, "capacitySource": "wikiAhoy" },
+    "accor-arena": { "name": "Accor Arena", "city": "Paris", "country": "FR", "tz": "Europe/Paris" },
+    "lanxess-arena": { "name": "Lanxess Arena", "city": "Cologne", "country": "DE", "tz": "Europe/Berlin" }
   },
   "events": [
-    {
-      "venue": "co-op-live",
-      "date": "2027-05-28",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    },
-    {
-      "venue": "the-o2",
-      "date": "2027-06-01",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    },
-    {
-      "venue": "the-o2",
-      "date": "2027-06-02",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    },
-    {
-      "venue": "rotterdam-ahoy",
-      "date": "2027-06-07",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    },
-    {
-      "venue": "rotterdam-ahoy",
-      "date": "2027-06-08",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    },
-    {
-      "venue": "accor-arena",
-      "date": "2027-06-12",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    },
-    {
-      "venue": "accor-arena",
-      "date": "2027-06-13",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    },
-    {
-      "venue": "lanxess-arena",
-      "date": "2027-06-17",
-      "status": "onsale",
-      "sources": [
-        "officialcharts"
-      ],
-      "notes": [
-        "Voorprogramma: Wet Leg."
-      ]
-    }
+    { "venue": "co-op-live", "date": "2027-05-28", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] },
+    { "venue": "the-o2", "date": "2027-06-01", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] },
+    { "venue": "the-o2", "date": "2027-06-02", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] },
+    { "venue": "rotterdam-ahoy", "date": "2027-06-07", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] },
+    { "venue": "rotterdam-ahoy", "date": "2027-06-08", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] },
+    { "venue": "accor-arena", "date": "2027-06-12", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] },
+    { "venue": "accor-arena", "date": "2027-06-13", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] },
+    { "venue": "lanxess-arena", "date": "2027-06-17", "status": "onsale", "sources": ["officialcharts"], "notes": ["Voorprogramma: Wet Leg."] }
   ],
   "phases": [
     {
@@ -150,32 +64,56 @@
       "kind": "presale",
       "type": "artist",
       "name": "Fan-presale",
-      "events": {
-        "exceptCities": [
-          "Paris"
-        ]
-      },
+      "events": { "exceptCities": ["Paris"] },
       "start": "2026-08-26T09:00",
       "tz": "Europe/London",
       "url": "https://tameimpala.com",
-      "sources": [
-        "officialcharts"
-      ]
+      "sources": ["officialcharts"]
     },
-    {
-      "key": "general",
-      "kind": "general_sale",
-      "name": "Algemene verkoop",
-      "events": {
-        "exceptCities": [
-          "Paris"
-        ]
+    { "key": "general", "kind": "general_sale", "name": "Algemene verkoop", "events": { "exceptCities": ["Paris"] }, "start": "2026-08-28T09:00", "tz": "Europe/London", "sources": ["officialcharts"] }
+  ],
+  "popularity": {
+    "metrics": [
+      { "metric": "lastfm_listeners", "value": 4700000, "source": "lastfm", "note": "4.7M op de pagina" },
+      { "metric": "lastfm_playcount", "value": 454700000, "source": "lastfm", "note": "454.7M op de pagina" }
+    ],
+    "charts": [
+      { "chart": "Album Top 100", "country": "NL", "title": "Deadbeat", "kind": "album", "peak": 2, "year": 2025, "source": "wikiDeadbeat" },
+      { "chart": "UK Albums Chart", "country": "GB", "title": "Deadbeat", "kind": "album", "peak": 4, "year": 2025, "source": "wikiDeadbeat" },
+      { "chart": "Billboard 200", "country": "US", "title": "Deadbeat", "kind": "album", "peak": 4, "year": 2025, "source": "wikiDeadbeat" },
+      { "chart": "ARIA Albums", "country": "AU", "title": "Deadbeat", "kind": "album", "peak": 2, "year": 2025, "source": "wikiDeadbeat" },
+      { "chart": "Ultratop Vlaanderen", "country": "BE", "title": "Deadbeat", "kind": "album", "peak": 5, "year": 2025, "source": "wikiDeadbeat" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "Deadbeat Tour",
+        "year": 2026,
+        "date": "2026-05-04",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "Ziggo Dome",
+        "capacity": 17000,
+        "shows": 1,
+        "detail": "Of deze show uitverkocht was, noemen de bronnen niet.",
+        "sources": ["wikiTour", "wikiZiggo"]
       },
-      "start": "2026-08-28T09:00",
-      "tz": "Europe/London",
-      "sources": [
-        "officialcharts"
-      ]
-    }
-  ]
+      {
+        "tour": "Slow Rush 2022 V.2 Clinical Trials Tour",
+        "year": 2022,
+        "date": "2022-08",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "AFAS Live",
+        "capacity": 6000,
+        "soldOut": true,
+        "detail": "Uitverkocht volgens NRC (via AFAS Live).",
+        "sources": ["afasLiveNews", "wikiAfasLive"]
+      },
+      { "tour": "Deadbeat Tour", "year": 2026, "date": "2026-05-07", "city": "London", "country": "GB", "venue": "The O2 Arena", "shows": 1, "sources": ["wikiTour"] },
+      { "tour": "Deadbeat Tour", "year": 2026, "date": "2026-05-03", "city": "Paris", "country": "FR", "venue": "Accor Arena", "shows": 1, "sources": ["wikiTour"] },
+      { "tour": "Deadbeat Tour", "year": 2026, "date": "2026-04-29", "city": "Berlin", "country": "DE", "venue": "Uber Arena", "shows": 1, "sources": ["wikiTour"] }
+    ]
+  }
 }

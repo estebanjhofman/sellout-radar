@@ -3,11 +3,11 @@ import { AppState, Platform } from 'react-native';
 import {
   isValidSnapshot,
   snapshotAgeWarning,
-  type Artist,
   type SalePhase,
   type Snapshot,
+  type SnapshotArtist,
   type SnapshotEvent,
-  type Tour,
+  type SnapshotTour,
   type Venue,
 } from '@sellout/core';
 import { SNAPSHOT_URL } from '../lib/config';
@@ -20,8 +20,8 @@ export interface DataIndex {
   phasesByEvent: Map<string, SalePhase[]>;
   phases: Map<string, SalePhase>;
   venues: Map<string, Venue>;
-  artists: Map<string, Artist>;
-  tours: Map<string, Tour>;
+  artists: Map<string, SnapshotArtist>;
+  tours: Map<string, SnapshotTour>;
   eventsByTour: Map<string, SnapshotEvent[]>;
 }
 

@@ -103,6 +103,46 @@ export function Chip({ label, active, onPress }: { label: string; active?: boole
   );
 }
 
+/** Twee of meer tabbladen naast elkaar (bijv. "Nog niet in de verkoop" / "Al in de verkoop"). */
+export function Segmented<T extends string>({ value, options, onChange }: { value: T; options: { key: T; label: string; count?: number }[]; onChange: (v: T) => void }) {
+  const t = useTheme();
+  return (
+    <View accessibilityRole="tablist" style={{ flexDirection: 'row', backgroundColor: t.chip, borderRadius: 12, padding: 3, marginBottom: 12 }}>
+      {options.map((o) => {
+        const active = o.key === value;
+        return (
+          <Pressable
+            key={o.key}
+            onPress={() => onChange(o.key)}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: active }}
+            style={({ pressed }) => ({
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: 9,
+              paddingHorizontal: 6,
+              borderRadius: 9,
+              backgroundColor: active ? t.card : 'transparent',
+              opacity: pressed ? 0.75 : 1,
+              ...(active ? { shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 3, shadowOffset: { width: 0, height: 1 }, elevation: 1 } : {}),
+            })}
+          >
+            <Text style={{ color: active ? t.text : t.muted, fontSize: 14, fontWeight: '800', textAlign: 'center' }} numberOfLines={1}>
+              {o.label}
+            </Text>
+            {o.count !== undefined ? (
+              <Text style={{ color: active ? t.accent : t.faint, fontSize: 12, fontWeight: '700', fontVariant: ['tabular-nums'] }}>
+                {o.count} {o.count === 1 ? 'datum' : 'datums'}
+              </Text>
+            ) : null}
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 export function TrendArrow({ trend }: { trend: Trend | null }) {
   const t = useTheme();
   if (!trend) return null;

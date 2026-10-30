@@ -1,4 +1,4 @@
-import type { Artist, Claim, Conflict, EventDate, SalePhase, Tour, Venue } from '@sellout/core';
+import type { Artist, ChartEntry, Claim, Conflict, EventDate, Observation, PastVisit, SalePhase, SourceRef, Tour, Venue } from '@sellout/core';
 import type { SeedEventInputs } from './seed/schema';
 
 /** Een datum met extra velden die de updater gebruikt (niet allemaal in het snapshot). */
@@ -18,7 +18,17 @@ export interface CatalogTour extends Tour {
   releaseDate?: string;
   soldOutElsewhere?: { city: string; country: string; count: number; capacity?: number }[];
   /** Bronnen voor de tourkenmerken hierboven. */
-  sources?: import('@sellout/core').SourceRef[];
+  sources?: SourceRef[];
+  /** Vorige tour van de artiest, per stad of land (uit de seeds, met bron). */
+  previousVisits?: PastVisit[];
+  /** Vorige edities van een festival of terugkerend evenement (uit de seeds, met bron). */
+  previousEditions?: PastVisit[];
+}
+
+/** Gegevens over een artiest die niet als meting binnenkomen (uit de seeds, met bron). */
+export interface ArtistFacts {
+  charts: ChartEntry[];
+  other: { label: string; value: number; at: string; source: SourceRef }[];
 }
 
 export interface CatalogVenue extends Venue {
@@ -33,6 +43,9 @@ export interface Catalog {
   phases: Map<string, SalePhase>;
   claims: Claim[];
   conflicts: Conflict[];
+  /** Metingen uit de seeds (bijv. Last.fm-luisteraars op de controledatum); elke run opnieuw ingelezen. */
+  observations: Observation[];
+  facts: Map<string, ArtistFacts>;
 }
 
 export function emptyCatalog(): Catalog {
@@ -44,6 +57,8 @@ export function emptyCatalog(): Catalog {
     phases: new Map(),
     claims: [],
     conflicts: [],
+    observations: [],
+    facts: new Map(),
   };
 }
 
@@ -57,5 +72,7 @@ export function cloneCatalog(c: Catalog): Catalog {
     phases: new Map([...c.phases].map(([k, v]) => [k, structuredClone(v)])),
     claims: c.claims.map((x) => structuredClone(x)),
     conflicts: c.conflicts.map((x) => structuredClone(x)),
+    observations: (c.observations ?? []).map((x) => structuredClone(x)),
+    facts: new Map([...(c.facts ?? new Map())].map(([k, v]) => [k, structuredClone(v)])),
   };
 }

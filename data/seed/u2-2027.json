@@ -15,14 +15,45 @@
     "u2com": { "name": "U2.com tourpagina", "kind": "artist", "url": "https://www.u2.com/tour", "checked": "2026-10-29T21:15:00Z" },
     "u2EuStore": { "name": "U2 EU Store, presalevoorwaarden", "kind": "official_store", "url": "https://shopeu.u2.com/pages/pre-sale-terms-08716489247478392284", "checked": "2026-10-29T21:15:00Z" },
     "louder": { "name": "Louder", "kind": "news", "url": "https://www.loudersound.com/news/u2-announce-2027-uk-europe-tour-dates-greatest-show-on-earth-2026", "checked": "2026-10-29" },
-    "louderFirst": { "name": "Louder (eerste aankondiging)", "kind": "news", "url": "https://www.loudersound.com/bands-artists/u2-carnaval-de-luz-presents-the-greatest-show-on-earth-world-tour", "checked": "2026-10-29" },
-    "nme": { "name": "NME", "kind": "news", "url": "https://www.nme.com/news/music/u2-announce-the-greatest-show-on-earth-2027-uk-and-european-stadium-tour-with-wolf-alice-tickets-3974542", "checked": "2026-10-29" },
+    "louderFirst": {
+      "name": "Louder (eerste aankondiging)",
+      "kind": "news",
+      "url": "https://www.loudersound.com/bands-artists/u2-carnaval-de-luz-presents-the-greatest-show-on-earth-world-tour",
+      "checked": "2026-10-29"
+    },
+    "nme": {
+      "name": "NME",
+      "kind": "news",
+      "url": "https://www.nme.com/news/music/u2-announce-the-greatest-show-on-earth-2027-uk-and-european-stadium-tour-with-wolf-alice-tickets-3974542",
+      "checked": "2026-10-29"
+    },
     "u2radio": { "name": "Zoo Station Radio (u2radio.com)", "kind": "fansite", "url": "https://www.u2radio.com/u2-2027-tour-tickets-europe/", "checked": "2026-10-29" },
     "u2tours": { "name": "u2tours.com", "kind": "fansite", "url": "https://u2tours.com/tours/the-greatest-show-on-earth-tour", "checked": "2026-10-29" },
     "goToIreland": { "name": "Go To Ireland", "kind": "news", "url": "https://www.go-to-ireland.com/u2-2027-tour-return-to-ireland-announcement/", "checked": "2026-10-29" },
     "unotv": { "name": "UnoTV", "kind": "news", "url": "https://www.unotv.com/entretenimiento/u2-abre-tercera-fecha-en-cdmx-cuando-y-como-comprar-boletos-para-febrero-de-2027/", "checked": "2026-10-29" },
     "irishExaminer": { "name": "Irish Examiner", "kind": "news", "url": "https://www.irishexaminer.com/lifestyle/artsandculture/arid-41924668.html", "checked": "2026-10-29" },
-    "wikiStadiums": { "name": "Wikipedia: List of European stadiums by capacity", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity", "checked": "2026-10-29T21:20:00Z", "note": "Sportcapaciteit; de concertopstelling kan afwijken." }
+    "wikiStadiums": {
+      "name": "Wikipedia: List of European stadiums by capacity",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity",
+      "checked": "2026-10-29T21:20:00Z",
+      "note": "Sportcapaciteit; de concertopstelling kan afwijken."
+    },
+    "lastfm": {
+      "name": "Last.fm: U2",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/U2",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiSoS": { "name": "Wikipedia: Songs of Surrender", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Songs_of_Surrender", "checked": "2026-10-30" },
+    "wikiEI": {
+      "name": "Wikipedia: Experience + Innocence Tour",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/Experience_%2B_Innocence_Tour",
+      "checked": "2026-10-30",
+      "note": "Box office (Billboard Boxscore): verkocht / beschikbaar per stad."
+    }
   },
   "venues": {
     "strawberry-arena": { "name": "Strawberry Arena", "city": "Stockholm", "country": "SE", "tz": "Europe/Stockholm", "capacity": 50653, "capacitySource": "wikiStadiums" },
@@ -37,22 +68,51 @@
     "river-plate": { "name": "Estadio River Plate", "city": "Buenos Aires", "country": "AR", "tz": "America/Argentina/Buenos_Aires", "outdoor": true }
   },
   "events": [
-    { "venue": "estadio-gnp-seguros", "date": "2027-02-23", "status": "onsale", "sources": ["louderFirst", "nme"], "notes": ["Algemene verkoop was op 23 oktober 2026; of er nog kaarten zijn, is niet bekend."] },
-    { "venue": "estadio-gnp-seguros", "date": "2027-02-26", "status": "onsale", "sources": ["louderFirst", "nme"], "notes": ["Algemene verkoop was op 23 oktober 2026; of er nog kaarten zijn, is niet bekend."] },
+    {
+      "venue": "estadio-gnp-seguros",
+      "date": "2027-02-23",
+      "status": "onsale",
+      "sources": ["louderFirst", "nme"],
+      "notes": ["Algemene verkoop was op 23 oktober 2026; of er nog kaarten zijn, is niet bekend."]
+    },
+    {
+      "venue": "estadio-gnp-seguros",
+      "date": "2027-02-26",
+      "status": "onsale",
+      "sources": ["louderFirst", "nme"],
+      "notes": ["Algemene verkoop was op 23 oktober 2026; of er nog kaarten zijn, is niet bekend."]
+    },
     { "venue": "estadio-gnp-seguros", "date": "2027-02-28", "addedShow": true, "addedShowReason": "Derde datum in Mexico-Stad, toegevoegd wegens vraag", "sources": ["unotv", "nme"] },
     { "venue": "estadio-gnp-seguros", "date": "2027-03-02", "addedShow": true, "addedShowReason": "Toegevoegd wegens vraag", "sources": ["nme"] },
     { "venue": "morumbis", "date": "2027-03-10", "status": "onsale", "sources": ["louderFirst", "nme"], "notes": ["Algemene verkoop was op 22 oktober 2026; of er nog kaarten zijn, is niet bekend."] },
     { "venue": "morumbis", "date": "2027-03-12", "status": "onsale", "sources": ["louderFirst", "nme"], "notes": ["Algemene verkoop was op 22 oktober 2026; of er nog kaarten zijn, is niet bekend."] },
     { "venue": "morumbis", "date": "2027-03-14", "addedShow": true, "addedShowReason": "Toegevoegd wegens vraag", "sources": ["nme"] },
     { "venue": "morumbis", "date": "2027-03-16", "addedShow": true, "addedShowReason": "Toegevoegd wegens vraag", "sources": ["nme"] },
-    { "venue": "river-plate", "date": "2027-03-23", "status": "onsale", "sources": ["louderFirst", "nme"], "notes": ["Algemene verkoop was op 22 oktober 2026; of er nog kaarten zijn, is niet bekend."] },
-    { "venue": "river-plate", "date": "2027-03-25", "status": "onsale", "sources": ["louderFirst", "nme"], "notes": ["Algemene verkoop was op 22 oktober 2026; of er nog kaarten zijn, is niet bekend."] },
+    {
+      "venue": "river-plate",
+      "date": "2027-03-23",
+      "status": "onsale",
+      "sources": ["louderFirst", "nme"],
+      "notes": ["Algemene verkoop was op 22 oktober 2026; of er nog kaarten zijn, is niet bekend."]
+    },
+    {
+      "venue": "river-plate",
+      "date": "2027-03-25",
+      "status": "onsale",
+      "sources": ["louderFirst", "nme"],
+      "notes": ["Algemene verkoop was op 22 oktober 2026; of er nog kaarten zijn, is niet bekend."]
+    },
     { "venue": "river-plate", "date": "2027-03-27", "addedShow": true, "addedShowReason": "Toegevoegd wegens vraag", "sources": ["nme"] },
     { "venue": "strawberry-arena", "date": "2027-04-26", "sources": ["u2com", "u2EuStore", "louder", "nme"], "notes": ["Voorprogramma: Wolf Alice."] },
     { "venue": "strawberry-arena", "date": "2027-04-28", "sources": ["u2com", "u2EuStore", "louder", "nme"] },
     { "venue": "stade-de-france", "date": "2027-05-05", "sources": ["u2com", "u2EuStore", "louder"] },
     { "venue": "stade-de-france", "date": "2027-05-08", "sources": ["u2com", "u2EuStore", "louder"] },
-    { "venue": "estadio-da-luz", "date": "2027-05-27", "sources": ["u2com", "u2EuStore", "louder"], "notes": ["Geen artist presale voor Lissabon; alleen de U2.com- en EU Store-presales en de algemene verkoop."] },
+    {
+      "venue": "estadio-da-luz",
+      "date": "2027-05-27",
+      "sources": ["u2com", "u2EuStore", "louder"],
+      "notes": ["Geen artist presale voor Lissabon; alleen de U2.com- en EU Store-presales en de algemene verkoop."]
+    },
     { "venue": "johan-cruijff-arena", "date": "2027-06-05", "sources": ["u2com", "u2EuStore", "louder", "nme"] },
     { "venue": "johan-cruijff-arena", "date": "2027-06-06", "sources": ["u2com", "u2EuStore", "louder", "nme"] },
     { "venue": "tottenham-hotspur-stadium", "date": "2027-06-18", "sources": ["u2com", "u2EuStore", "louder", "nme"] },
@@ -188,13 +248,101 @@
       "sources": ["u2com", "u2EuStore", "louder"]
     }
   ],
-  "claims": [
-    {
-      "target": "2027-06-30@olympiastadion-berlin",
-      "field": "venue",
-      "value": "Olympiastadion, Munich",
-      "source": "u2tours",
-      "evidence": "Jun 30, 2027 - Olympiastadion · Munich"
-    }
-  ]
+  "claims": [{ "target": "2027-06-30@olympiastadion-berlin", "field": "venue", "value": "Olympiastadion, Munich", "source": "u2tours", "evidence": "Jun 30, 2027 - Olympiastadion · Munich" }],
+  "popularity": {
+    "metrics": [
+      { "metric": "lastfm_listeners", "value": 5100000, "source": "lastfm", "note": "5.1M op de pagina" },
+      { "metric": "lastfm_playcount", "value": 234500000, "source": "lastfm", "note": "234.5M op de pagina" }
+    ],
+    "charts": [
+      { "chart": "Album Top 100", "country": "NL", "title": "Songs of Surrender", "kind": "album", "peak": 1, "year": 2023, "source": "wikiSoS" },
+      { "chart": "UK Albums Chart", "country": "GB", "title": "Songs of Surrender", "kind": "album", "peak": 1, "year": 2023, "source": "wikiSoS" },
+      { "chart": "Offizielle Top 100", "country": "DE", "title": "Songs of Surrender", "kind": "album", "peak": 1, "year": 2023, "source": "wikiSoS" },
+      { "chart": "FIMI Album", "country": "IT", "title": "Songs of Surrender", "kind": "album", "peak": 1, "year": 2023, "source": "wikiSoS" },
+      { "chart": "SNEP Albums", "country": "FR", "title": "Songs of Surrender", "kind": "album", "peak": 2, "year": 2023, "source": "wikiSoS" },
+      { "chart": "Billboard 200", "country": "US", "title": "Songs of Surrender", "kind": "album", "peak": 5, "year": 2023, "source": "wikiSoS" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "eXPERIENCE + iNNOCENCE Tour",
+        "year": 2018,
+        "date": "2018-10-07",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "Ziggo Dome",
+        "capacity": 16771,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "33.542 van 33.542 kaarten verkocht (7 en 8 oktober 2018).",
+        "sources": ["wikiEI"]
+      },
+      {
+        "tour": "eXPERIENCE + iNNOCENCE Tour",
+        "year": 2018,
+        "date": "2018-10-23",
+        "city": "London",
+        "country": "GB",
+        "venue": "The O2 Arena",
+        "capacity": 18316,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "36.632 van 36.632 kaarten verkocht.",
+        "sources": ["wikiEI"]
+      },
+      {
+        "tour": "eXPERIENCE + iNNOCENCE Tour",
+        "year": 2018,
+        "date": "2018-09-08",
+        "city": "Paris",
+        "country": "FR",
+        "venue": "AccorHotels Arena",
+        "capacity": 18103,
+        "shows": 4,
+        "soldOut": true,
+        "detail": "72.412 van 72.412 kaarten verkocht (4 shows).",
+        "sources": ["wikiEI"]
+      },
+      {
+        "tour": "eXPERIENCE + iNNOCENCE Tour",
+        "year": 2018,
+        "date": "2018-08-31",
+        "city": "Berlin",
+        "country": "DE",
+        "venue": "Mercedes-Benz Arena",
+        "capacity": 14630,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "29.260 van 29.260 kaarten verkocht.",
+        "sources": ["wikiEI"]
+      },
+      {
+        "tour": "eXPERIENCE + iNNOCENCE Tour",
+        "year": 2018,
+        "date": "2018-10-11",
+        "city": "Milan",
+        "country": "IT",
+        "venue": "Mediolanum Forum",
+        "capacity": 12665,
+        "shows": 4,
+        "soldOut": true,
+        "detail": "50.660 van 50.660 kaarten verkocht (4 shows).",
+        "sources": ["wikiEI"]
+      },
+      {
+        "tour": "eXPERIENCE + iNNOCENCE Tour",
+        "year": 2018,
+        "date": "2018-09-16",
+        "city": "Lisbon",
+        "country": "PT",
+        "venue": "Altice Arena",
+        "capacity": 18759,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "37.518 van 37.518 kaarten verkocht.",
+        "sources": ["wikiEI"]
+      }
+    ]
+  }
 }

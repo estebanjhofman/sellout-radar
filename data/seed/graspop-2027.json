@@ -1,67 +1,30 @@
 {
-  "artist": {
-    "id": "graspop",
-    "name": "Graspop Metal Meeting",
-    "genres": [
-      "festival",
-      "metal"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "graspop-2027",
-    "name": "Graspop Metal Meeting 2027 (30e editie)",
-    "verification": "official"
-  },
+  "artist": { "id": "graspop", "name": "Graspop Metal Meeting", "genres": ["festival", "metal"], "fandom": "regular" },
+  "tour": { "id": "graspop-2027", "name": "Graspop Metal Meeting 2027 (30e editie)", "verification": "official" },
   "type": "festival",
   "sources": {
-    "site": {
-      "name": "Graspop.be",
+    "site": { "name": "Graspop.be", "kind": "promoter", "url": "https://www.graspop.be/", "checked": "2026-10-30" },
+    "festivalinfo": { "name": "Festivalinfo.nl", "kind": "news", "url": "https://www.festivalinfo.nl/news/overzicht/0/", "checked": "2026-10-30" },
+    "press2025": {
+      "name": "Graspop Metal Meeting: GMM 2025 – Sun, sweat and soaring guitars",
       "kind": "promoter",
-      "url": "https://www.graspop.be/",
-      "checked": "2026-10-30"
-    },
-    "festivalinfo": {
-      "name": "Festivalinfo.nl",
-      "kind": "news",
-      "url": "https://www.festivalinfo.nl/news/overzicht/0/",
+      "url": "https://press.graspop.be/graspop-metal-meeting-2025-sun-sweat-and-soaring-guitars",
       "checked": "2026-10-30"
     }
   },
-  "venues": {
-    "graspop-dessel": {
-      "name": "Graspop-terrein",
-      "city": "Dessel",
-      "country": "BE",
-      "tz": "Europe/Brussels",
-      "outdoor": true
-    }
-  },
+  "venues": { "graspop-dessel": { "name": "Graspop-terrein", "city": "Dessel", "country": "BE", "tz": "Europe/Brussels", "outdoor": true } },
   "events": [
     {
       "venue": "graspop-dessel",
       "date": "2027-06-17",
       "title": "Graspop Metal Meeting 2027 (17–20 juni)",
-      "sources": [
-        "site",
-        "festivalinfo"
-      ],
+      "sources": ["site", "festivalinfo"],
       "notes": [
         "Vier dagen, donderdag 17 t/m zondag 20 juni 2027. Headliners o.a. blink-182, Parkway Drive (donderdag), Faith No More (vrijdag) en Mötley Crüe (zondag).",
         "Graspop deelde op 26 oktober eerste informatie over de kaartverkoop, maar datum en tijd staan nog niet op de site."
       ]
     }
   ],
-  "phases": [
-    {
-      "key": "general",
-      "kind": "general_sale",
-      "name": "Kaartverkoop",
-      "events": "all",
-      "start": null,
-      "sources": [
-        "site"
-      ]
-    }
-  ]
+  "phases": [{ "key": "general", "kind": "general_sale", "name": "Kaartverkoop", "events": "all", "start": null, "sources": ["site"] }],
+  "history": { "previousEditions": [{ "year": 2025, "city": "Dessel", "country": "BE", "soldOut": true, "detail": "Ongeveer 55.000 bezoekers per dag; 'filled to capacity'.", "sources": ["press2025"] }] }
 }

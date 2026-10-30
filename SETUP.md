@@ -38,8 +38,8 @@ Zet ze als **Repository secret** onder *Settings → Secrets and variables → A
 |---|---|---|
 | `TICKETMASTER_API_KEY` | developer.ticketmaster.com → *My Apps* → Consumer Key (Discovery API) | Nieuwe evenementen, presales, verkoopstart en status per datum |
 | `SEATGEEK_CLIENT_ID` | platform.seatgeek.com → account maken en een app registreren | Doorverkoopprijzen (vooral Noord-Amerika) |
-| `LASTFM_API_KEY` | last.fm/api/account/create | Luisteraars en groei per artiest |
-| `YOUTUBE_API_KEY` | Google Cloud Console → *YouTube Data API v3* inschakelen → API-sleutel | Groei in videoweergaven |
+| `LASTFM_API_KEY` | last.fm/api/account/create | Luisteraars en keer afgespeeld per artiest (daaruit de groei over 90 dagen), en de Last.fm-toplijst wereldwijd en per land voor de 20 landen met de meeste datums. Telt mee in de verwachte drukte |
+| `YOUTUBE_API_KEY` | Google Cloud Console → *YouTube Data API v3* inschakelen → API-sleutel | Abonnees en weergaven van het kanaal, alleen ter informatie op de detailpagina (niet in de score, zie hieronder) |
 | `SETLISTFM_API_KEY` | api.setlist.fm | Wanneer en waar een artiest eerder in een stad speelde |
 | `ANTHROPIC_API_KEY` | console.anthropic.com | Leest officiële pagina's (`data/watchlist.json`) en nieuws (`data/feeds.json`) en haalt er verkoopdata uit. Een datum telt alleen als de letterlijke tekst in de bron staat. Kost geld per gebruik; zie `SELLOUT_MAX_LLM_CALLS`. |
 | `EXPO_ACCESS_TOKEN` | expo.dev → *Account settings* → *Access tokens* | Alleen nodig als je in Expo "enhanced push security" aanzet |
@@ -56,12 +56,15 @@ Onder **Variables** (zelfde scherm, tabblad *Variables*) kun je instellen:
 
 **Gebruiksvoorwaarden.** Elke bron heeft eigen voorwaarden, ook over het bewaren en tonen van hun gegevens. Omdat de repository openbaar is, is het snapshot dat ook. Lees per bron de voorwaarden voordat je de sleutel toevoegt. De updater gebruikt officiële API's waar die er zijn, maakt zich bekend met een eigen User-Agent, volgt `robots.txt` en vraagt niet vaker dan drie keer per dag.
 
+- **Last.fm**: de API is bedoeld voor niet-commercieel gebruik; de app noemt Last.fm als bron met een link naar de pagina van de artiest. De toplijsten worden hooguit één keer per dag opgehaald.
+- **YouTube**: volgens de YouTube API-voorwaarden mag je uit API-gegevens geen eigen maten of scores afleiden en statistieken niet langer dan 30 dagen bewaren. Daarom telt YouTube niet mee in de score, toont de app alleen de laatste meting en wist de updater YouTube-cijfers na 30 dagen.
+
 ## 3. Supabase (aanbevolen)
 
 Nodig voor pushmeldingen vanaf de server (bijv. "extra show toegevoegd", "nieuwe presale", "uitverkocht") en om op meerdere apparaten dezelfde lijst met gevolgde evenementen te hebben.
 
 1. Maak op supabase.com een nieuw project (gratis plan). Kies een regio in Europa.
-2. Open **SQL Editor**, plak de inhoud van `supabase/migrations/0001_schema.sql` en klik op **Run**.
+2. Open **SQL Editor**, plak de inhoud van `supabase/migrations/0001_schema.sql` en klik op **Run**. Doe daarna hetzelfde met `supabase/migrations/0002_twee_scores.sql` (de twee scores). Had je Supabase al ingericht met een eerdere versie, voer dan alleen `0002_twee_scores.sql` uit; bestaande gegevens blijven staan.
 3. Ga naar **Authentication → Sign In / Providers** en zet **anonieme aanmeldingen** aan. De app meldt zich zo aan zonder e-mailadres of wachtwoord.
 4. Ga naar **Project Settings → API keys** en noteer:
    - de **Project URL**;
@@ -127,7 +130,7 @@ Snel uitproberen zonder Apple-account kan met de app **Expo Go**: `npx expo star
 
 ### Meldingen in de app
 
-- Standaard krijg je meldingen voor evenementen die je volgt en voor evenementen met score 70 of hoger. Beide stel je in onder **Instellingen**.
+- Standaard krijg je meldingen voor evenementen die je volgt en voor evenementen met score 70 of hoger. Vóór de verkoop telt daarvoor de verwachte drukte, daarna de uitverkoopkans. Beide stel je in onder **Instellingen**.
 - Presale en algemene verkoop: minstens 12 uur van tevoren. Inschrijvingen: zodra ze opengaan en minstens 12 uur voor de deadline.
 - Optioneel een herinnering 1 uur vooraf.
 - Wijzigingen: extra show, andere verkoopdatum, nieuwe presale, score +15 of meer, uitverkocht.
@@ -139,7 +142,22 @@ Snel uitproberen zonder Apple-account kan met de app **Expo Go**: `npx expo star
 - **Officiële pagina's** (`data/watchlist.json`): tourpagina's, promotors en zalen die elke run worden gelezen (met `ANTHROPIC_API_KEY`).
 - **Nieuws** (`data/feeds.json`): RSS-feeds waarin de updater zoekt naar aankondigingen, extra shows en verkoopdata.
 
-Controleer seeds altijd met `npm run seed:check`. Die controleert onder meer bronverwijzingen, tijdzones en of een weekdag in een notitie klopt bij de datum.
+Controleer seeds altijd met `npm run seed:check`. Die controleert onder meer bronverwijzingen, tijdzones en of een weekdag in een notitie klopt bij de datum, en telt hoeveel artiesten populariteit, hitnoteringen en een vorige tour of editie hebben.
+
+**Populariteit en geschiedenis in een seed.** Vul alleen in wat een bron noemt, met de bron in `sources` (met `checked`, de datum van controle). Zonder bron: weglaten.
+
+```json
+"popularity": {
+  "metrics": [{ "metric": "lastfm_listeners", "value": 1700000, "source": "lastfm" }],
+  "charts": [{ "chart": "Album Top 100", "country": "NL", "title": "The Great Divide", "kind": "album", "peak": 1, "year": 2026, "source": "wikiTGD" }]
+},
+"history": {
+  "previousVisits": [{ "tour": "…", "year": 2024, "date": "2024-08-24", "city": "Amsterdam", "country": "NL", "venue": "Ziggo Dome", "capacity": 17000, "shows": 1, "soldOut": true, "sources": ["…"] }],
+  "previousEditions": [{ "year": 2025, "sellThrough": 0.92, "withinHours": 2, "sources": ["…"] }]
+}
+```
+
+`previousVisits` is de vorige tour van de artiest, `previousEditions` de vorige edities van een festival of terugkerend evenement. `sellThrough` (0–1) en `withinHours` vul je alleen in als de bron ze noemt. Een venue-capaciteit (`capacity`) heeft altijd een `capacitySource` nodig. Met `LASTFM_API_KEY` neemt de updater de Last.fm-cijfers later vanzelf over; de seedwaarde is dan de eerste meting.
 
 ## 8. Lokaal draaien en testen
 

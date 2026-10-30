@@ -1,57 +1,45 @@
 {
-  "artist": {
-    "id": "paaspop",
-    "name": "Paaspop",
-    "genres": [
-      "festival"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "paaspop-2027",
-    "name": "Paaspop 2027 (50e editie)",
-    "verification": "official"
-  },
+  "artist": { "id": "paaspop", "name": "Paaspop", "genres": ["festival"], "fandom": "regular" },
+  "tour": { "id": "paaspop-2027", "name": "Paaspop 2027 (50e editie)", "verification": "official" },
   "type": "festival",
   "sources": {
-    "site": {
-      "name": "Paaspop.nl",
-      "kind": "promoter",
-      "url": "https://www.paaspop.nl/",
-      "checked": "2026-10-30"
+    "site": { "name": "Paaspop.nl", "kind": "promoter", "url": "https://www.paaspop.nl/", "checked": "2026-10-30" },
+    "ff2025": {
+      "name": "Festivalfans: Paaspop officieel uitverkocht",
+      "kind": "news",
+      "url": "https://festivalfans.nl/paaspop-officieel-uitverkocht-maar-nog-genoeg-tickets-beschikbaar/",
+      "checked": "2026-10-30",
+      "note": "Artikel van 10 april 2025."
+    },
+    "fi2025": {
+      "name": "Festivalinfo: Paaspop trekt recordaantal bezoekers",
+      "kind": "news",
+      "url": "https://www.festivalinfo.nl/news/56403/Paaspop-Schijndel-trekt-recordaantal-bezoekers-en-start-verkoop-Super-Early-Birds-voor-2026-editie/",
+      "checked": "2026-10-30",
+      "note": "Artikel van 22 april 2025."
     }
   },
-  "venues": {
-    "paaspop-schijndel": {
-      "name": "Paaspop-terrein",
-      "city": "Schijndel",
-      "country": "NL",
-      "tz": "Europe/Amsterdam"
-    }
-  },
+  "venues": { "paaspop-schijndel": { "name": "Paaspop-terrein", "city": "Schijndel", "country": "NL", "tz": "Europe/Amsterdam" } },
   "events": [
     {
       "venue": "paaspop-schijndel",
       "date": "2027-03-26",
       "title": "Paaspop 2027 (26–28 maart)",
-      "sources": [
-        "site"
-      ],
-      "notes": [
-        "50e editie. Eerste 50 namen o.a. Rag’n’Bone Man, Clouseau, BLØF, The Opposites, De Staat en Sub Focus."
-      ]
+      "sources": ["site"],
+      "notes": ["50e editie. Eerste 50 namen o.a. Rag’n’Bone Man, Clouseau, BLØF, The Opposites, De Staat en Sub Focus."]
     }
   ],
-  "phases": [
-    {
-      "key": "general",
-      "kind": "general_sale",
-      "name": "Kaartverkoop dag- en weekendtickets",
-      "events": "all",
-      "start": "2026-10-31T11:00",
-      "sources": [
-        "site"
-      ]
-    }
-  ]
+  "phases": [{ "key": "general", "kind": "general_sale", "name": "Kaartverkoop dag- en weekendtickets", "events": "all", "start": "2026-10-31T11:00", "sources": ["site"] }],
+  "history": {
+    "previousEditions": [
+      {
+        "year": 2025,
+        "city": "Schijndel",
+        "country": "NL",
+        "soldOut": true,
+        "detail": "Alle reguliere tickets uitverkocht (10 april 2025); recordaantal van 120.000 bezoekers; 30.000 early birds binnen een uur weg.",
+        "sources": ["ff2025", "fi2025"]
+      }
+    ]
+  }
 }

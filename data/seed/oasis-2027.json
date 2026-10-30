@@ -1,532 +1,121 @@
 {
-  "artist": {
-    "id": "oasis",
-    "name": "Oasis",
-    "genres": [
-      "rock"
-    ],
-    "fandom": "regular"
-  },
-  "tour": {
-    "id": "oasis-live-2027",
-    "name": "Oasis Live 2027",
-    "leg": "VK, Europa, Noord-Amerika en Ierland",
-    "announcedAt": "2026-09-14",
-    "reunion": true,
-    "verification": "official"
-  },
+  "artist": { "id": "oasis", "name": "Oasis", "genres": ["rock"], "fandom": "regular" },
+  "tour": { "id": "oasis-live-2027", "name": "Oasis Live 2027", "leg": "VK, Europa, Noord-Amerika en Ierland", "announcedAt": "2026-09-14", "reunion": true, "verification": "official" },
   "type": "concert",
   "sources": {
-    "timeout": {
-      "name": "Time Out",
-      "kind": "news",
-      "url": "https://www.timeout.com/news/how-to-get-tickets-to-oasis-live-2027-in-europe-091526",
-      "checked": "2026-10-30"
-    },
-    "ilpost": {
-      "name": "Il Post",
-      "kind": "news",
-      "url": "https://www.ilpost.it/2026/09/14/oasis-date-2027-europa/",
-      "checked": "2026-10-30"
-    },
-    "jambase": {
-      "name": "JamBase",
-      "kind": "news",
-      "url": "https://www.jambase.com/article/oasis-tour-dates-2027",
-      "checked": "2026-10-30"
-    },
-    "nhnieuws": {
-      "name": "NH Nieuws",
-      "kind": "news",
-      "url": "https://www.nhnieuws.nl/nieuws/363433/een-staanplaats-vooraan-bij-oasis-gaat-je-250-euro-kosten",
-      "checked": "2026-10-30"
-    },
+    "timeout": { "name": "Time Out", "kind": "news", "url": "https://www.timeout.com/news/how-to-get-tickets-to-oasis-live-2027-in-europe-091526", "checked": "2026-10-30" },
+    "ilpost": { "name": "Il Post", "kind": "news", "url": "https://www.ilpost.it/2026/09/14/oasis-date-2027-europa/", "checked": "2026-10-30" },
+    "jambase": { "name": "JamBase", "kind": "news", "url": "https://www.jambase.com/article/oasis-tour-dates-2027", "checked": "2026-10-30" },
+    "nhnieuws": { "name": "NH Nieuws", "kind": "news", "url": "https://www.nhnieuws.nl/nieuws/363433/een-staanplaats-vooraan-bij-oasis-gaat-je-250-euro-kosten", "checked": "2026-10-30" },
     "wiki": {
       "name": "Wikipedia: List of European stadiums by capacity",
       "kind": "aggregator",
       "url": "https://en.wikipedia.org/wiki/List_of_European_stadiums_by_capacity",
       "checked": "2026-10-29",
       "note": "Sportcapaciteit; de concertopstelling kan afwijken."
+    },
+    "lastfm": {
+      "name": "Last.fm: Oasis",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/Oasis",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiLive25": {
+      "name": "Wikipedia: Oasis Live '25 Tour",
+      "kind": "aggregator",
+      "url": "https://en.wikipedia.org/wiki/Oasis_Live_%2725_Tour",
+      "checked": "2026-10-30",
+      "note": "Bezoekers per stad; Oasis meldde dat alle kaarten voor het VK en Ierland waren verkocht; alle Noord-Amerikaanse data binnen een uur uitverkocht."
     }
   },
   "venues": {
-    "celtic-park": {
-      "name": "Celtic Park",
-      "city": "Glasgow",
-      "country": "GB",
-      "tz": "Europe/London",
-      "outdoor": true
-    },
-    "etihad-stadium": {
-      "name": "Etihad Stadium",
-      "city": "Manchester",
-      "country": "GB",
-      "tz": "Europe/London",
-      "capacity": 61470,
-      "capacitySource": "wiki",
-      "outdoor": true
-    },
-    "allianz-arena": {
-      "name": "Allianz Arena",
-      "city": "Munich",
-      "country": "DE",
-      "tz": "Europe/Berlin",
-      "capacity": 75000,
-      "capacitySource": "wiki"
-    },
-    "estadi-olimpic": {
-      "name": "Estadi Olímpic Lluís Companys",
-      "city": "Barcelona",
-      "country": "ES",
-      "tz": "Europe/Madrid",
-      "capacity": 55926,
-      "capacitySource": "wiki",
-      "outdoor": true
-    },
-    "johan-cruijff-arena": {
-      "name": "Johan Cruijff ArenA",
-      "city": "Amsterdam",
-      "country": "NL",
-      "tz": "Europe/Amsterdam",
-      "capacity": 55445,
-      "capacitySource": "wiki",
-      "lat": 52.3144,
-      "lon": 4.9419
-    },
-    "stade-de-france": {
-      "name": "Stade de France",
-      "city": "Paris",
-      "country": "FR",
-      "tz": "Europe/Paris",
-      "capacity": 81338,
-      "capacitySource": "wiki",
-      "outdoor": true
-    },
-    "stadio-olimpico-roma": {
-      "name": "Stadio Olimpico",
-      "city": "Rome",
-      "country": "IT",
-      "tz": "Europe/Rome",
-      "capacity": 67585,
-      "capacitySource": "wiki",
-      "outdoor": true
-    },
-    "gillette-stadium": {
-      "name": "Gillette Stadium",
-      "city": "Foxborough",
-      "country": "US",
-      "tz": "America/New_York",
-      "outdoor": true
-    },
-    "allegiant-stadium": {
-      "name": "Allegiant Stadium",
-      "city": "Las Vegas",
-      "country": "US",
-      "tz": "America/Los_Angeles"
-    },
-    "slane-castle": {
-      "name": "Slane Castle",
-      "city": "Slane",
-      "country": "IE",
-      "tz": "Europe/Dublin",
-      "outdoor": true
-    },
-    "knebworth-house": {
-      "name": "Knebworth House",
-      "city": "Knebworth",
-      "country": "GB",
-      "tz": "Europe/London",
-      "outdoor": true
-    }
+    "celtic-park": { "name": "Celtic Park", "city": "Glasgow", "country": "GB", "tz": "Europe/London", "outdoor": true },
+    "etihad-stadium": { "name": "Etihad Stadium", "city": "Manchester", "country": "GB", "tz": "Europe/London", "capacity": 61470, "capacitySource": "wiki", "outdoor": true },
+    "allianz-arena": { "name": "Allianz Arena", "city": "Munich", "country": "DE", "tz": "Europe/Berlin", "capacity": 75000, "capacitySource": "wiki" },
+    "estadi-olimpic": { "name": "Estadi Olímpic Lluís Companys", "city": "Barcelona", "country": "ES", "tz": "Europe/Madrid", "capacity": 55926, "capacitySource": "wiki", "outdoor": true },
+    "johan-cruijff-arena": { "name": "Johan Cruijff ArenA", "city": "Amsterdam", "country": "NL", "tz": "Europe/Amsterdam", "capacity": 55445, "capacitySource": "wiki", "lat": 52.3144, "lon": 4.9419 },
+    "stade-de-france": { "name": "Stade de France", "city": "Paris", "country": "FR", "tz": "Europe/Paris", "capacity": 81338, "capacitySource": "wiki", "outdoor": true },
+    "stadio-olimpico-roma": { "name": "Stadio Olimpico", "city": "Rome", "country": "IT", "tz": "Europe/Rome", "capacity": 67585, "capacitySource": "wiki", "outdoor": true },
+    "gillette-stadium": { "name": "Gillette Stadium", "city": "Foxborough", "country": "US", "tz": "America/New_York", "outdoor": true },
+    "allegiant-stadium": { "name": "Allegiant Stadium", "city": "Las Vegas", "country": "US", "tz": "America/Los_Angeles" },
+    "slane-castle": { "name": "Slane Castle", "city": "Slane", "country": "IE", "tz": "Europe/Dublin", "outdoor": true },
+    "knebworth-house": { "name": "Knebworth House", "city": "Knebworth", "country": "GB", "tz": "Europe/London", "outdoor": true }
   },
   "events": [
-    {
-      "venue": "celtic-park",
-      "date": "2027-05-21",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "celtic-park",
-      "date": "2027-05-23",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "celtic-park",
-      "date": "2027-05-25",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "celtic-park",
-      "date": "2027-05-28",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "celtic-park",
-      "date": "2027-05-29",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-04",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-06",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-08",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-11",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-12",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-15",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-18",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-19",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-22",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-25",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "etihad-stadium",
-      "date": "2027-06-26",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "allianz-arena",
-      "date": "2027-07-02",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "allianz-arena",
-      "date": "2027-07-03",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
+    { "venue": "celtic-park", "date": "2027-05-21", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "celtic-park", "date": "2027-05-23", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "celtic-park", "date": "2027-05-25", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "celtic-park", "date": "2027-05-28", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "celtic-park", "date": "2027-05-29", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-04", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-06", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-08", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-11", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-12", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-15", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-18", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-19", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-22", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-25", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "etihad-stadium", "date": "2027-06-26", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "allianz-arena", "date": "2027-07-02", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "allianz-arena", "date": "2027-07-03", "status": "onsale", "sources": ["ilpost", "timeout"] },
     {
       "venue": "allianz-arena",
       "date": "2027-07-06",
       "status": "onsale",
-      "sources": [
-        "ilpost"
-      ],
+      "sources": ["ilpost"],
       "addedShow": true,
       "addedShowReason": "Niet in de eerste lijst van 38 shows (Time Out, 15 september); later 42 shows (Il Post)."
     },
-    {
-      "venue": "estadi-olimpic",
-      "date": "2027-07-10",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "estadi-olimpic",
-      "date": "2027-07-11",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
+    { "venue": "estadi-olimpic", "date": "2027-07-10", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "estadi-olimpic", "date": "2027-07-11", "status": "onsale", "sources": ["ilpost", "timeout"] },
     {
       "venue": "johan-cruijff-arena",
       "date": "2027-07-16",
       "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout",
-        "nhnieuws"
-      ],
-      "priceRange": {
-        "min": 85,
-        "max": 250,
-        "currency": "EUR"
-      },
-      "notes": [
-        "Goedkoopste kaart €85, staanplaats vooraan €250 (NH Nieuws)."
-      ]
+      "sources": ["ilpost", "timeout", "nhnieuws"],
+      "priceRange": { "min": 85, "max": 250, "currency": "EUR" },
+      "notes": ["Goedkoopste kaart €85, staanplaats vooraan €250 (NH Nieuws)."]
     },
     {
       "venue": "johan-cruijff-arena",
       "date": "2027-07-17",
       "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout",
-        "nhnieuws"
-      ],
-      "priceRange": {
-        "min": 85,
-        "max": 250,
-        "currency": "EUR"
-      },
-      "notes": [
-        "Goedkoopste kaart €85, staanplaats vooraan €250 (NH Nieuws)."
-      ]
+      "sources": ["ilpost", "timeout", "nhnieuws"],
+      "priceRange": { "min": 85, "max": 250, "currency": "EUR" },
+      "notes": ["Goedkoopste kaart €85, staanplaats vooraan €250 (NH Nieuws)."]
     },
-    {
-      "venue": "stade-de-france",
-      "date": "2027-07-23",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "stade-de-france",
-      "date": "2027-07-24",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
+    { "venue": "stade-de-france", "date": "2027-07-23", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "stade-de-france", "date": "2027-07-24", "status": "onsale", "sources": ["ilpost", "timeout"] },
     {
       "venue": "stadio-olimpico-roma",
       "date": "2027-07-26",
       "status": "onsale",
-      "sources": [
-        "ilpost"
-      ],
+      "sources": ["ilpost"],
       "addedShow": true,
       "addedShowReason": "Niet in de eerste lijst van 38 shows (Time Out, 15 september); later 42 shows (Il Post)."
     },
-    {
-      "venue": "stadio-olimpico-roma",
-      "date": "2027-07-29",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "stadio-olimpico-roma",
-      "date": "2027-07-30",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "gillette-stadium",
-      "date": "2027-08-10",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "gillette-stadium",
-      "date": "2027-08-13",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "gillette-stadium",
-      "date": "2027-08-14",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "allegiant-stadium",
-      "date": "2027-08-20",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "allegiant-stadium",
-      "date": "2027-08-21",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "allegiant-stadium",
-      "date": "2027-08-24",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "slane-castle",
-      "date": "2027-09-04",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "slane-castle",
-      "date": "2027-09-05",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "knebworth-house",
-      "date": "2027-09-11",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "knebworth-house",
-      "date": "2027-09-12",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "knebworth-house",
-      "date": "2027-09-18",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
-    {
-      "venue": "knebworth-house",
-      "date": "2027-09-19",
-      "status": "onsale",
-      "sources": [
-        "ilpost",
-        "timeout"
-      ]
-    },
+    { "venue": "stadio-olimpico-roma", "date": "2027-07-29", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "stadio-olimpico-roma", "date": "2027-07-30", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "gillette-stadium", "date": "2027-08-10", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "gillette-stadium", "date": "2027-08-13", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "gillette-stadium", "date": "2027-08-14", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "allegiant-stadium", "date": "2027-08-20", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "allegiant-stadium", "date": "2027-08-21", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "allegiant-stadium", "date": "2027-08-24", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "slane-castle", "date": "2027-09-04", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "slane-castle", "date": "2027-09-05", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "knebworth-house", "date": "2027-09-11", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "knebworth-house", "date": "2027-09-12", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "knebworth-house", "date": "2027-09-18", "status": "onsale", "sources": ["ilpost", "timeout"] },
+    { "venue": "knebworth-house", "date": "2027-09-19", "status": "onsale", "sources": ["ilpost", "timeout"] },
     {
       "venue": "knebworth-house",
       "date": "2027-09-25",
       "status": "onsale",
-      "sources": [
-        "ilpost"
-      ],
+      "sources": ["ilpost"],
       "addedShow": true,
       "addedShowReason": "Niet in de eerste lijst van 38 shows (Time Out, 15 september); later 42 shows (Il Post)."
     },
@@ -534,9 +123,7 @@
       "venue": "knebworth-house",
       "date": "2027-09-26",
       "status": "onsale",
-      "sources": [
-        "ilpost"
-      ],
+      "sources": ["ilpost"],
       "addedShow": true,
       "addedShowReason": "Niet in de eerste lijst van 38 shows (Time Out, 15 september); later 42 shows (Il Post)."
     }
@@ -552,10 +139,7 @@
       "tz": "Europe/London",
       "whereToRegister": "oasisinet.com",
       "conditions": "Geselecteerde fans kregen een unieke, niet-overdraagbare code met een eigen koopmoment. Er was geen algemene verkoop.",
-      "sources": [
-        "timeout",
-        "jambase"
-      ]
+      "sources": ["timeout", "jambase"]
     },
     {
       "key": "code-sale",
@@ -565,14 +149,125 @@
       "events": "all",
       "start": "2026-09-25",
       "tz": "Europe/London",
-      "notes": [
-        "VK: verkoop op 25, 26 en 27 september. Nederland: codes per loting tussen 24 en 27 september (NH Nieuws), Ticketmaster-account verplicht."
-      ],
-      "sources": [
-        "timeout",
-        "jambase",
-        "nhnieuws"
-      ]
+      "notes": ["VK: verkoop op 25, 26 en 27 september. Nederland: codes per loting tussen 24 en 27 september (NH Nieuws), Ticketmaster-account verplicht."],
+      "sources": ["timeout", "jambase", "nhnieuws"]
     }
-  ]
+  ],
+  "popularity": { "metrics": [{ "metric": "lastfm_listeners", "value": 6108153, "source": "lastfm" }, { "metric": "lastfm_playcount", "value": 343030867, "source": "lastfm" }] },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "Cardiff",
+        "country": "GB",
+        "venue": "Principality Stadium",
+        "capacity": 70000,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "140.000 bezoekers.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "Manchester",
+        "country": "GB",
+        "venue": "Heaton Park",
+        "capacity": 74000,
+        "shows": 5,
+        "soldOut": true,
+        "detail": "370.000 bezoekers.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "London",
+        "country": "GB",
+        "venue": "Wembley Stadium",
+        "capacity": 81000,
+        "shows": 7,
+        "soldOut": true,
+        "detail": "567.000 bezoekers.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "Edinburgh",
+        "country": "GB",
+        "venue": "Murrayfield Stadium",
+        "capacity": 70000,
+        "shows": 3,
+        "soldOut": true,
+        "detail": "210.000 bezoekers.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "Dublin",
+        "country": "IE",
+        "venue": "Croke Park",
+        "capacity": 80000,
+        "shows": 2,
+        "soldOut": true,
+        "detail": "160.000 bezoekers; Ticketmaster Ireland meldde op de dag van de verkoop om 13:23 dat alles weg was.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "Toronto",
+        "country": "CA",
+        "venue": "Rogers Stadium",
+        "capacity": 50000,
+        "shows": 2,
+        "soldOut": true,
+        "withinHours": 1,
+        "detail": "100.000 bezoekers; binnen een uur uitverkocht.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "Chicago",
+        "country": "US",
+        "venue": "Soldier Field",
+        "capacity": 52000,
+        "shows": 1,
+        "soldOut": true,
+        "withinHours": 1,
+        "detail": "52.000 bezoekers; binnen een uur uitverkocht.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "East Rutherford",
+        "country": "US",
+        "venue": "MetLife Stadium",
+        "capacity": 60000,
+        "shows": 2,
+        "soldOut": true,
+        "withinHours": 1,
+        "detail": "120.000 bezoekers; binnen een uur uitverkocht.",
+        "sources": ["wikiLive25"]
+      },
+      {
+        "tour": "Oasis Live '25",
+        "year": 2025,
+        "city": "Pasadena",
+        "country": "US",
+        "venue": "Rose Bowl",
+        "capacity": 90000,
+        "shows": 2,
+        "soldOut": true,
+        "withinHours": 1,
+        "detail": "180.000 bezoekers; binnen een uur uitverkocht.",
+        "sources": ["wikiLive25"]
+      }
+    ]
+  }
 }

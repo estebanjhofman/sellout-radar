@@ -1,462 +1,131 @@
 {
-  "artist": {
-    "id": "txt",
-    "name": "TOMORROW X TOGETHER",
-    "aliases": [
-      "TXT"
-    ],
-    "genres": [
-      "k-pop"
-    ],
-    "fandom": "organized"
-  },
-  "tour": {
-    "id": "txt-steal-the-wind",
-    "name": "TOMORROW X TOGETHER WORLD TOUR <STEAL THE WIND>",
-    "leg": "2026–2027",
-    "announcedAt": "2026-08-27",
-    "verification": "official"
-  },
+  "artist": { "id": "txt", "name": "TOMORROW X TOGETHER", "aliases": ["TXT"], "genres": ["k-pop"], "fandom": "organized" },
+  "tour": { "id": "txt-steal-the-wind", "name": "TOMORROW X TOGETHER WORLD TOUR <STEAL THE WIND>", "leg": "2026–2027", "announcedAt": "2026-08-27", "verification": "official" },
   "type": "concert",
   "titleTemplate": "TXT · {city}",
   "sources": {
-    "ticketnews": {
-      "name": "TicketNews",
-      "kind": "news",
-      "url": "https://www.ticketnews.com/2026/08/tomorrow-x-together-set-2026-2027-steal-the-wind-world-tour/",
-      "checked": "2026-10-30"
-    },
-    "khan": {
-      "name": "Sports Kyunghyang",
-      "kind": "news",
-      "url": "https://sports.khan.co.kr/en/article/202609231224007",
-      "checked": "2026-10-30"
-    },
+    "ticketnews": { "name": "TicketNews", "kind": "news", "url": "https://www.ticketnews.com/2026/08/tomorrow-x-together-set-2026-2027-steal-the-wind-world-tour/", "checked": "2026-10-30" },
+    "khan": { "name": "Sports Kyunghyang", "kind": "news", "url": "https://sports.khan.co.kr/en/article/202609231224007", "checked": "2026-10-30" },
     "soompi27": {
       "name": "Soompi: 2027 K-Pop Tour Masterlist",
       "kind": "news",
       "url": "https://www.soompi.com/article/1880039wpp/2027-k-pop-tour-masterlist-concerts-fan-meetings-and-more",
       "checked": "2026-10-30",
       "note": "Lijst bijgewerkt op 29 oktober 2026."
-    }
+    },
+    "lastfm": {
+      "name": "Last.fm: TOMORROW X TOGETHER",
+      "kind": "aggregator",
+      "url": "https://www.last.fm/music/TOMORROW+X+TOGETHER",
+      "checked": "2026-10-30",
+      "note": "Luisteraars en scrobbles zoals op de artiestpagina; afgeronde waarden staan er afgerond (bijv. 5.1M)."
+    },
+    "wikiDisc": { "name": "Wikipedia: Tomorrow X Together discography", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Tomorrow_X_Together_discography", "checked": "2026-10-30" },
+    "kce": { "name": "K-pop Concerts Europe: TXT ACT : PROMISE EP. 2 in Europe", "kind": "fansite", "url": "https://www.kpopconcertseurope.com/post/txt-act-promise-ep-2-europe", "checked": "2026-10-30" },
+    "wikiZiggo": { "name": "Wikipedia: Ziggo Dome", "kind": "aggregator", "url": "https://en.wikipedia.org/wiki/Ziggo_Dome", "checked": "2026-10-30" }
   },
   "venues": {
-    "kspo-dome": {
-      "name": "KSPO Dome",
-      "city": "Seoul",
-      "country": "KR",
-      "tz": "Asia/Seoul"
-    },
-    "galaxy-arena": {
-      "name": "Galaxy Arena",
-      "city": "Macau",
-      "country": "MO",
-      "tz": "Asia/Macau"
-    },
-    "tba-fukuoka": {
-      "name": "Venue nog niet bekend",
-      "city": "Fukuoka",
-      "country": "JP",
-      "tz": "Asia/Tokyo"
-    },
-    "tokyo-dome": {
-      "name": "Tokyo Dome",
-      "city": "Tokyo",
-      "country": "JP",
-      "tz": "Asia/Tokyo"
-    },
-    "kyocera-dome": {
-      "name": "Kyocera Dome",
-      "city": "Osaka",
-      "country": "JP",
-      "tz": "Asia/Tokyo"
-    },
-    "vantelin-dome": {
-      "name": "Vantelin Dome Nagoya",
-      "city": "Nagoya",
-      "country": "JP",
-      "tz": "Asia/Tokyo"
-    },
-    "tba-kaohsiung": {
-      "name": "Venue nog niet bekend",
-      "city": "Kaohsiung",
-      "country": "TW",
-      "tz": "Asia/Taipei"
-    },
-    "tba-kuala-lumpur": {
-      "name": "Venue nog niet bekend",
-      "city": "Kuala Lumpur",
-      "country": "MY",
-      "tz": "Asia/Kuala_Lumpur"
-    },
-    "tba-jakarta": {
-      "name": "Venue nog niet bekend",
-      "city": "Jakarta",
-      "country": "ID",
-      "tz": "Asia/Jakarta"
-    },
-    "tba-tacoma": {
-      "name": "Venue nog niet bekend",
-      "city": "Tacoma",
-      "country": "US",
-      "tz": "America/Los_Angeles"
-    },
-    "tba-inglewood": {
-      "name": "Venue nog niet bekend",
-      "city": "Inglewood",
-      "country": "US",
-      "tz": "America/Los_Angeles"
-    },
-    "tba-mexico-city": {
-      "name": "Venue nog niet bekend",
-      "city": "Mexico City",
-      "country": "MX",
-      "tz": "America/Mexico_City"
-    },
-    "tba-fort-worth": {
-      "name": "Venue nog niet bekend",
-      "city": "Fort Worth",
-      "country": "US",
-      "tz": "America/Chicago"
-    },
-    "tba-atlanta": {
-      "name": "Venue nog niet bekend",
-      "city": "Atlanta",
-      "country": "US",
-      "tz": "America/New_York"
-    },
-    "tba-belmont-park": {
-      "name": "Venue nog niet bekend",
-      "city": "Belmont Park",
-      "country": "US",
-      "tz": "America/New_York"
-    },
-    "tba-chicago": {
-      "name": "Venue nog niet bekend",
-      "city": "Chicago",
-      "country": "US",
-      "tz": "America/Chicago"
-    },
-    "tba-manchester": {
-      "name": "Venue nog niet bekend",
-      "city": "Manchester",
-      "country": "GB",
-      "tz": "Europe/London"
-    },
-    "tba-milan": {
-      "name": "Venue nog niet bekend",
-      "city": "Milan",
-      "country": "IT",
-      "tz": "Europe/Rome"
-    },
-    "tba-paris": {
-      "name": "Venue nog niet bekend",
-      "city": "Paris",
-      "country": "FR",
-      "tz": "Europe/Paris"
-    },
-    "tba-amsterdam": {
-      "name": "Venue nog niet bekend",
-      "city": "Amsterdam",
-      "country": "NL",
-      "tz": "Europe/Amsterdam"
-    },
-    "tba-antwerp": {
-      "name": "Venue nog niet bekend",
-      "city": "Antwerp",
-      "country": "BE",
-      "tz": "Europe/Brussels"
-    },
-    "tba-cologne": {
-      "name": "Venue nog niet bekend",
-      "city": "Cologne",
-      "country": "DE",
-      "tz": "Europe/Berlin"
-    },
-    "tba-hong-kong": {
-      "name": "Venue nog niet bekend",
-      "city": "Hong Kong",
-      "country": "HK",
-      "tz": "Asia/Hong_Kong"
-    }
+    "kspo-dome": { "name": "KSPO Dome", "city": "Seoul", "country": "KR", "tz": "Asia/Seoul" },
+    "galaxy-arena": { "name": "Galaxy Arena", "city": "Macau", "country": "MO", "tz": "Asia/Macau" },
+    "tba-fukuoka": { "name": "Venue nog niet bekend", "city": "Fukuoka", "country": "JP", "tz": "Asia/Tokyo" },
+    "tokyo-dome": { "name": "Tokyo Dome", "city": "Tokyo", "country": "JP", "tz": "Asia/Tokyo" },
+    "kyocera-dome": { "name": "Kyocera Dome", "city": "Osaka", "country": "JP", "tz": "Asia/Tokyo" },
+    "vantelin-dome": { "name": "Vantelin Dome Nagoya", "city": "Nagoya", "country": "JP", "tz": "Asia/Tokyo" },
+    "tba-kaohsiung": { "name": "Venue nog niet bekend", "city": "Kaohsiung", "country": "TW", "tz": "Asia/Taipei" },
+    "tba-kuala-lumpur": { "name": "Venue nog niet bekend", "city": "Kuala Lumpur", "country": "MY", "tz": "Asia/Kuala_Lumpur" },
+    "tba-jakarta": { "name": "Venue nog niet bekend", "city": "Jakarta", "country": "ID", "tz": "Asia/Jakarta" },
+    "tba-tacoma": { "name": "Venue nog niet bekend", "city": "Tacoma", "country": "US", "tz": "America/Los_Angeles" },
+    "tba-inglewood": { "name": "Venue nog niet bekend", "city": "Inglewood", "country": "US", "tz": "America/Los_Angeles" },
+    "tba-mexico-city": { "name": "Venue nog niet bekend", "city": "Mexico City", "country": "MX", "tz": "America/Mexico_City" },
+    "tba-fort-worth": { "name": "Venue nog niet bekend", "city": "Fort Worth", "country": "US", "tz": "America/Chicago" },
+    "tba-atlanta": { "name": "Venue nog niet bekend", "city": "Atlanta", "country": "US", "tz": "America/New_York" },
+    "tba-belmont-park": { "name": "Venue nog niet bekend", "city": "Belmont Park", "country": "US", "tz": "America/New_York" },
+    "tba-chicago": { "name": "Venue nog niet bekend", "city": "Chicago", "country": "US", "tz": "America/Chicago" },
+    "tba-manchester": { "name": "Venue nog niet bekend", "city": "Manchester", "country": "GB", "tz": "Europe/London" },
+    "tba-milan": { "name": "Venue nog niet bekend", "city": "Milan", "country": "IT", "tz": "Europe/Rome" },
+    "tba-paris": { "name": "Venue nog niet bekend", "city": "Paris", "country": "FR", "tz": "Europe/Paris" },
+    "tba-amsterdam": { "name": "Venue nog niet bekend", "city": "Amsterdam", "country": "NL", "tz": "Europe/Amsterdam" },
+    "tba-antwerp": { "name": "Venue nog niet bekend", "city": "Antwerp", "country": "BE", "tz": "Europe/Brussels" },
+    "tba-cologne": { "name": "Venue nog niet bekend", "city": "Cologne", "country": "DE", "tz": "Europe/Berlin" },
+    "tba-hong-kong": { "name": "Venue nog niet bekend", "city": "Hong Kong", "country": "HK", "tz": "Asia/Hong_Kong" }
   },
   "events": [
-    {
-      "venue": "kspo-dome",
-      "date": "2026-11-13",
-      "sources": [
-        "ticketnews",
-        "khan"
-      ]
-    },
-    {
-      "venue": "kspo-dome",
-      "date": "2026-11-14",
-      "sources": [
-        "ticketnews",
-        "khan"
-      ]
-    },
-    {
-      "venue": "kspo-dome",
-      "date": "2026-11-15",
-      "sources": [
-        "ticketnews",
-        "khan"
-      ]
-    },
-    {
-      "venue": "galaxy-arena",
-      "date": "2026-11-20",
-      "sources": [
-        "khan"
-      ],
-      "addedShow": true,
-      "addedShowReason": "Toegevoegd nadat 21 en 22 november uitverkochten (Sports Kyunghyang, 23 september)."
-    },
+    { "venue": "kspo-dome", "date": "2026-11-13", "sources": ["ticketnews", "khan"] },
+    { "venue": "kspo-dome", "date": "2026-11-14", "sources": ["ticketnews", "khan"] },
+    { "venue": "kspo-dome", "date": "2026-11-15", "sources": ["ticketnews", "khan"] },
+    { "venue": "galaxy-arena", "date": "2026-11-20", "sources": ["khan"], "addedShow": true, "addedShowReason": "Toegevoegd nadat 21 en 22 november uitverkochten (Sports Kyunghyang, 23 september)." },
     {
       "venue": "galaxy-arena",
       "date": "2026-11-21",
-      "sources": [
-        "ticketnews",
-        "khan"
-      ],
+      "sources": ["ticketnews", "khan"],
       "status": "soldout",
       "soldOutAt": "2026-09-22",
       "soldOutInPresale": false,
-      "notes": [
-        "Uitverkocht in de algemene verkoop van 22 september (Sports Kyunghyang)."
-      ]
+      "notes": ["Uitverkocht in de algemene verkoop van 22 september (Sports Kyunghyang)."]
     },
     {
       "venue": "galaxy-arena",
       "date": "2026-11-22",
-      "sources": [
-        "ticketnews",
-        "khan"
-      ],
+      "sources": ["ticketnews", "khan"],
       "status": "soldout",
       "soldOutAt": "2026-09-22",
       "soldOutInPresale": false,
-      "notes": [
-        "Uitverkocht in de algemene verkoop van 22 september (Sports Kyunghyang)."
-      ]
+      "notes": ["Uitverkocht in de algemene verkoop van 22 september (Sports Kyunghyang)."]
     },
-    {
-      "venue": "tba-fukuoka",
-      "date": "2026-12-19",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-fukuoka",
-      "date": "2026-12-20",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tokyo-dome",
-      "date": "2027-01-07",
-      "sources": [
-        "ticketnews",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "tokyo-dome",
-      "date": "2027-01-08",
-      "sources": [
-        "ticketnews",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "kyocera-dome",
-      "date": "2027-01-30",
-      "sources": [
-        "ticketnews",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "kyocera-dome",
-      "date": "2027-01-31",
-      "sources": [
-        "ticketnews",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "vantelin-dome",
-      "date": "2027-02-20",
-      "sources": [
-        "ticketnews",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "vantelin-dome",
-      "date": "2027-02-21",
-      "sources": [
-        "ticketnews",
-        "soompi27"
-      ]
-    },
-    {
-      "venue": "tba-kaohsiung",
-      "date": "2027-03-06",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-kaohsiung",
-      "date": "2027-03-07",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-kuala-lumpur",
-      "date": "2027-03-13",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-jakarta",
-      "date": "2027-03-20",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-tacoma",
-      "date": "2027-05-04",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-inglewood",
-      "date": "2027-05-07",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-mexico-city",
-      "date": "2027-05-12",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-fort-worth",
-      "date": "2027-05-15",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-atlanta",
-      "date": "2027-05-18",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-belmont-park",
-      "date": "2027-05-22",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-chicago",
-      "date": "2027-05-25",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-manchester",
-      "date": "2027-06-02",
-      "sources": [
-        "ticketnews"
-      ],
-      "notes": [
-        "Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."
-      ]
-    },
-    {
-      "venue": "tba-milan",
-      "date": "2027-06-05",
-      "sources": [
-        "ticketnews"
-      ],
-      "notes": [
-        "Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."
-      ]
-    },
-    {
-      "venue": "tba-paris",
-      "date": "2027-06-07",
-      "sources": [
-        "ticketnews"
-      ],
-      "notes": [
-        "Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."
-      ]
-    },
-    {
-      "venue": "tba-amsterdam",
-      "date": "2027-06-10",
-      "sources": [
-        "ticketnews"
-      ],
-      "notes": [
-        "Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."
-      ]
-    },
-    {
-      "venue": "tba-antwerp",
-      "date": "2027-06-12",
-      "sources": [
-        "ticketnews"
-      ],
-      "notes": [
-        "Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."
-      ]
-    },
-    {
-      "venue": "tba-cologne",
-      "date": "2027-06-14",
-      "sources": [
-        "ticketnews"
-      ],
-      "notes": [
-        "Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."
-      ]
-    },
-    {
-      "venue": "tba-hong-kong",
-      "date": "2027-06-19",
-      "sources": [
-        "ticketnews"
-      ]
-    },
-    {
-      "venue": "tba-hong-kong",
-      "date": "2027-06-20",
-      "sources": [
-        "ticketnews"
-      ]
-    }
+    { "venue": "tba-fukuoka", "date": "2026-12-19", "sources": ["ticketnews"] },
+    { "venue": "tba-fukuoka", "date": "2026-12-20", "sources": ["ticketnews"] },
+    { "venue": "tokyo-dome", "date": "2027-01-07", "sources": ["ticketnews", "soompi27"] },
+    { "venue": "tokyo-dome", "date": "2027-01-08", "sources": ["ticketnews", "soompi27"] },
+    { "venue": "kyocera-dome", "date": "2027-01-30", "sources": ["ticketnews", "soompi27"] },
+    { "venue": "kyocera-dome", "date": "2027-01-31", "sources": ["ticketnews", "soompi27"] },
+    { "venue": "vantelin-dome", "date": "2027-02-20", "sources": ["ticketnews", "soompi27"] },
+    { "venue": "vantelin-dome", "date": "2027-02-21", "sources": ["ticketnews", "soompi27"] },
+    { "venue": "tba-kaohsiung", "date": "2027-03-06", "sources": ["ticketnews"] },
+    { "venue": "tba-kaohsiung", "date": "2027-03-07", "sources": ["ticketnews"] },
+    { "venue": "tba-kuala-lumpur", "date": "2027-03-13", "sources": ["ticketnews"] },
+    { "venue": "tba-jakarta", "date": "2027-03-20", "sources": ["ticketnews"] },
+    { "venue": "tba-tacoma", "date": "2027-05-04", "sources": ["ticketnews"] },
+    { "venue": "tba-inglewood", "date": "2027-05-07", "sources": ["ticketnews"] },
+    { "venue": "tba-mexico-city", "date": "2027-05-12", "sources": ["ticketnews"] },
+    { "venue": "tba-fort-worth", "date": "2027-05-15", "sources": ["ticketnews"] },
+    { "venue": "tba-atlanta", "date": "2027-05-18", "sources": ["ticketnews"] },
+    { "venue": "tba-belmont-park", "date": "2027-05-22", "sources": ["ticketnews"] },
+    { "venue": "tba-chicago", "date": "2027-05-25", "sources": ["ticketnews"] },
+    { "venue": "tba-manchester", "date": "2027-06-02", "sources": ["ticketnews"], "notes": ["Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."] },
+    { "venue": "tba-milan", "date": "2027-06-05", "sources": ["ticketnews"], "notes": ["Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."] },
+    { "venue": "tba-paris", "date": "2027-06-07", "sources": ["ticketnews"], "notes": ["Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."] },
+    { "venue": "tba-amsterdam", "date": "2027-06-10", "sources": ["ticketnews"], "notes": ["Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."] },
+    { "venue": "tba-antwerp", "date": "2027-06-12", "sources": ["ticketnews"], "notes": ["Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."] },
+    { "venue": "tba-cologne", "date": "2027-06-14", "sources": ["ticketnews"], "notes": ["Venue en kaartverkoop voor Europa nog niet bekend (TicketNews, 28 augustus)."] },
+    { "venue": "tba-hong-kong", "date": "2027-06-19", "sources": ["ticketnews"] },
+    { "venue": "tba-hong-kong", "date": "2027-06-20", "sources": ["ticketnews"] }
   ],
-  "notes": [
-    "Verkoopdata per show staan nog niet in de bronnen; TicketNews verwijst naar de officiële kanalen van TXT."
-  ]
+  "notes": ["Verkoopdata per show staan nog niet in de bronnen; TicketNews verwijst naar de officiële kanalen van TXT."],
+  "popularity": {
+    "metrics": [{ "metric": "lastfm_listeners", "value": 1300146, "source": "lastfm" }, { "metric": "lastfm_playcount", "value": 464508235, "source": "lastfm" }],
+    "charts": [
+      { "chart": "Circle Album Chart", "country": "KR", "title": "7th Year: A Moment of Stillness in the Thorns", "kind": "album", "peak": 1, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Billboard 200", "country": "US", "title": "7th Year: A Moment of Stillness in the Thorns", "kind": "album", "peak": 3, "year": 2026, "source": "wikiDisc" },
+      { "chart": "Oricon Albums", "country": "JP", "title": "7th Year: A Moment of Stillness in the Thorns", "kind": "album", "peak": 1, "year": 2026, "source": "wikiDisc" }
+    ]
+  },
+  "history": {
+    "previousVisits": [
+      {
+        "tour": "ACT : PROMISE – EP. 2",
+        "year": 2025,
+        "date": "2025-04-01",
+        "city": "Amsterdam",
+        "country": "NL",
+        "venue": "Ziggo Dome",
+        "capacity": 17000,
+        "shows": 1,
+        "detail": "Of deze show uitverkocht was, noemt de bron niet.",
+        "sources": ["kce", "wikiZiggo"]
+      },
+      { "tour": "ACT : PROMISE – EP. 2", "year": 2025, "date": "2025-03-25", "city": "London", "country": "GB", "venue": "The O2", "shows": 1, "sources": ["kce"] },
+      { "tour": "ACT : PROMISE – EP. 2", "year": 2025, "date": "2025-03-27", "city": "Berlin", "country": "DE", "venue": "Uber Arena", "shows": 1, "sources": ["kce"] },
+      { "tour": "ACT : PROMISE – EP. 2", "year": 2025, "date": "2025-03-30", "city": "Paris", "country": "FR", "venue": "Accor Arena", "shows": 1, "sources": ["kce"] }
+    ]
+  }
 }
