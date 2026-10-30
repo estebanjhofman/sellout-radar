@@ -51,6 +51,8 @@ jobs:
           npx expo export --platform web --output-dir dist-web
           # Directe links (bijv. /event/...) laden via 404.html dezelfde app.
           cp dist-web/index.html dist-web/404.html
+          # Schermvullend openen vanaf het beginscherm van je iPhone, met eigen icoon.
+          node scripts/pwa.mjs dist-web "$BASE"
 
       - uses: actions/upload-pages-artifact@v3
         with:

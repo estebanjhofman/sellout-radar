@@ -14,11 +14,12 @@ import {
   type EventScoreView,
 } from '@sellout/core';
 import { cityNl, placeText, shortDate, showDateText, SOURCE_KIND_NL, timeAgo, typeLabel } from '../../lib/view';
+import { registrationPhases, registrationTargets } from '../../lib/registered';
 import { useData } from '../../state/data';
-import { usePrefs } from '../../state/prefs';
+import { registeredIds, usePrefs } from '../../state/prefs';
 import { PastVisitsBlock, PopularityBlock } from '../../ui/Background';
 import { BadgeView, Banner, Card, KeyValue, LinkText, ScorePill, SectionTitle, TrendArrow, useNow } from '../../ui/components';
-import { IconArrow, IconBell, IconStar } from '../../ui/icons';
+import { IconArrow, IconBell, IconStar, IconTicket } from '../../ui/icons';
 import { ScoreChart } from '../../ui/ScoreChart';
 import { Timeline } from '../../ui/Timeline';
 import { useTheme } from '../../ui/theme';
@@ -90,7 +91,7 @@ export default function EventDetail() {
   const now = useNow(30_000);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { index, snapshot } = useData();
-  const { prefs, isFollowing, toggleEvent, toggleTour, toggleArtist, setMuted } = usePrefs();
+  const { prefs, isFollowing, toggleEvent, toggleTour, toggleArtist, setMuted, toggleOwned, toggleRegistered } = usePrefs();
   const ev = index?.events.get(String(id));
 
   if (!snapshot || !index) return <Text style={{ color: t.muted, padding: 20 }}>Data laden…</Text>;
@@ -114,6 +115,10 @@ export default function EventDetail() {
   const followedArtist = !!artist && prefs.followedArtists.includes(artist.id);
   const followed = isFollowing(ev.id, ev.tourId, ev.artistIds);
   const muted = prefs.mutedEvents.includes(ev.id);
+  const owned = (prefs.ownedEvents ?? []).includes(ev.id);
+  const regs = registrationPhases(phases);
+  const regIds = registeredIds(prefs.registered, ev.id);
+  const regTargets = registrationTargets(phases, regIds, now);
   const badges = eventBadges(ev, phases, { hasConflict: ev.conflicts.length > 0 });
   const siblings = (tour ? (index.eventsByTour.get(tour.id) ?? []) : []).filter((x) => x.id !== ev.id);
   const allSources = [...ev.sources].sort((a, b) => Number(isOfficial(b)) - Number(isOfficial(a)) || a.name.localeCompare(b.name));
@@ -143,6 +148,14 @@ export default function EventDetail() {
 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
         <Pressable
+          onPress={() => toggleOwned(ev.id)}
+          accessibilityRole="button"
+          style={{ flexDirection: 'row', gap: 6, alignItems: 'center', backgroundColor: owned ? t.up : t.chip, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10 }}
+        >
+          <IconTicket color={owned ? '#FFFFFF' : t.text} size={18} />
+          <Text style={{ color: owned ? '#FFFFFF' : t.text, fontWeight: '700' }}>{owned ? 'Tickets: ja' : 'Ik heb tickets'}</Text>
+        </Pressable>
+        <Pressable
           onPress={() => toggleEvent(ev.id)}
           accessibilityRole="button"
           style={{ flexDirection: 'row', gap: 6, alignItems: 'center', backgroundColor: followedDirect ? t.chipActive : t.chip, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10 }}
@@ -168,7 +181,7 @@ export default function EventDetail() {
             <Text style={{ color: followedArtist ? t.chipActiveText : t.text, fontWeight: '700' }}>{followedArtist ? `${artist.name} gevolgd` : `Volg ${artist.name}`}</Text>
           </Pressable>
         ) : null}
-        {followed || s.value >= (prefs.settings.scoreThreshold ?? 101) ? (
+        {!owned && (followed || s.value >= (prefs.settings.scoreThreshold ?? 101)) ? (
           <Pressable
             onPress={() => setMuted(ev.id, !muted)}
             accessibilityRole="button"
@@ -181,6 +194,7 @@ export default function EventDetail() {
       </View>
 
       <View style={{ marginTop: 16 }}>
+        {owned ? <Banner tone="info">Je hebt tickets voor deze datum. Je krijgt hiervoor geen verkoopherinneringen meer.</Banner> : null}
         {ev.stale ? <Banner tone="warn">{ev.stale.message}</Banner> : null}
         {view.movedLocally ? (
           <Banner tone="info">
@@ -191,6 +205,40 @@ export default function EventDetail() {
           <ConflictBox key={i} c={c} />
         ))}
       </View>
+
+      {!owned ? (
+        <>
+          <SectionTitle>Ingeschreven</SectionTitle>
+          <Card>
+            <Text style={{ color: t.muted, fontSize: 13, marginBottom: 8, lineHeight: 18 }}>
+              {regs.length ? 'Waarvoor sta je ingeschreven? Kies er één of meer; per inschrijving telt de aftelklok af naar de verkoop waar die toegang toe geeft.' : 'Sta je ingeschreven (bijv. een nieuwsbrief of fanclub)? Dan telt de aftelklok af naar de eerstvolgende verkoop.'}
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {(regs.length ? regs.map((r) => ({ id: r.id, name: r.name })) : [{ id: '', name: 'Ik sta ingeschreven' }]).map((r) => {
+                const on = regIds.includes(r.id);
+                return (
+                  <Pressable
+                    key={r.id || 'algemeen'}
+                    onPress={() => toggleRegistered(ev.id, r.id)}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: on }}
+                    style={{ backgroundColor: on ? t.accent : t.chip, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10 }}
+                  >
+                    <Text style={{ color: on ? '#FFFFFF' : t.text, fontWeight: '700' }}>{on ? `✓ ${r.name}` : r.name}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            {regTargets.map((rt, i) => (
+              <View key={`${rt.label}-${i}`} style={{ marginTop: 12, opacity: rt.countdown === 'voorbij' ? 0.5 : 1 }}>
+                <Text style={{ color: t.muted, fontSize: 13 }}>Aftellen naar {rt.label}</Text>
+                <Text style={{ color: t.accent, fontSize: i === 0 ? 24 : 19, fontWeight: '800', fontVariant: ['tabular-nums'] }}>{rt.countdown ?? 'Datum nog niet bekend'}</Text>
+                <Text style={{ color: t.text, fontSize: 13.5 }}>{rt.when}</Text>
+              </View>
+            ))}
+          </Card>
+        </>
+      ) : null}
 
       <SectionTitle>{SCORE_KIND_LABEL[view.kind]}</SectionTitle>
       <Card>

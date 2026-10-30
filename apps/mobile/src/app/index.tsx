@@ -1,270 +1,219 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
+import { useMemo } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { router, Stack } from 'expo-router';
-import {
-  BENELUX,
-  continentOf,
-  earliestInstant,
-  eventScoreView,
-  groupEvents,
-  nextAction,
-  normalizeText,
-  STAGE_LABEL,
-  type EventGroup,
-  type GroupDate,
-  type GroupSort,
-  type SaleStage,
-  type SnapshotEvent,
-} from '@sellout/core';
-import { readJson, writeJson } from '../lib/storage';
-import { timeAgo } from '../lib/view';
+import { DateTime } from 'luxon';
+import { countdown, earliestInstant, eventScoreView, SCORE_KIND_LABEL, type SnapshotEvent } from '@sellout/core';
+import { cityNl, nextInfo, shortDate } from '../lib/view';
+import { registrationTargets } from '../lib/registered';
 import { useData } from '../state/data';
-import { usePrefs } from '../state/prefs';
-import { Banner, Button, Chip, Segmented, useNow } from '../ui/components';
-import { GroupCard } from '../ui/GroupCard';
-import { IconGear, IconList, IconSearch } from '../ui/icons';
+import { registeredIds, usePrefs } from '../state/prefs';
+import { Banner, Card, ScorePill, SectionTitle, useNow } from '../ui/components';
+import { IconGear, IconList, IconTicket } from '../ui/icons';
 import { useTheme } from '../ui/theme';
 
-type Quick = 'all' | '40' | '70' | 'followed';
-type Kind = 'all' | SnapshotEvent['type'];
-type Region = 'all' | 'NL' | 'BENELUX' | 'EU';
+/** Begin van de show (ms), of null als alleen een maand bekend is. */
+function showStart(e: SnapshotEvent): number | null {
+  if (e.date.utc) return Date.parse(e.date.utc);
+  if (e.date.localDate) return DateTime.fromISO(e.date.localDate, { zone: e.date.tz }).toMillis();
+  return null;
+}
 
-const TAB_KEY = 'ui:tab';
-
-export default function Overview() {
+/** Startpagina: mijn tickets, waar ik in geïnteresseerd ben, en de ingang naar de radar. */
+export default function Home() {
   const t = useTheme();
   const now = useNow(30_000);
-  const { snapshot, index, loading, error, staleWarning, refresh, fetchedAt } = useData();
-  const { prefs, isFollowing, toggleEvent, toggleArtist } = usePrefs();
-  const [tab, setTab] = useState<SaleStage>('upcoming');
-  const [query, setQuery] = useState('');
-  const [quick, setQuick] = useState<Quick>('all');
-  const [kind, setKind] = useState<Kind>('all');
-  const [region, setRegion] = useState<Region>('all');
-  const [soon, setSoon] = useState(false);
-  const [sort, setSort] = useState<GroupSort>('score');
-  const [showFilters, setShowFilters] = useState(false);
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const { snapshot, index, loading, error, staleWarning } = useData();
+  const { prefs, isFollowing, toggleOwned } = usePrefs();
+  const nowIso = now.toISOString();
+  const owned = new Set(prefs.ownedEvents ?? []);
 
-  // Laatst gekozen tabblad onthouden (alleen op dit toestel).
-  useEffect(() => {
-    void readJson<SaleStage>(TAB_KEY).then((v) => {
-      if (v === 'upcoming' || v === 'onsale') setTab(v);
-    });
-  }, []);
-  const chooseTab = useCallback((v: SaleStage) => {
-    setTab(v);
-    void writeJson(TAB_KEY, v);
-  }, []);
-
-  // Elke datum met het tabblad en de score van nu: een datum schuift door zodra de eerste verkoop begint.
-  const rows = useMemo(() => {
-    if (!snapshot || !index) return [] as GroupDate[];
-    const nowIso = now.toISOString();
-    return snapshot.events.map((e) => ({ event: e, view: eventScoreView(e, index.phasesByEvent.get(e.id) ?? [], nowIso), venue: index.venues.get(e.venueId) }));
-  }, [snapshot, index, now]);
-
-  const filtered = useMemo(() => {
-    if (!index) return [] as GroupDate[];
-    const q = normalizeText(query.trim());
-    const nowIso = now.toISOString();
-    const in7d = now.getTime() + 7 * 86_400_000;
-    return rows.filter(({ event: e, view, venue: v }) => {
-      if (quick === '40' && view.score.value < 40) return false;
-      if (quick === '70' && view.score.value < 70) return false;
-      if (quick === 'followed' && !isFollowing(e.id, e.tourId, e.artistIds)) return false;
-      if (kind !== 'all' && e.type !== kind) return false;
-      if (region === 'NL' && v?.country !== 'NL') return false;
-      if (region === 'BENELUX' && !BENELUX.has(v?.country ?? '')) return false;
-      if (region === 'EU' && continentOf(v?.country ?? '') !== 'EU') return false;
-      if (soon) {
-        const na = nextAction(index.phasesByEvent.get(e.id) ?? [], nowIso);
-        const at = na ? earliestInstant(na.at)?.toMillis() : undefined;
-        if (!at || at > in7d) return false;
-      }
-      if (q) {
-        const artists = e.artistIds.map((a) => index.artists.get(a)?.name ?? '').join(' ');
-        const tour = e.tourId ? (index.tours.get(e.tourId)?.name ?? '') : '';
-        const hay = normalizeText(`${e.title} ${artists} ${tour} ${v?.city ?? ''} ${v?.name ?? ''}`);
-        if (!q.split(/\s+/).every((w) => hay.includes(w))) return false;
-      }
-      return true;
-    });
-  }, [rows, index, query, quick, kind, region, soon, now, isFollowing]);
-
-  const counts = useMemo(() => {
+  const { tickets, registered, followed, radar } = useMemo(() => {
+    const evs = snapshot?.events ?? [];
+    const tickets = evs.filter((e) => owned.has(e.id)).sort((a, b) => (showStart(a) ?? Infinity) - (showStart(b) ?? Infinity));
+    // Ingeschreven: aftellen naar de verkoop waarvoor je ingeschreven staat (zonder tickets).
+    const isReg = (id: string) => registeredIds(prefs.registered, id).length > 0;
+    const registered = evs
+      .filter((e) => isReg(e.id) && !owned.has(e.id))
+      .map((e) => {
+        const targets = registrationTargets(index?.phasesByEvent.get(e.id) ?? [], registeredIds(prefs.registered, e.id), now);
+        return { e, target: targets[0]!, more: targets.slice(1) };
+      })
+      .sort((a, b) => a.target.sortAt - b.target.sortAt);
+    // Geïnteresseerd: alles wat je volgt, en ook de datums waarvoor je tickets hebt of ingeschreven staat.
+    const followed = evs
+      .filter((e) => owned.has(e.id) || isReg(e.id) || isFollowing(e.id, e.tourId, e.artistIds))
+      .map((e) => {
+        const next = nextInfo(index?.phasesByEvent.get(e.id) ?? [], now);
+        const at = next ? (earliestInstant(next.item.at)?.toMillis() ?? Infinity) : Infinity;
+        return { e, next, at };
+      })
+      .sort((a, b) => a.at - b.at || (showStart(a.e) ?? Infinity) - (showStart(b.e) ?? Infinity));
+    // Radar: aantallen per tabblad en de drukste datums die nog in de verkoop moeten.
     let upcoming = 0;
-    for (const r of filtered) if (r.view.stage === 'upcoming') upcoming++;
-    return { upcoming, onsale: filtered.length - upcoming };
-  }, [filtered]);
-
-  const groups = useMemo(() => {
-    if (!index) return [] as EventGroup[];
-    return groupEvents(
-      filtered.filter((r) => r.view.stage === tab),
-      { artists: index.artists, tours: index.tours, phasesByEvent: index.phasesByEvent, now: now.toISOString() },
-      sort,
-    );
-  }, [filtered, tab, index, sort, now]);
-
-  const searching = query.trim().length > 0;
-  const toggleGroup = useCallback((key: string) => {
-    setExpanded((s) => {
-      const n = new Set(s);
-      if (n.has(key)) n.delete(key);
-      else n.add(key);
-      return n;
-    });
-  }, []);
-
-  const renderItem = useCallback(
-    ({ item }: { item: EventGroup }) => (
-      <GroupCard
-        group={item}
-        now={now}
-        expanded={searching || groups.length === 1 ? !expanded.has(`${tab}:${item.key}`) : expanded.has(`${tab}:${item.key}`)}
-        onToggle={() => toggleGroup(`${tab}:${item.key}`)}
-        followedArtist={prefs.followedArtists.includes(item.artistId)}
-        onToggleFollowArtist={() => toggleArtist(item.artistId)}
-        isFollowingEvent={(e) => prefs.followedEvents.includes(e.id)}
-        onToggleFollowEvent={toggleEvent}
-        onOpenEvent={(id) => router.push({ pathname: '/event/[id]', params: { id } })}
-      />
-    ),
-    [now, tab, searching, groups.length, expanded, toggleGroup, prefs.followedArtists, prefs.followedEvents, toggleArtist, toggleEvent],
-  );
+    const hot: { e: SnapshotEvent; score: number }[] = [];
+    for (const e of evs) {
+      const v = eventScoreView(e, index?.phasesByEvent.get(e.id) ?? [], nowIso);
+      if (v.stage === 'upcoming') {
+        upcoming++;
+        if (v.score.state === 'scored') hot.push({ e, score: v.score.value });
+      }
+    }
+    hot.sort((a, b) => b.score - a.score);
+    return { tickets, registered, followed, radar: { upcoming, onsale: evs.length - upcoming, hot: hot.slice(0, 3) } };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snapshot, index, prefs, nowIso]);
 
   const header = (
-    <View>
-      {error && snapshot ? <Banner tone="warn">{`Bijwerken lukte niet: ${error} Je ziet de laatst bekende data.`}</Banner> : null}
-      {staleWarning ? <Banner tone="warn">{staleWarning}</Banner> : null}
-      <Segmented
-        value={tab}
-        onChange={chooseTab}
-        options={[
-          { key: 'upcoming', label: STAGE_LABEL.upcoming, count: counts.upcoming },
-          { key: 'onsale', label: STAGE_LABEL.onsale, count: counts.onsale },
-        ]}
-      />
-      <Text style={{ color: t.muted, fontSize: 13, lineHeight: 18, marginTop: -4, marginBottom: 10 }}>
-        {tab === 'upcoming'
-          ? 'Score = verwachte drukte: hoe moeilijk het wordt om bij de eerste verkoop een kaart te krijgen. Een datum schuift door zodra de eerste presale of algemene verkoop begint.'
-          : 'Score = uitverkoopkans: de kans dat de datum vóór de showdag uitverkoopt, op basis van echte verkoopsignalen. Uitverkochte datums staan onderaan.'}
-      </Text>
-      <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: t.card, borderRadius: 12, borderWidth: 1, borderColor: t.border, paddingHorizontal: 12, marginBottom: 12 }}>
-        <IconSearch color={t.faint} />
-        <TextInput
-          value={query}
-          onChangeText={setQuery}
-          placeholder="Zoek artiest, evenement, stad of venue"
-          placeholderTextColor={t.faint}
-          style={{ flex: 1, color: t.text, fontSize: 15.5, paddingVertical: 11, paddingHorizontal: 8 }}
-          autoCorrect={false}
-          clearButtonMode="while-editing"
-          accessibilityLabel="Zoeken"
-        />
-      </View>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        <Chip label="Alles" active={quick === 'all'} onPress={() => setQuick('all')} />
-        <Chip label="40+" active={quick === '40'} onPress={() => setQuick('40')} />
-        <Chip label="70+" active={quick === '70'} onPress={() => setQuick('70')} />
-        <Chip label="Gevolgd" active={quick === 'followed'} onPress={() => setQuick('followed')} />
-        <Chip label={showFilters ? 'Minder filters' : 'Filters'} active={showFilters} onPress={() => setShowFilters((s) => !s)} />
-      </View>
-      {showFilters ? (
-        <View style={{ marginBottom: 4 }}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {(
-              [
-                ['all', 'Alle soorten'],
-                ['concert', 'Concerten'],
-                ['festival', 'Festivals'],
-                ['sport', 'Sport'],
-                ['theatre', 'Theater'],
-                ['comedy', 'Comedy'],
-                ['other', 'Overig'],
-              ] as [Kind, string][]
-            ).map(([k, l]) => (
-              <Chip key={k} label={l} active={kind === k} onPress={() => setKind(k)} />
-            ))}
+    <Stack.Screen
+      options={{
+        headerRight: () => (
+          <View style={{ flexDirection: 'row', gap: 18, paddingRight: 4 }}>
+            <Pressable onPress={() => router.push('/changes')} accessibilityRole="button" accessibilityLabel="Wijzigingen" hitSlop={8}>
+              <IconList color={t.text} />
+            </Pressable>
+            <Pressable onPress={() => router.push('/settings')} accessibilityRole="button" accessibilityLabel="Instellingen" hitSlop={8}>
+              <IconGear color={t.text} />
+            </Pressable>
           </View>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {(
-              [
-                ['all', 'Overal'],
-                ['NL', 'Nederland'],
-                ['BENELUX', 'Benelux'],
-                ['EU', 'Europa'],
-              ] as [Region, string][]
-            ).map(([k, l]) => (
-              <Chip key={k} label={l} active={region === k} onPress={() => setRegion(k)} />
-            ))}
-            <Chip label="Verkoopmoment binnen 7 dagen" active={soon} onPress={() => setSoon((s) => !s)} />
-          </View>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            <Chip label="Op score" active={sort === 'score'} onPress={() => setSort('score')} />
-            <Chip label="Eerstvolgend verkoopmoment" active={sort === 'next'} onPress={() => setSort('next')} />
-            <Chip label="Op showdatum" active={sort === 'date'} onPress={() => setSort('date')} />
-          </View>
-        </View>
-      ) : null}
-      <Text style={{ color: t.muted, fontSize: 12.5, marginBottom: 8, marginTop: 2 }}>
-        {groups.length} {groups.length === 1 ? 'artiest of evenement' : 'artiesten en evenementen'} · {tab === 'upcoming' ? counts.upcoming : counts.onsale}{' '}
-        {(tab === 'upcoming' ? counts.upcoming : counts.onsale) === 1 ? 'datum' : 'datums'}
-        {snapshot ? ` · bijgewerkt ${timeAgo(snapshot.generatedAt, now)}` : ''}
-      </Text>
-    </View>
+        ),
+      }}
+    />
   );
+  if (!snapshot || !index)
+    return (
+      <View style={{ padding: 20, gap: 12 }}>
+        {header}
+        {loading ? <ActivityIndicator /> : <Banner tone="warn">{`Kon geen data laden. ${error ?? ''}`}</Banner>}
+      </View>
+    );
+  const place = (e: SnapshotEvent) => {
+    const v = index.venues.get(e.venueId);
+    return v ? `${cityNl(v.city, v.country)} · ${v.name}` : '';
+  };
+  const open = (id: string) => router.push({ pathname: '/event/[id]', params: { id } });
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerRight: () => (
-            <View style={{ flexDirection: 'row', gap: 18, paddingRight: 4 }}>
-              <Pressable onPress={() => router.push('/changes')} accessibilityRole="button" accessibilityLabel="Wijzigingen" hitSlop={8}>
-                <IconList color={t.text} />
-              </Pressable>
-              <Pressable onPress={() => router.push('/settings')} accessibilityRole="button" accessibilityLabel="Instellingen" hitSlop={8}>
-                <IconGear color={t.text} />
-              </Pressable>
-            </View>
-          ),
-        }}
-      />
-      {!snapshot ? (
-        <ScrollView contentContainerStyle={{ padding: 16 }}>
-          {loading ? (
-            <View style={{ alignItems: 'center', marginTop: 60, gap: 12 }}>
-              <ActivityIndicator />
-              <Text style={{ color: t.muted }}>Data laden…</Text>
-            </View>
-          ) : (
-            <View style={{ gap: 12 }}>
-              <Banner tone="warn">{`Kon geen data laden. ${error ?? ''}`}</Banner>
-              <Button label="Opnieuw proberen" kind="primary" onPress={() => void refresh()} />
-            </View>
-          )}
-        </ScrollView>
-      ) : (
-        <FlatList
-          data={groups}
-          keyExtractor={(g) => g.key}
-          renderItem={renderItem}
-          extraData={expanded}
-          ListHeaderComponent={header}
-          ListEmptyComponent={
-            <Text style={{ color: t.muted, marginTop: 20, textAlign: 'center' }}>
-              {tab === 'upcoming' ? 'Geen datums die nog in de verkoop moeten, met deze filters.' : 'Geen datums in de verkoop, met deze filters.'}
+    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 48, maxWidth: 760, width: '100%', alignSelf: 'center' }}>
+      {header}
+      {staleWarning ? <Banner tone="warn">{staleWarning}</Banner> : null}
+      <Pressable
+        onPress={() => router.push('/radar')}
+        accessibilityRole="button"
+        accessibilityLabel="Open de radar"
+        style={({ pressed }) => ({ backgroundColor: t.card, borderRadius: 14, borderWidth: 1, borderColor: t.border, padding: 14, marginTop: 4, opacity: pressed ? 0.85 : 1 })}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: t.text, fontSize: 19, fontWeight: '800' }}>Radar</Text>
+            <Text style={{ color: t.muted, fontSize: 13.5, marginTop: 2 }}>
+              {radar.upcoming} nog niet in de verkoop · {radar.onsale} al in de verkoop
             </Text>
-          }
-          contentContainerStyle={{ padding: 16, paddingBottom: 40, maxWidth: 860, width: '100%', alignSelf: 'center' }}
-          initialNumToRender={10}
-          windowSize={9}
-          refreshControl={<RefreshControl refreshing={loading && !!fetchedAt} onRefresh={() => void refresh()} />}
-          keyboardShouldPersistTaps="handled"
-        />
-      )}
-    </>
+          </View>
+        </View>
+        {radar.hot.length ? (
+          <View style={{ marginTop: 10, gap: 8 }}>
+            <Text style={{ color: t.muted, fontSize: 12, fontWeight: '700', letterSpacing: 0.4, textTransform: 'uppercase' }}>Drukst verwacht</Text>
+            {radar.hot.map(({ e, score }) => (
+              <View key={e.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <ScorePill score={score} size={30} />
+                <Text style={{ color: t.text, fontSize: 14, fontWeight: '600', flex: 1 }} numberOfLines={1}>
+                  {e.title} <Text style={{ color: t.muted, fontWeight: '400' }}>· {shortDate(e)}</Text>
+                </Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
+      </Pressable>
+
+      <SectionTitle>Mijn tickets</SectionTitle>
+      <Card style={{ paddingVertical: 6 }}>
+        {tickets.length === 0 ? (
+          <Text style={{ color: t.muted, fontSize: 13.5, paddingVertical: 8, lineHeight: 19 }}>
+            Nog geen tickets gemarkeerd. Tik bij een datum op het ticket-icoon of op "Ik heb tickets" op de detailpagina.
+          </Text>
+        ) : null}
+        {tickets.map((e) => {
+          const start = showStart(e);
+          const left = start && start > now.getTime() ? `over ${countdown(DateTime.fromMillis(start), DateTime.fromJSDate(now))}` : start ? 'geweest' : null;
+          return (
+            <Pressable key={e.id} onPress={() => open(e.id)} style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 9, opacity: pressed ? 0.7 : 1 })}>
+              <IconTicket color={t.up} filled size={24} />
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }} numberOfLines={1}>{e.title}</Text>
+                <Text style={{ color: t.muted, fontSize: 13 }} numberOfLines={1}>{shortDate(e)} · {place(e)}</Text>
+                {e.status === 'cancelled' ? <Text style={{ color: t.down, fontSize: 13, fontWeight: '700' }}>Geannuleerd</Text> : null}
+                {e.status === 'postponed' ? <Text style={{ color: t.down, fontSize: 13, fontWeight: '700' }}>Uitgesteld</Text> : null}
+              </View>
+              {left ? <Text style={{ color: t.accent, fontSize: 13, fontWeight: '800', fontVariant: ['tabular-nums'] }}>{left}</Text> : null}
+              <Pressable onPress={() => toggleOwned(e.id)} hitSlop={8} accessibilityRole="button" accessibilityLabel="Toch geen tickets">
+                <Text style={{ color: t.faint, fontSize: 18 }}>×</Text>
+              </Pressable>
+            </Pressable>
+          );
+        })}
+      </Card>
+
+      <SectionTitle>Ingeschreven</SectionTitle>
+      <Card style={{ paddingVertical: 6 }}>
+        {registered.length === 0 ? (
+          <Text style={{ color: t.muted, fontSize: 13.5, paddingVertical: 8, lineHeight: 19 }}>
+            Nog nergens ingeschreven. Kies op de pagina van een datum bij "Ingeschreven" waarvoor je je hebt aangemeld.
+          </Text>
+        ) : null}
+        {registered.map(({ e, target, more }) => (
+          <Pressable key={e.id} onPress={() => open(e.id)} style={({ pressed }) => ({ paddingVertical: 10, opacity: pressed ? 0.7 : 1 })}>
+            <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }} numberOfLines={1}>{e.title}</Text>
+            <Text style={{ color: t.muted, fontSize: 13 }} numberOfLines={1}>{shortDate(e)} · {place(e)}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', columnGap: 8, marginTop: 4 }}>
+              <Text style={{ color: t.accent, fontSize: 22, fontWeight: '800', fontVariant: ['tabular-nums'] }}>{target.countdown ?? 'Datum nog niet bekend'}</Text>
+              <Text style={{ color: t.text, fontSize: 13.5, fontWeight: '700' }} numberOfLines={1}>{target.label}</Text>
+            </View>
+            <Text style={{ color: t.muted, fontSize: 12.5 }}>{target.when}</Text>
+            {more.map((m, i) => (
+              <Text key={i} style={{ color: t.text, fontSize: 13, marginTop: 4, opacity: m.countdown === 'voorbij' ? 0.5 : 1 }} numberOfLines={1}>
+                <Text style={{ color: t.accent, fontWeight: '800' }}>{m.countdown ?? 'nog niet bekend'}</Text> · {m.label}
+              </Text>
+            ))}
+          </Pressable>
+        ))}
+      </Card>
+
+      <SectionTitle>Geïnteresseerd</SectionTitle>
+      <Card style={{ paddingVertical: 6 }}>
+        {followed.length === 0 ? (
+          <Text style={{ color: t.muted, fontSize: 13.5, paddingVertical: 8, lineHeight: 19 }}>
+            Nog niets. Tik in de radar op een ster bij een artiest of datum.
+          </Text>
+        ) : null}
+        {followed.map(({ e, next }) => {
+          const v = eventScoreView(e, index.phasesByEvent.get(e.id) ?? [], nowIso);
+          return (
+            <Pressable key={e.id} onPress={() => open(e.id)} style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 9, opacity: pressed ? 0.7 : 1 })}>
+              <ScorePill score={v.score.value} size={36} state={v.score.state} />
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }} numberOfLines={1}>{e.title}</Text>
+                <Text style={{ color: t.muted, fontSize: 13 }} numberOfLines={1}>{shortDate(e)} · {place(e)}</Text>
+                {owned.has(e.id) ? (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <IconTicket color={t.up} filled size={14} />
+                    <Text style={{ color: t.up, fontSize: 12.5, fontWeight: '700' }}>Je hebt tickets</Text>
+                  </View>
+                ) : null}
+                <Text style={{ color: t.muted, fontSize: 12.5 }} numberOfLines={1}>
+                  {v.score.state === 'scored' ? `${SCORE_KIND_LABEL[v.kind]}: ${v.score.label.toLowerCase()}` : v.score.label}
+                </Text>
+                {next && !owned.has(e.id) ? (
+                  <Text style={{ color: t.text, fontSize: 13, marginTop: 2 }} numberOfLines={1}>
+                    {next.label}{' '}
+                    <Text style={{ color: t.accent, fontWeight: '800' }}>{next.countdown === 'nu bezig' ? 'nu bezig' : next.countdown ? `over ${next.countdown}` : ''}</Text>
+                    <Text style={{ color: t.muted }}>{` · ${next.when}${next.item.at.precision === 'exact' ? ' (NL)' : ''}`}</Text>
+                  </Text>
+                ) : null}
+              </View>
+            </Pressable>
+          );
+        })}
+      </Card>
+    </ScrollView>
   );
 }

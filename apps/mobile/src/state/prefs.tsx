@@ -19,6 +19,10 @@ export interface Prefs {
   followedArtists: string[];
   /** Gevolgd, maar zonder meldingen. */
   mutedEvents: string[];
+  /** Datums waarvoor je al tickets hebt (geen verkoopherinneringen meer). */
+  ownedEvents: string[];
+  /** Datums waarvoor je ingeschreven staat: datum-ID → IDs van de inschrijvingen ('' = algemeen). */
+  registered: Record<string, string[]>;
   settings: Settings;
 }
 
@@ -27,6 +31,8 @@ export const DEFAULT_PREFS: Prefs = {
   followedTours: [],
   followedArtists: [],
   mutedEvents: [],
+  ownedEvents: [],
+  registered: {},
   settings: {
     notificationsEnabled: true,
     scoreThreshold: DEFAULT_SCORE_THRESHOLD,
@@ -52,10 +58,19 @@ interface PrefsState {
   toggleTour: (tourId: string) => void;
   toggleArtist: (artistId: string) => void;
   setMuted: (eventId: string, muted: boolean) => void;
+  toggleOwned: (eventId: string) => void;
+  /** Zet een inschrijving voor een datum aan of uit (je kunt er meerdere hebben). */
+  toggleRegistered: (eventId: string, phaseId: string) => void;
   updateSettings: (patch: Partial<Settings>) => void;
 }
 
 const Ctx = createContext<PrefsState | null>(null);
+
+/** Inschrijvingen van een datum (ook voor oudere opslag met één inschrijving als tekst). */
+export function registeredIds(r: Record<string, string[] | string> | undefined, eventId: string): string[] {
+  const v = r?.[eventId];
+  return v === undefined ? [] : typeof v === 'string' ? [v] : v;
+}
 
 const toggle = (list: string[], id: string) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
 
@@ -95,6 +110,15 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       toggleArtist: (id) => setPrefs((p) => ({ ...p, followedArtists: toggle(p.followedArtists, id) })),
       setMuted: (id, muted) =>
         setPrefs((p) => ({ ...p, mutedEvents: muted ? [...new Set([...p.mutedEvents, id])] : p.mutedEvents.filter((x) => x !== id) })),
+      toggleRegistered: (id, phaseId) =>
+        setPrefs((p) => {
+          const r = { ...(p.registered ?? {}) };
+          const list = toggle(registeredIds(r, id), phaseId);
+          if (list.length) r[id] = list;
+          else delete r[id];
+          return { ...p, registered: r };
+        }),
+      toggleOwned: (id) => setPrefs((p) => ({ ...p, ownedEvents: toggle(p.ownedEvents ?? [], id) })),
       updateSettings: (patch) => setPrefs((p) => ({ ...p, settings: { ...p.settings, ...patch } })),
     }),
     [prefs, ready, isFollowing],

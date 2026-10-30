@@ -9,7 +9,7 @@ import {
   type SalePhase,
   type Snapshot,
 } from '@sellout/core';
-import type { Prefs } from '../state/prefs';
+import { registeredIds, type Prefs } from '../state/prefs';
 
 export function notifySettings(prefs: Prefs): NotifySettings {
   const s = prefs.settings;
@@ -25,11 +25,14 @@ export function eventsInScope(snapshot: Snapshot, prefs: Prefs, now = DateTime.n
   const out = new Set<string>();
   if (!prefs.settings.notificationsEnabled) return out;
   const muted = new Set(prefs.mutedEvents);
+  // Al tickets: geen verkoopherinneringen meer voor die datum.
+  const owned = new Set(prefs.ownedEvents ?? []);
   const phasesByEvent = new Map<string, SalePhase[]>();
   for (const p of snapshot.phases) for (const id of p.eventIds) phasesByEvent.set(id, [...(phasesByEvent.get(id) ?? []), p]);
   for (const e of snapshot.events) {
-    if (e.status === 'cancelled' || e.status === 'soldout') continue;
+    if (e.status === 'cancelled' || e.status === 'soldout' || owned.has(e.id)) continue;
     const followed =
+      registeredIds(prefs.registered, e.id).length > 0 ||
       prefs.followedEvents.includes(e.id) ||
       (e.tourId !== undefined && prefs.followedTours.includes(e.tourId)) ||
       e.artistIds.some((a) => prefs.followedArtists.includes(a));

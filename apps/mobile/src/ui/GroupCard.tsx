@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { confidenceLabel, COUNTRY_NL, eventBadges, formatDate, formatTimePoint, joinList, type EventGroup, type GroupDate } from '@sellout/core';
 import { nextInfo } from '../lib/view';
 import { BadgeView, ScorePill } from './components';
-import { IconArrow, IconStar } from './icons';
+import { IconArrow, IconStar, IconTicket } from './icons';
 import { SaleMoments } from './SaleMoments';
 import { useTheme } from './theme';
 
@@ -17,6 +17,8 @@ interface Props {
   onToggleFollowArtist: () => void;
   isFollowingEvent: (e: GroupDate['event']) => boolean;
   onToggleFollowEvent: (id: string) => void;
+  isOwned: (id: string) => boolean;
+  onToggleOwned: (id: string) => void;
   onOpenEvent: (id: string) => void;
 }
 
@@ -30,7 +32,7 @@ function dateText(d: GroupDate): string {
   return formatTimePoint(e.date);
 }
 
-function DateRow({ d, followed, onToggleFollow, onOpen }: { d: GroupDate; followed: boolean; onToggleFollow: () => void; onOpen: () => void }) {
+function DateRow({ d, followed, owned, onToggleFollow, onToggleOwned, onOpen }: { d: GroupDate; followed: boolean; owned: boolean; onToggleFollow: () => void; onToggleOwned: () => void; onOpen: () => void }) {
   const t = useTheme();
   const s = d.view.score;
   const badges = eventBadges(d.event, [], { hasConflict: d.event.conflicts.length > 0 }).filter((b) => b.key !== 'sale_date_unknown');
@@ -54,8 +56,12 @@ function DateRow({ d, followed, onToggleFollow, onOpen }: { d: GroupDate; follow
           {s.state === 'scored' ? `${s.label} · betrouwbaarheid ${confidenceLabel(s.confidence)}` : s.label}
           {d.view.movedLocally ? ' · verkoop net begonnen' : ''}
         </Text>
+        {owned ? <Text style={{ color: t.up, fontSize: 12.5, fontWeight: '700' }}>Je hebt tickets</Text> : null}
         {badges.length ? <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>{badges.map((b) => <BadgeView key={b.key} badge={b} />)}</View> : null}
       </View>
+      <Pressable onPress={onToggleOwned} hitSlop={8} accessibilityRole="button" accessibilityLabel={owned ? 'Toch geen tickets' : 'Ik heb tickets'} style={{ marginRight: 6 }}>
+        <IconTicket color={owned ? t.up : t.faint} filled={owned} size={20} />
+      </Pressable>
       <Pressable onPress={onToggleFollow} hitSlop={10} accessibilityRole="button" accessibilityLabel={followed ? 'Datum niet meer volgen' : 'Datum volgen'}>
         <IconStar color={followed ? '#E5A100' : t.faint} filled={followed} size={19} />
       </Pressable>
@@ -63,7 +69,7 @@ function DateRow({ d, followed, onToggleFollow, onOpen }: { d: GroupDate; follow
   );
 }
 
-function GroupCardInner({ group, now, expanded, onToggle, followedArtist, onToggleFollowArtist, isFollowingEvent, onToggleFollowEvent, onOpenEvent }: Props) {
+function GroupCardInner({ group, now, expanded, onToggle, followedArtist, onToggleFollowArtist, isFollowingEvent, onToggleFollowEvent, isOwned, onToggleOwned, onOpenEvent }: Props) {
   const t = useTheme();
   const allPhases = group.cities.flatMap((c) => c.phases);
   const next = nextInfo(allPhases, now);
@@ -137,11 +143,11 @@ function GroupCardInner({ group, now, expanded, onToggle, followedArtist, onTogg
       </Pressable>
 
       {expanded ? (
-        <View style={{ borderTopWidth: 1, borderTopColor: t.border }}>
+        <View style={{ borderTopWidth: 2, borderTopColor: t.accent }}>
           {group.cities.map((c, i) => {
             const venues = [...new Set(c.dates.map((d) => d.venue?.name).filter(Boolean) as string[])];
             return (
-              <View key={c.key} style={{ paddingHorizontal: 12, paddingTop: 12, paddingBottom: 12, borderTopWidth: i === 0 ? 0 : 1, borderTopColor: t.border, backgroundColor: c.settled ? t.cardAlt : t.card }}>
+              <View key={c.key} style={{ paddingHorizontal: 12, paddingTop: 12, paddingBottom: 12, borderTopWidth: i === 0 ? 0 : 2, borderTopColor: t.accent, backgroundColor: c.settled ? t.cardAlt : t.card }}>
                 <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
                   {c.city}
                   {c.country && c.country !== 'NL' ? <Text style={{ color: t.muted, fontWeight: '600' }}>{` · ${COUNTRY_NL[c.country] ?? c.country}`}</Text> : null}
@@ -157,7 +163,9 @@ function GroupCardInner({ group, now, expanded, onToggle, followedArtist, onTogg
                       key={d.event.id}
                       d={d}
                       followed={isFollowingEvent(d.event)}
+                      owned={isOwned(d.event.id)}
                       onToggleFollow={() => onToggleFollowEvent(d.event.id)}
+                      onToggleOwned={() => onToggleOwned(d.event.id)}
                       onOpen={() => onOpenEvent(d.event.id)}
                     />
                   ))}

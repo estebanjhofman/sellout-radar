@@ -90,6 +90,7 @@ function AppStack() {
         }}
       >
         <Stack.Screen name="index" options={{ title: 'Sellout Radar', ...(Platform.OS === 'web' ? { headerLeft: () => null } : {}) }} />
+        <Stack.Screen name="radar" options={{ title: 'Radar' }} />
         <Stack.Screen name="event/[id]" options={{ title: '' }} />
         <Stack.Screen name="settings" options={{ title: 'Instellingen' }} />
         <Stack.Screen name="accuracy" options={{ title: 'Nauwkeurigheid' }} />
