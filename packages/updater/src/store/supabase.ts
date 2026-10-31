@@ -197,9 +197,9 @@ export class SupabaseStore implements Store {
     await chunks('venue', c.venues.map(toVenueRow), { upsert: true, onConflict: 'id' });
     await chunks('event', c.events.map(toEventRow), { upsert: true, onConflict: 'id' });
     await chunks('sale_phase', c.phases.map(toPhaseRow), { upsert: true, onConflict: 'id' });
-    const phaseIds = c.phases.map((p) => p.id);
-    for (let i = 0; i < phaseIds.length; i += 200) {
-      await this.check(db.from('sale_phase_event').delete().in('phase_id', phaseIds.slice(i, i + 200)), 'sale_phase_event');
+    // In kleine groepjes: de ID's staan in de URL, en een te lange URL geeft "Bad Request".
+    for (const part of byUrlLength(c.phases.map((p) => p.id))) {
+      await this.check(db.from('sale_phase_event').delete().in('phase_id', part), 'sale_phase_event');
     }
     const eventIds = new Set(c.events.map((e) => e.id));
     await chunks(
@@ -416,7 +416,10 @@ export class SupabaseStore implements Store {
 
   async removePushTokens(tokens: string[]): Promise<void> {
     if (tokens.length === 0) return;
-    await this.check(this.db.from('device').update({ push_token: null }).in('push_token', tokens), 'device');
+    // Webabonnementen zijn lange JSON-teksten: één voor één, anders wordt de URL te lang.
+    for (const token of tokens) {
+      await this.check(this.db.from('device').update({ push_token: null }).eq('push_token', token), 'device');
+    }
   }
 }
 
@@ -584,3 +587,22 @@ const fromClaimRow = (r: Row): Claim => ({
   },
   ...(r.evidence ? { evidence: String(r.evidence) } : {}),
 });
+
+/** Verdeelt waarden in groepjes waarvan de URL-lengte samen onder de grens blijft (PostgREST/Kong). */
+export function byUrlLength(values: string[], maxChars = 3000): string[][] {
+  const out: string[][] = [];
+  let cur: string[] = [];
+  let len = 0;
+  for (const v of values) {
+    const l = encodeURIComponent(v).length + 3;
+    if (cur.length && len + l > maxChars) {
+      out.push(cur);
+      cur = [];
+      len = 0;
+    }
+    cur.push(v);
+    len += l;
+  }
+  if (cur.length) out.push(cur);
+  return out;
+}

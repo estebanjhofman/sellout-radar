@@ -66,3 +66,13 @@ describe('tickets: wel wijzigingen, geen verkoopherinneringen', () => {
     expect(owned.some((m) => m.kind === 'change_extra_show')).toBe(true);
   });
 });
+
+describe('Supabase: lange lijsten in de URL', () => {
+  it('verdeelt ID-lijsten zo dat elke URL kort genoeg blijft', async () => {
+    const { byUrlLength } = await import('../src/store/supabase');
+    const ids = Array.from({ length: 700 }, (_, i) => `ticketmaster:Z698xZ2qZa${i}:presale:ticketmaster-verified-fan-onsale`);
+    const parts = byUrlLength(ids);
+    expect(parts.flat()).toEqual(ids);
+    for (const p of parts) expect(p.map((v) => encodeURIComponent(v).length + 3).reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(3000);
+  });
+});
